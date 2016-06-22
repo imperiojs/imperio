@@ -1,8 +1,8 @@
 'use strict'; // eslint-disable-line
 const express = require('express');
 const app = express();
-const http = require('http').Server(app); //eslint-disable-line
-const io = require('socket.io')(http);
+const server = require('http').Server(app); //eslint-disable-line
+const io = require('socket.io')(server);
 const path = require('path');
 const bodyParser = require('body-parser');
 const useragent = require('express-useragent');
@@ -37,13 +37,14 @@ app.get('*', (req, res) => {
  * --   Sockets    --
  * ------------------ */
 
-io.on('connection', (socket) => {
-  console.log('a user connected:', socket);
+io.on('connection', socket => {
+  console.log('a user connected');
   socket.on('tap', () => {
     console.log('tap from mobile!');
     io.emit('tap');
   });
   socket.on('disconnect', () => {
+    console.log('user disconnected');
     io.emit('user disconnected');
   });
 });
@@ -52,6 +53,6 @@ io.on('connection', (socket) => {
  * --    Server    --
  * ------------------ */
 
-app.listen(3000, () => {
+server.listen(3000, () => {
   console.log('Listening on port 3000');
 });
