@@ -1,5 +1,6 @@
 const socket = io();
 
-const emitTap = () => {
+function emitTap(){
+  console.log("Tap Event Emitted");
   socket.emit('tap');
-};
+}
