@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/austinlyon/project-start.git"
+    "url": "git+https://github.com/echoLoJS/project-start.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/austinlyon/project-start/issues"
+    "url": "https://github.com/echoLoJS/project-start/issues"
   },
-  "homepage": "https://github.com/austinlyon/project-start#readme",
+  "homepage": "https://github.com/echoLoJS/project-start#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
