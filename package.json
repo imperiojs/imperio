@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint-config-airbnb": "^9.0.1"
+    "eslint-config-airbnb": "^9.0.1",
+    "socket.io-client": "^1.4.6"
   }
 }
