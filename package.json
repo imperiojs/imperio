@@ -4,6 +4,7 @@
   "description": "starting repo for production project",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,11 +21,13 @@
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
+    "express-useragent": "^0.2.4",
     "socket.io": "^1.4.6"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint-config-airbnb": "^9.0.1",
-    "socket.io-client": "^1.4.6"
+    "socket.io-client": "^1.4.6",
+    "nodemon": "^1.9.2"
   }
 }
