@@ -12,12 +12,12 @@ const expect = require ('chai').expect,
       }
 
 
-describe("socket connection", ()=>{
-  it('should broadcast a username once connected', (done){
+describe('socket connection', ()=>{
+  it('should broadcast a string once connected', (done)=>{
     const client = io.connect(url, options);
 
-    client.on('connect', (data)=>{
-      client.emit('connection name', user1);
+    client.on('tap', (data)=>{
+      client.emit('tap has been made successfullt');
     });
   });
 
