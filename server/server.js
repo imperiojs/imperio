@@ -15,18 +15,19 @@ let activeConnectRequests = {};
 app.use(express.static(path.join(`${__dirname}/../client`)));
 app.use(useragent.express());
 app.use(cookieParser());
+app.set('view engine', 'ejs');
 
 /* ------------------
  * --    Routes    --
  * ------------------ */
 
-// App will serve up different pages for client v& desktop
+// App will serve up different pages for client & desktop
 app.get('/', (req, res) => {
   console.log(`request received`);
   if (req.useragent && req.useragent.isMobile) {
     console.log(`we're in the mobile`);
-    // res.render(`${__dirname}/../client/mobile.html`);
-    res.sendFile(path.join(`${__dirname}/../client/mobile.html`));
+    res.render(`${__dirname}/../client/rootmobile`);
+    // res.sendFile(path.join(`${__dirname}/../client/mobile.html`));
   } else if (req.useragent && req.useragent.isDesktop) {
     console.log(`we're in the browser`);
     // check if already in session (from cookie)
@@ -41,10 +42,22 @@ app.get('/', (req, res) => {
     // res.render(`../client/browser.html`);
   }
 });
+
+
+
+app.post('/', (req,res)=>{
+
+  const codeCheck = req.body;
+  // db.find(codeCheck, functions()=>{
+  //   //if correct then redirect to tap page
+  //   //if incorrect then redirect to rootmobile page with error message
+  // })
+
+});
 // 404 error on invalid endpoint
 app.get('*', (req, res) => {
   res.status(404)
-     .sendFile(path.join(`${__dirname}/../client/404.html`));
+     .render(`${__dirname}/../client/rootmobile`,{error: "Please enter code to connect to browser"});
 });
 
 /* ------------------
@@ -67,6 +80,6 @@ io.on('connection', socket => {
  * --    Server    --
  * ------------------ */
 
-server.listen(3000, () => {
-  console.log('Listening on port 3000');
+server.listen(8080, () => {
+  console.log('Listening on port 8080');
 });
