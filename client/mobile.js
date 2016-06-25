@@ -1,3 +1,4 @@
+var request = require('browser');
 const socket = io();
 // function to emit tap event
 function emitTap(){

@@ -19,7 +19,9 @@
   "homepage": "https://github.com/echoLoJS/project-start#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "browser-request": "^0.3.3",
     "cookie-parser": "^1.4.3",
+    "ejs": "^2.4.2",
     "express": "^4.14.0",
     "express-useragent": "^0.2.4",
     "socket.io": "^1.4.6"
