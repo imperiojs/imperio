@@ -6,7 +6,11 @@ const io = require('socket.io')(server);
 const path = require('path');
 const bodyParser = require('body-parser');
 const useragent = require('express-useragent');
+const cookieParser = require('cookie-parser');
+const cookieController = require('./cookieController')
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.static(path.join(`${__dirname}/../client`)));
 app.use(useragent.express());
 
@@ -15,18 +19,17 @@ app.use(useragent.express());
  * ------------------ */
 
 // App will serve up different pages for client v& desktop
-app.get('/', (req, res) => {
+app.get('/', cookieController.countRooms, cookieController.setCookie, (req, res) => {
   console.log(`request received`);
   if (req.useragent && req.useragent.isMobile) {
     console.log(`we're in the mobile`);
-    // res.render(`${__dirname}/../client/mobile.html`);
     res.sendFile(path.join(`${__dirname}/../client/mobile.html`));
   } else if (req.useragent && req.useragent.isDesktop) {
     console.log(`we're in the browser`);
     res.sendFile(path.join(`${__dirname}/../client/browser.html`));
-    // res.render(`../client/browser.html`);
   }
 });
+
 // 404 error on invalid endpoint
 app.get('*', (req, res) => {
   res.status(404)
@@ -38,10 +41,14 @@ app.get('*', (req, res) => {
  * ------------------ */
 
 io.on('connection', socket => {
-  console.log('a user connected');
-  socket.on('tap', () => {
+  console.log('a girl has no connection');
+  socket.on('createRoom', room => {
+    console.log(`In the codes and joined ${room}`);
+    socket.join(room);
+  });
+  socket.on('tap', room => {
     console.log('tap from mobile!');
-    io.emit('tap');
+    io.sockets.in(room).emit('tap');
   });
   socket.on('disconnect', () => {
     console.log('user disconnected');
