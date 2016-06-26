@@ -18,11 +18,8 @@ function changeBody () {
 }
 
 (function() {
-  console.log(document.getElementById('nonceContainer'));
-  document.getElementById('nonceContainer').innerHTML = document.cookie;
+  document.getElementById('nonceContainer').innerHTML = 'Enter this into your phone, please: ' + Cookies.get('nonce');
 })();
-
-module.exports = bodyElement;
 
 //use browser event to change class
 // document.addEventListener('click', changeBody, false);

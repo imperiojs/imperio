@@ -8,9 +8,10 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const useragent = require('express-useragent');
 
-const jwtController = require('./jwtController.js');
-const nonceController = require('./nonceController.js');
-let activeConnectRequests = {};
+const activeConnectRequests = {};
+const desktopController = require('./desktopController.js');
+const mobileController = require('./mobileController.js');
+
 
 app.use(express.static(path.join(`${__dirname}/../client`)));
 app.use(useragent.express());
@@ -24,26 +25,12 @@ app.set('view engine', 'ejs');
 // App will serve up different pages for client & desktop
 app.get('/', (req, res) => {
   console.log(`request received`);
-  if (req.useragent && req.useragent.isMobile) {
-    console.log(`we're in the mobile`);
-    res.render(`${__dirname}/../client/rootmobile`);
-    // res.sendFile(path.join(`${__dirname}/../client/mobile.html`));
-  } else if (req.useragent && req.useragent.isDesktop) {
-    console.log(`we're in the browser`);
-    // check if already in session (from cookie)
-    const roomId = jwtController.handleSession(req, res);
-    // - if NOT, give it a session via jwt via cookie
-    const nonce = nonceController.generateNonce(5);
-    res.cookie('nonce', nonce);
-    activeConnectRequests[nonce] =
-      nonceController.generateConnectRequest(roomId);
-    console.log(activeConnectRequests);
-    res.sendFile(path.join(`${__dirname}/../client/browser.html`));
-    // res.render(`../client/browser.html`);
+  if (req.useragent && req.useragent.isDesktop) {
+    desktopController.handleRequest(req, res);
+  } else if (req.useragent && req.useragent.isMobile) {
+    mobileController.handleRequest(req, res);
   }
 });
-
-
 
 app.post('/', (req,res)=>{
 
@@ -80,6 +67,6 @@ io.on('connection', socket => {
  * --    Server    --
  * ------------------ */
 
-server.listen(8080, () => {
-  console.log('Listening on port 8080');
+server.listen(3000, () => {
+  console.log('Listening on port 3000');
 });
