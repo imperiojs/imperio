@@ -5,28 +5,34 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./test/test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/austinlyon/project-start.git"
+    "url": "git+https://github.com/echoLoJS/project-start.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/austinlyon/project-start/issues"
+    "url": "https://github.com/echoLoJS/project-start/issues"
   },
-  "homepage": "https://github.com/austinlyon/project-start#readme",
+  "homepage": "https://github.com/echoLoJS/project-start#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "browser-request": "^0.3.3",
     "cookie-parser": "^1.4.3",
+    "cookies-js": "^1.2.2",
+    "ejs": "^2.4.2",
     "express": "^4.14.0",
     "express-useragent": "^0.2.4",
+    "jsonwebtoken": "^7.0.1",
+    "node-uuid": "^1.4.7",
     "socket.io": "^1.4.6"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint-config-airbnb": "^9.0.1",
+    "socket.io-client": "^1.4.6",
     "nodemon": "^1.9.2"
   }
 }
