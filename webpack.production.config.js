@@ -6,7 +6,7 @@ module.exports = {
     path: `${__dirname}/client/`,
     filename: 'mobileBundle.js',
   },
-
+  watch: true,
   module: {
     loaders: [
       {

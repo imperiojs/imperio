@@ -1,28 +1,38 @@
 const webpack = require('webpack');
 
-module.exports = {
-  devtool: 'eval-source-map', // or use source-map
-  entry: `${__dirname}/client/mobile.js`,
-  output: {
-    path: `${__dirname}/client/`,
-    filename: 'mobileBundle.js',
-  },
-
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel',
-      },
-      //{},
+module.exports = [
+  // {
+  //   name: 'server code, output to ./server',
+  //   entry: `${__dirname}/server/server.js`,
+  //   output: {
+  //     filename: `${__dirname}/server/server.js`,
+  //   },
+  //   watch: true,
+  //   target: 'node',
+  // },
+  {
+    name: 'client side output to ./client',
+    devtool: 'source-map', // or use source-map
+    entry: `${__dirname}/client/mobile.js`,
+    output: {
+      path: `${__dirname}/client/`,
+      filename: 'mobileBundle.js',
+    },
+    watch: true,
+    module: {
+      loaders: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel',
+        },
+        //{},
+      ],
+    },
+    plugins: [
+      new webpack.BannerPlugin('Copyright MA\'AM inc.'),
+      // new webpack.HotModuleReplacementPlugin(),
     ],
-  },
-
-  plugins: [
-    new webpack.BannerPlugin('Copyright MA\'AM inc.'),
-    new webpack.HotModuleReplacementPlugin(),
-  ],
   // IF WE WANT TO USE THE WEBPACK SERVER - NOT USING FOR NOW SINCE WE HAVE OUR OWN SERVER.
   // devServer: {
   // contentBase: "./public",
@@ -31,4 +41,5 @@ module.exports = {
   //   inline: true,
   //   hot: true,
   // },
-};
+  },
+];

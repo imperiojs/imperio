@@ -3,6 +3,8 @@
 logs
 *.log
 npm-debug.log*
+mobileBundle.js
+mobileBundle.js.map
 
 # Runtime data
 pids
