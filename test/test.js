@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const expect = require ('chai').expect,
   io = require('socket.io-client'),
@@ -12,7 +12,6 @@ const expect = require ('chai').expect,
     name: 'Maam',
   };
 
-
 describe('socket connection', ()=>{
   it('should broadcast a string once connected', (done)=>{
     const client1 = io.connect(url, options);
@@ -22,5 +21,4 @@ describe('socket connection', ()=>{
       expect(body.classList.contains("class2")).to.equal(true);
     });
   });
-
 });

@@ -7,11 +7,11 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const useragent = require('express-useragent');
+const cookieParser = require('cookie-parser');
 
 const activeConnectRequests = {};
 const desktopController = require('./desktopController.js');
 const mobileController = require('./mobileController.js');
-
 
 app.use(express.static(path.join(`${__dirname}/../client`)));
 app.use(useragent.express());
@@ -28,7 +28,6 @@ app.get('/',
   desktopController.handleRequest(activeConnectRequests),
   mobileController.handleRequest(activeConnectRequests),
   (req, res) => {
-
     if (req.useragent && req.useragent.isDesktop) {
       res.sendFile(path.join(`${__dirname}/../client/browser.html`));
       // res.render(`../client/browser.html`);
@@ -55,13 +54,17 @@ app.get('*', (req, res) => {
  * ------------------ */
 
 io.on('connection', socket => {
-  console.log('a user connected');
-  socket.on('tap', () => {
-    console.log('tap from mobile!');
-    io.emit('tap');
+  console.log('A socket has a connection');
+  socket.on('createRoom', room => {
+    console.log(`Joined ${room}`);
+    socket.join(room);
+  });
+  socket.on('tap', room => {
+    console.log('Tap from mobile!');
+    io.sockets.in(room).emit('tap');
   });
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('A user has disconnected');
     io.emit('user disconnected');
   });
 });

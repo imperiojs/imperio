@@ -11,11 +11,11 @@ desktopController.handleRequest = function(connectRequests) {
     if (req.useragent && req.useragent.isDesktop) {
       console.log(`request if from Desktop`);
 
-      // check if already in session (from cookie)
+      // check if already in session, or create session
       const roomId = jwtController.handleSession(req, res);
-      res.cookie('roomId', roomId);
+      res.cookie('roomId', roomId); //DEBUG this is for reference
 
-      // - if NOT, give it a session via jwt via cookie
+      // handle nonce
       const nonce = nonceController.generateNonce(5);
       res.cookie('nonce', nonce);
       connectRequests[nonce] = nonceController.generateConnectRequest(roomId);
