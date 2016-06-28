@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 
 module.exports = {
-  devtool: 'eval-source-map', // or use source-map
   entry: `${__dirname}/client/mobile.js`,
   output: {
     path: `${__dirname}/client/`,
@@ -15,20 +14,12 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel',
       },
-      //{},
     ],
   },
 
   plugins: [
     new webpack.BannerPlugin('Copyright MA\'AM inc.'),
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.UglifyJsPlugin(),
   ],
-  // IF WE WANT TO USE THE WEBPACK SERVER - NOT USING FOR NOW SINCE WE HAVE OUR OWN SERVER.
-  // devServer: {
-  // contentBase: "./public",
-  //   colors: true,
-  //   historyApiFallback: true,
-  //   inline: true,
-  //   hot: true,
-  // },
 };
