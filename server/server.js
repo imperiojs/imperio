@@ -15,6 +15,7 @@ const mobileController = require('./mobileController.js');
 
 app.use(express.static(path.join(`${__dirname}/../client`)));
 app.use(useragent.express());
+app.use(bodyParser.urlencoded( { extended: true } ));
 app.use(cookieParser());
 app.set('view engine', 'ejs');
 
@@ -23,24 +24,26 @@ app.set('view engine', 'ejs');
  * ------------------ */
 
 // App will serve up different pages for client & desktop
-app.get('/', (req, res) => {
-  console.log(`request received`);
-  if (req.useragent && req.useragent.isDesktop) {
-    desktopController.handleRequest(req, res);
-  } else if (req.useragent && req.useragent.isMobile) {
-    mobileController.handleRequest(req, res);
+app.get('/',
+  desktopController.handleRequest(activeConnectRequests),
+  mobileController.handleRequest(activeConnectRequests),
+  (req, res) => {
+
+    if (req.useragent && req.useragent.isDesktop) {
+      res.sendFile(path.join(`${__dirname}/../client/browser.html`));
+      // res.render(`../client/browser.html`);
+    } else if (req.useragent && req.useragent.isMobile) {
+      res.render(`${__dirname}/../client/rootmobile`, {error: null});
+      // res.sendFile(path.join(`${__dirname}/../client/mobile.html`));
+    }
   }
-});
+);
+app.post('/',
+  mobileController.handlePost(activeConnectRequests),
+  (req, res) => {
 
-app.post('/', (req,res)=>{
-
-  const codeCheck = req.body;
-  // db.find(codeCheck, functions()=>{
-  //   //if correct then redirect to tap page
-  //   //if incorrect then redirect to rootmobile page with error message
-  // })
-
-});
+  }
+);
 // 404 error on invalid endpoint
 app.get('*', (req, res) => {
   res.status(404)
