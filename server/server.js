@@ -41,17 +41,17 @@ app.get('*', (req, res) => {
  * ------------------ */
 
 io.on('connection', socket => {
-  console.log('a girl has no connection');
+  console.log('A socket has a connection');
   socket.on('createRoom', room => {
-    console.log(`In the codes and joined ${room}`);
+    console.log(`Joined ${room}`);
     socket.join(room);
   });
   socket.on('tap', room => {
-    console.log('tap from mobile!');
+    console.log('Tap from mobile!');
     io.sockets.in(room).emit('tap');
   });
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('A user has disconnected');
     io.emit('user disconnected');
   });
 });
