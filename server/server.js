@@ -7,7 +7,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const useragent = require('express-useragent');
-const cookieParser = require('cookie-parser');
 
 const activeConnectRequests = {};
 const desktopController = require('./desktopController.js');
@@ -32,6 +31,7 @@ app.get('/',
       res.sendFile(path.join(`${__dirname}/../client/browser.html`));
       // res.render(`../client/browser.html`);
     } else if (req.useragent && req.useragent.isMobile) {
+      //TODO if token is on request, sent to tap in appropriate room
       res.render(`${__dirname}/../client/rootmobile`, {error: null});
       // res.sendFile(path.join(`${__dirname}/../client/mobile.html`));
     }
@@ -40,7 +40,7 @@ app.get('/',
 app.post('/',
   mobileController.handlePost(activeConnectRequests),
   (req, res) => {
-
+    res.render(`${__dirname}/../client/tapmobile`, {error: null});
   }
 );
 // 404 error on invalid endpoint

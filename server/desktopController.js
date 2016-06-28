@@ -13,7 +13,7 @@ desktopController.handleRequest = function(connectRequests) {
 
       // check if already in session, or create session
       const roomId = jwtController.handleSession(req, res);
-      res.cookie('roomId', roomId); //DEBUG this is for reference
+      res.cookie('roomId', roomId); //DEBUG this is for reference?
 
       // handle nonce
       const nonce = nonceController.generateNonce(5);

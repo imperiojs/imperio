@@ -3,7 +3,8 @@ const socket = io();
 const bodyElement = document.querySelector('body');
 const h6Element = document.querySelector('h6');
 
-let room = document.cookie.slice(5);
+let room = Cookies.get('roomId');
+// let room = document.cookie.slice(5);
 
 socket.on('connect', () => {
   h6Element.innerHTML = `Socket connection, in ${room}`;
