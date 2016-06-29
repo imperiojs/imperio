@@ -3,6 +3,9 @@
 logs
 *.log
 npm-debug.log*
+mobileBundle.js
+mobileBundle.js.map
+keys.js
 
 # Runtime data
 pids
@@ -30,6 +33,7 @@ build/Release
 # Dependency directories
 node_modules
 jspm_packages
+client/lib
 
 # Optional npm cache directory
 .npm
