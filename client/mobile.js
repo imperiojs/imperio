@@ -5,9 +5,8 @@ var h1Element = document.querySelector('h1');
 var h2Element = document.querySelector('h2');
 var h3Element = document.querySelector('h3');
 var room = Cookies.get('roomId');
-// var room = document.cookie.slice(5);
 
-socket.on('connect', function () {
+socket.on('connect', function() {
   h1Element.innerHTML = `inside socket connect, room is ${room}`;
   socket.emit('createRoom', room);
 });

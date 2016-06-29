@@ -3,10 +3,13 @@
   "description": "starting repo for production project",
   "main": "index.js",
   "authors": [
-    "Austin <austin.lyon@gmail.com>"
+    "Austin <austin.lyon@gmail.com>",
+    "Austin <anwaukoni@gmail.com>",
+    "Matt <mclaugmg@gmail.com>",
+    "Michael <michael.james.blanchard@gmail.com>"
   ],
   "license": "ISC",
-  "homepage": "https://github.com/austinlyon/project-start",
+  "homepage": "https://github.com/echoLoJS/project-start",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -15,6 +18,7 @@
     "tests"
   ],
   "dependencies": {
-    "cookies-js": "^1.2.2"
+    "cookies-js": "^1.2.2",
+    "socket.io-client": "^1.4.6"
   }
 }
