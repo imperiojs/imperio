@@ -1,7 +1,7 @@
 "use strict"; // eslint-disable-line
 const jwt = require('jsonwebtoken');
 const uuid = require('node-uuid');
-const keys = require('./../keys.js');
+const keys = require('./../../keys.js');
 const jwtController = {};
 
 jwtController.createTokenFrom = (roomId, res) => {
