@@ -5,6 +5,7 @@ logs
 npm-debug.log*
 mobileBundle.js
 mobileBundle.js.map
+keys.js
 
 # Runtime data
 pids
