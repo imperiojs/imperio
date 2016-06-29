@@ -6,6 +6,8 @@ const accelDiv = document.getElementById('accel');
 const gyroDiv = document.getElementById('gyro');
 
 const room = Cookies.get('roomId');
+document.getElementById('nonceContainer').innerHTML = `Enter this into your phone,
+please: ${Cookies.get('nonce')}`;
 
 socket.on('connect', () => {
   h6Element.innerHTML = `Socket connection, in ${room}`;
@@ -19,7 +21,8 @@ socket.on('acceleration', (accelObject) => {
 });
 
 socket.on('gyroscope', (gyroObject) => {
-  gyroDiv.innerHTML = `alpha is ${gyroObject.alpha}, beta is ${gyroObject.beta}, gamma is ${gyroObject.gamma}`;
+  gyroDiv.innerHTML = `alpha is ${gyroObject.alpha},
+  beta is ${gyroObject.beta}, gamma is ${gyroObject.gamma}`;
 });
 
 function changeBody() {
@@ -33,7 +36,3 @@ function changeBody() {
     // bodyElement.innerHTML = 'Hello, EchoLoJS';
   }
 }
-
-(function() {
-  document.getElementById('nonceContainer').innerHTML = 'Enter this into your phone, please: ' + Cookies.get('nonce');
-})();
