@@ -4,6 +4,13 @@ const bodyElement = document.querySelector('body');
 const h6Element = document.querySelector('h6');
 const accelDiv = document.getElementById('accel');
 const gyroDiv = document.getElementById('gyro');
+const aX = document.getElementById('acceleration-x');
+const aY = document.getElementById('acceleration-y');
+const aZ = document.getElementById('acceleration-z');
+const alpha = document.getElementById('alpha');
+const beta = document.getElementById('beta');
+const gamma = document.getElementById('gamma');
+
 
 const room = Cookies.get('roomId');
 document.getElementById('nonceContainer').innerHTML = `Enter this into your phone,
@@ -17,12 +24,16 @@ socket.on('connect', () => {
 socket.on('tap', changeBody);
 
 socket.on('acceleration', (accelObject) => {
-  accelDiv.innerHTML = `Ax is ${accelObject.x}, Ay is ${accelObject.y}, Az is ${accelObject.z}`;
+  aX.innerHTML = `${accelObject.x}`;
+  aY.innerHTML = `${accelObject.y}`;
+  aZ.innerHTML = `${accelObject.z}`;  
 });
 
 socket.on('gyroscope', (gyroObject) => {
-  gyroDiv.innerHTML = `alpha is ${gyroObject.alpha},
-  beta is ${gyroObject.beta}, gamma is ${gyroObject.gamma}`;
+  alpha.innerHTML = `${gyroObject.alpha}`;
+  beta.innerHTML = `${gyroObject.beta}`;
+  gamma.innerHTML = `${gyroObject.gamma}`;
+
 });
 
 function changeBody() {

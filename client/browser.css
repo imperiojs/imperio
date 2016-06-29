@@ -13,3 +13,10 @@ body {
     color: black;
     background-color:white;
 }
+
+
+table td {
+    border: 1px solid white;
+    width: 400px;
+    font-size: 0.75em;
+}
