@@ -2,12 +2,16 @@ const webpack = require('webpack');
 
 module.exports = [
   {
-    name: 'client side output to ./client',
-    devtool: 'source-map', // or use source-map
-    entry: `${__dirname}/client/mobile.js`,
+    name: 'client side output to ./library',
+    devtool: 'source-map', // or use source-map-eval
+    entry: `${__dirname}/library/client/mainClient.js`,
     output: {
-      path: `${__dirname}/client/`,
-      filename: 'mobileBundle.js',
+      path: `${__dirname}/client/lib/echoLoJS`,
+      filename: 'echoLoJS-library.js',
+      library: 'echoLoJS-library',
+      libraryTarget: 'umd', // This is exporting as a universal module
+      umdNamedDefine: true,
+      // explore externals for things we may not want to include in our bundle
     },
     watch: true,
     module: {
