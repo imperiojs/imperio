@@ -5,13 +5,19 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/server.js",
+    "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --progress",
     "test": "mocha ./test/test.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/echoLoJS/project-start.git"
   },
-  "author": "",
+  "authors": [
+    "Austin <austin.lyon@gmail.com>",
+    "Austin <anwaukoni@gmail.com>",
+    "Matt <mclaugmg@gmail.com>",
+    "Michael <michael.james.blanchard@gmail.com>"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/echoLoJS/project-start/issues"
@@ -19,15 +25,31 @@
   "homepage": "https://github.com/echoLoJS/project-start#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "browser-request": "^0.3.3",
     "cookie-parser": "^1.4.3",
+    "cookies-js": "^1.2.2",
+    "ejs": "^2.4.2",
     "express": "^4.14.0",
     "express-useragent": "^0.2.4",
+    "jsonwebtoken": "^7.0.1",
+    "node-uuid": "^1.4.7",
     "socket.io": "^1.4.6"
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "nodemon": "^1.9.2",
+    "webpack": "^1.13.1",
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-react-transform": "^2.0.2",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "react-transform-hmr": "^1.0.4",
+    "eslint": "^2.13.1",
     "eslint-config-airbnb": "^9.0.1",
-    "socket.io-client": "^1.4.6",
-    "nodemon": "^1.9.2"
+    "eslint-plugin-import": "^1.9.2",
+    "eslint-plugin-jsx-a11y": "^1.5.3",
+    "eslint-plugin-react": "^5.2.2",
+    "socket.io-client": "^1.4.6"
   }
 }

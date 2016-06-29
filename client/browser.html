@@ -5,7 +5,47 @@
     <title>EchoLoJS Proof of Concept</title>
     <link rel="stylesheet" type="text/css" href="./browser.css">
   </head>
-  <body class="class1">Hello, EchoLoJS</body>
+
+  <body class="class1">
+    <h1>Hello, EchoLoJSON</h1>
+    <div id='nonceContainer'></div>
+    <div id="accel">
+      <table>
+        <tr>
+          <td>Ax</td>
+          <td id="acceleration-x"></td> 
+        </tr>
+        <tr>
+          <td>Ay</td>
+          <td id="acceleration-y"></td> 
+        </tr>
+        <tr>
+          <td>Az</td>
+          <td id="acceleration-z"></td> 
+        </tr>
+      </table>
+    </div>
+    <div id="gyro">
+      <table>
+        <tr>
+          <td>Alpha</td>
+          <td id="alpha"></td> 
+        </tr>
+        <tr>
+          <td>Beta</td>
+          <td id="beta"></td> 
+        </tr>
+        <tr>
+          <td>Gamma</td>
+          <td id="gamma"></td> 
+        </tr>
+      </table>
+    </div>
+
+    <h6></h6>
+  </body>
+
   <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+  <script src="./lib/cookies-js/dist/cookies.js"></script>
   <script src="./browser.js"></script>
 </html>
