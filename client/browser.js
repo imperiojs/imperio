@@ -13,13 +13,10 @@ const beta = document.getElementById('beta');
 const gamma = document.getElementById('gamma');
 const room = Cookies.get('roomId');
 
+// const echo = require('./../library/client/mainClient.js');
+
 // Add nonce code to screen for mobile users to enter
 document.getElementById('nonceContainer').innerHTML = `Mobile code: ${Cookies.get('nonce')}`;
-// Use roomId from cookies to create a room
-socket.on('connect', () => {
-  h6Element.innerHTML = `Socket connection, in ${room}`;
-  socket.emit('createRoom', room);
-});
 
 function changeBodyClass() {
   if (bodyElement.classList.contains('class1')) {
@@ -32,20 +29,24 @@ function changeBodyClass() {
 }
 
 function updateAccelerationData(accelerationDataObject) {
-  if (accelerationDataObject.x && accelerationDataObject.y && accelerationDataObject.z) {
-    aX.innerHTML = `${accelerationDataObject.x}`;
-    aY.innerHTML = `${accelerationDataObject.y}`;
-    aZ.innerHTML = `${accelerationDataObject.z}`;
-  }
+  aX.innerHTML = `${accelerationDataObject.x}`;
+  aY.innerHTML = `${accelerationDataObject.y}`;
+  aZ.innerHTML = `${accelerationDataObject.z}`;
 }
 
 function updateGyroscopeData(gyroscopeDataObject) {
-  if (gyroscopeDataObject.alpha && gyroscopeDataObject.beta && gyroscopeDataObject.gamma) {
-    alpha.innerHTML = `${gyroscopeDataObject.alpha}`;
-    beta.innerHTML = `${gyroscopeDataObject.beta}`;
-    gamma.innerHTML = `${gyroscopeDataObject.gamma}`;
-  }
+  alpha.innerHTML = `${gyroscopeDataObject.alpha}`;
+  beta.innerHTML = `${gyroscopeDataObject.beta}`;
+  gamma.innerHTML = `${gyroscopeDataObject.gamma}`;
 }
+
+
+
+// Use roomId from cookies to create a room
+socket.on('connect', () => {
+  h6Element.innerHTML = `Socket connection, in ${room}`;
+  socket.emit('createRoom', room);
+});
 
 // Define socket listeners and callback functions
 socket.on('tap', changeBodyClass);
