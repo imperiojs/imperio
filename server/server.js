@@ -75,6 +75,14 @@ io.on('connection', socket => {
     console.log('A user has disconnected');
     io.emit('user disconnected');
   });
+  socket.on('acceleration', (room, accObject) => {
+    console.log(accObject);
+    io.sockets.in(room).emit('acceleration', accObject);
+  });
+  socket.on('gyroscope', (room, gyroObject) => {
+    console.log(gyroObject);
+    io.sockets.in(room).emit('gyroscope', gyroObject);
+  });
 });
 
 /* ------------------
