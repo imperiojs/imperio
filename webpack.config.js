@@ -1,15 +1,6 @@
 const webpack = require('webpack');
 
 module.exports = [
-  // {
-  //   name: 'server code, output to ./server',
-  //   entry: `${__dirname}/server/server.js`,
-  //   output: {
-  //     filename: `${__dirname}/server/server.js`,
-  //   },
-  //   watch: true,
-  //   target: 'node',
-  // },
   {
     name: 'client side output to ./client',
     devtool: 'source-map', // or use source-map
