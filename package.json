@@ -12,7 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/echoLoJS/project-start.git"
   },
-  "author": "",
+  "authors": [
+    "Austin <austin.lyon@gmail.com>",
+    "Austin <anwaukoni@gmail.com>",
+    "Matt <mclaugmg@gmail.com>"
+    "Michael <michael.james.blanchard@gmail.com>",
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/echoLoJS/project-start/issues"

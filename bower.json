@@ -3,10 +3,13 @@
   "description": "starting repo for production project",
   "main": "index.js",
   "authors": [
-    "Austin <austin.lyon@gmail.com>"
+    "Austin <austin.lyon@gmail.com>",
+    "Austin <anwaukoni@gmail.com>",
+    "Matt <mclaugmg@gmail.com>"
+    "Michael <michael.james.blanchard@gmail.com>",
   ],
   "license": "ISC",
-  "homepage": "https://github.com/austinlyon/project-start",
+  "homepage": "https://github.com/echoLoJS/project-start",
   "ignore": [
     "**/.*",
     "node_modules",
