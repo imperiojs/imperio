@@ -23,6 +23,7 @@ mobileController.handlePost = function(connectRequests) {
     if (req.useragent && req.useragent.isMobile) {
       console.log('post is from Mobile: ', req.body);
       // if correct then redirect to tap page
+      // TODO how do we allow the developer to link up their input that sends the nonce with our module?
       let nonce = req.body.codeCheck;
       if (connectRequests.hasOwnProperty(nonce)) {
         let roomId = connectRequests[nonce].roomId;

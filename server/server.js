@@ -1,7 +1,7 @@
 "use strict"; // eslint-disable-line
 const express = require('express');
 const app = express();
-const server = require('http').Server(app); //eslint-disable-line
+const server = require('http').Server(app); // eslint-disable-line
 const io = require('socket.io')(server);
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -31,8 +31,8 @@ app.get('/',
       res.sendFile(path.join(`${__dirname}/../client/browser.html`));
       // res.render(`../client/browser.html`);
     } else if (req.useragent && req.useragent.isMobile) {
-      //TODO if token is on request, sent to tap in appropriate room
-      res.render(`${__dirname}/../client/rootmobile`, {error: null});
+      // TODO if token is on request, sent to tap in appropriate room
+      res.render(`${__dirname}/../client/rootmobile`, { error: null });
       // res.sendFile(path.join(`${__dirname}/../client/mobile.html`));
     }
   }
@@ -40,13 +40,20 @@ app.get('/',
 app.post('/',
   mobileController.handlePost(activeConnectRequests),
   (req, res) => {
-    res.render(`${__dirname}/../client/tapmobile`, {error: null});
+    if (req.useragent && req.useragent.isMobile) {
+      // TODO Validate nonce match, if it doesn't, serve rootmobile
+      res.render(`${__dirname}/../client/tapmobile`, { error: null });
+    } else {
+      res.status(404)
+         .render(`${__dirname}/../client/browser.html`, { error: 'NO POST' });
+    }
   }
 );
 // 404 error on invalid endpoint
 app.get('*', (req, res) => {
   res.status(404)
-     .render(`${__dirname}/../client/rootmobile`,{error: "Please enter code to connect to browser"});
+     .render(`${__dirname}/../client/rootmobile`,
+             { error: 'Please enter code to connect to browser' });
 });
 
 /* ------------------
@@ -57,6 +64,7 @@ io.on('connection', socket => {
   console.log('A socket has a connection');
   socket.on('createRoom', room => {
     console.log(`Joined ${room}`);
+    // decrypt token?
     socket.join(room);
   });
   socket.on('tap', room => {
