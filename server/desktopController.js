@@ -1,4 +1,4 @@
-"use strict";
+"use strict"; // eslint-disable-line
 const jwtController = require('./jwtController.js');
 const nonceController = require('./nonceController.js');
 const path = require('path');
