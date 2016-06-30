@@ -11,12 +11,14 @@ const aZ = document.getElementById('acceleration-z');
 const alpha = document.getElementById('alpha');
 const beta = document.getElementById('beta');
 const gamma = document.getElementById('gamma');
-const room = Cookies.get('roomId');
+const room = frontEndEcho.Cookies.get('roomId');
 
 // const echo = require('./../library/client/mainClient.js');
 
+const test1 = frontEndEcho.test1;
+
 // Add nonce code to screen for mobile users to enter
-document.getElementById('nonceContainer').innerHTML = `Mobile code: ${Cookies.get('nonce')}`;
+document.getElementById('nonceContainer').innerHTML = `Mobile code: ${frontEndEcho.Cookies.get('nonce')}`;
 
 function changeBodyClass() {
   if (bodyElement.classList.contains('class1')) {

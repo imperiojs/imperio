@@ -1,6 +1,11 @@
 'use strict';
 const socket = io();
-const Cookie = require('cookies-js');
+import Cookies from './../../client/lib/cookies-js/dist/cookies.js';
 let frontEndEcho = {};
+frontEndEcho.Cookies = Cookies;
 
-module.exports = frontEndEcho;
+if (typeof module === 'undefined')
+  module.exports = frontEndEcho;
+else {
+  window.frontEndEcho = frontEndEcho;
+}
