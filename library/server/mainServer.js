@@ -1,37 +1,45 @@
-"use strict";
+"use strict"; // eslint-disable-line
 function initializeEcho(server) {
-  let Echo = {};
-  Echo.test = 'console frog is great';
+  const Echo = {};
   Echo.desktopController = require('./desktopController.js');
   Echo.mobileController = require('./mobileController.js');
   Echo.activeConnectRequests = {};
-  console.log(`echo is: `, Echo);
 
-  Echo.init = function() {
-    let that = this;
-    console.log(that);
-    return function(req, res, next) {
-      // if this is a get request (for now, at '/'), run these
-      console.log(`The request method is: ${req.method}`);
+  Echo.init = function echoInit() {
+    const that = this;
+    // Include our dependency middleware
+    const bodyParser = require('body-parser');
+    const cookieParser = require('cookie-parser');
+    const useragent = require('express-useragent');
+
+    return (req, res, next) => {
+      // create an object on the req object that we can store stuff in
+      req.echo = {};
+      req.echo.connected = false;
+
+      // Run our dependency middleware
+      useragent.express()(req, res, () => {});
+      bodyParser.urlencoded({ extended: true })(req, res, () => {});
+      cookieParser()(req, res, () => {});
+
       if (req.method === 'GET') {
+        // If this is a get request (for now, at '/'), run these
         // Only execute this func if we're accessing it from a desktop
         that.desktopController.handleRequest(req, res, that.activeConnectRequests);
         // Only execute this func if we're accessing it from a mobile device
         that.mobileController.handleRequest(req, res, that.activeConnectRequests);
-      }
-      // else if this is a post request (for now, at '/'), run these
-      else if (req.method === 'POST') {
+      } else if (req.method === 'POST') {
+        // Else if this is a post request (for now, at '/'), run these
         that.mobileController.handlePost(req, res, that.activeConnectRequests);
       }
 
       next();
-    }
+    };
   };
 
-  console.log('echo is (after init function): ', Echo);
-  // etc etc
+  // uh oh
   const io = require('socket.io')(server);
-  // Echo.socket = io;
+  Echo.socket = io;
 
   io.on('connection', socket => {
     console.log('A socket has a connection');

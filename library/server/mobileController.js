@@ -11,6 +11,7 @@ mobileController.handleRequest = function(req, res, connectRequests) {
     if (token) {
       roomId = jwtController.getRoomIdFrom(token);
       res.cookie('roomId', roomId); // DEBUG this is for reference?
+      req.echo.connected = true;
     }
   }
 };
@@ -27,6 +28,7 @@ mobileController.handlePost = (req, res, connectRequests) => {
       console.log('the nonce exists and matches to roomId:', roomId);
       jwtController.createTokenFrom(roomId, res);
       res.cookie('roomId', roomId); // DEBUG this is for reference?
+      req.echo.connected = true;
     }
     // if incorrect then redirect to rootmobile page with error message
   }
