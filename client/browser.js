@@ -13,12 +13,9 @@ const beta = document.getElementById('beta');
 const gamma = document.getElementById('gamma');
 const room = frontEndEcho.Cookies.get('roomId');
 
-// const echo = require('./../library/client/mainClient.js');
-
-const test1 = frontEndEcho.test1;
-
 // Add nonce code to screen for mobile users to enter
-document.getElementById('nonceContainer').innerHTML = `Mobile code: ${frontEndEcho.Cookies.get('nonce')}`;
+document.getElementById('nonceContainer').innerHTML = `Mobile code: 
+  ${frontEndEcho.Cookies.get('nonce')}`;
 
 function changeBodyClass() {
   if (bodyElement.classList.contains('class1')) {
@@ -41,8 +38,6 @@ function updateGyroscopeData(gyroscopeDataObject) {
   beta.innerHTML = `${gyroscopeDataObject.beta}`;
   gamma.innerHTML = `${gyroscopeDataObject.gamma}`;
 }
-
-
 
 // Use roomId from cookies to create a room
 socket.on('connect', () => {
