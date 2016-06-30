@@ -40,13 +40,15 @@ function updateGyroscopeData(gyroscopeDataObject) {
   gamma.innerHTML = `${gyroscopeDataObject.gamma}`;
 }
 
-// Use roomId from cookies to create a room
-socket.on('connect', () => {
+function showSocketConnection() {
   h6Element.innerHTML = `Socket connection, in ${room}`;
-  socket.emit('createRoom', room);
-});
+}
+
+// Use roomId from cookies to create a room
+frontEndEcho.desktopRoomSetup(showSocketConnection);
 
 // Define socket listeners and callback functions
-socket.on('tap', changeBodyClass);
-socket.on('acceleration', updateAccelerationData);
-socket.on('gyroscope', updateGyroscopeData);
+frontEndEcho.desktopTapHandler(changeBodyClass);
+frontEndEcho.desktopAccelHandler(updateAccelerationData);
+frontEndEcho.desktopGyroHandler(updateGyroscopeData);
+
