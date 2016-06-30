@@ -3,8 +3,8 @@ import getCookie from './../getCookie.js';
 const room = getCookie('roomId');
 
 // gyroscope data
-const mobileGyro = (callback) => {
-  window.ondeviceorientation = function (event) {
+const mobileGyro = callback => {
+  window.ondeviceorientation = event => {
     const alpha = Math.round(event.alpha);
     const beta = Math.round(event.beta);
     const gamma = Math.round(event.gamma);
@@ -14,7 +14,7 @@ const mobileGyro = (callback) => {
       gamma,
     };
     socket.emit('gyroscope', room, gyroObject);
-    callback();
+    callback(gyroObject);
   };
 };
 

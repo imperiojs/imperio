@@ -1,57 +1,24 @@
-// var request = require('browser');
-var socket = io();
-
 var h1Element = document.querySelector('h1');
 var h2Element = document.querySelector('h2');
 var h3Element = document.querySelector('h3');
-// var room = frontEndEcho.Cookies.get('roomId');
-var room = document.cookie.slice(7, 43);
 
-socket.on('connect', function() {
-  h1Element.innerHTML = `inside socket connect, room is ${room}`;
-  socket.emit('createRoom', room);
-});
+frontEndEcho.mobileRoomSetup(showRoomName);
 
-function printAccelerationData(x, y, z) {
-  h2Element.innerHTML = `Ax is ${x}, Ay is ${y}, Az is ${z}`;
+// handle accel data using our library
+frontEndEcho.mobileAccelShare(printAccelerationData);
+
+// handle gyro using our library
+frontEndEcho.mobileGyroShare(printGyroscopeData);
+
+function printAccelerationData(accObj) {
+  h2Element.innerHTML = `Ax is ${accObj.x}, Ay is ${accObj.y}, Az is ${accObj.z}`;
 }
 
-frontEndEcho.mobileAccelShare(printAccelerationData(ax, ay, az));
-
-function printGyroscopeData(alpha, beta, gamma) {
-  h3Element.innerHTML = `alpha is ${alpha}, beta is ${beta}, gamma is ${gamma}`;
+function printGyroscopeData(gyroObj) {
+  h3Element.innerHTML = `alpha is ${gyroObj.alpha},
+    beta is ${gyroObj.beta}, gamma is ${gyroObj.gamma}`;
 }
 
-frontEndEcho.mobileGyroShare(printGyroscopeData(alpha, beta, gamma));
-// printAccelerationData(ax, ay, az);
-// accelerometer data
-// window.ondevicemotion = function (event) {
-//   var ax = Math.round(event.accelerationIncludingGravity.x);
-//   var ay = Math.round(event.accelerationIncludingGravity.y);
-//   var az = Math.round(event.accelerationIncludingGravity.z);
-//   var rotation = event.rotationRate;
-//   if (rotation != null) {
-//     var arAlpha = Math.round(rotation.alpha);
-//     var arBeta = Math.round(rotation.beta);
-//     var arGamma = Math.round(rotation.gamma);
-//   }
-//   var accObject = {
-//     x: ax,
-//     y: ay,
-//     z: az,
-//   };
-//   socket.emit('acceleration', room, accObject);
-// };
-
-// gyroscope data
-// window.ondeviceorientation = function (event) {
-//   var alpha = Math.round(event.alpha);
-//   var beta = Math.round(event.beta);
-//   var gamma = Math.round(event.gamma);
-//   var gyroObject = {
-//     alpha,
-//     beta,
-//     gamma,
-//   };
-//   socket.emit('gyroscope', room, gyroObject);
-// };
+function showRoomName() {
+  h1Element.innerHTML = `inside socket connection, room is good`;
+}
