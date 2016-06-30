@@ -1,3 +1,7 @@
 const socket = io();
-import getCookie from './../getCookie.js';
-const room = getCookie('roomId');
+
+const tapHandle = callback => {
+  socket.on('tap', callback);
+};
+
+module.exports = tapHandle;
