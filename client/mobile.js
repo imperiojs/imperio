@@ -6,37 +6,24 @@ var h2Element = document.querySelector('h2');
 var h3Element = document.querySelector('h3');
 var room = Cookies.get('roomId');
 
+function printAccelerationData(x, y, z) {
+  h2Element.innerHTML = `Ax is ${x}, Ay is ${y}, Az is ${z}`;
+}
+
+function printGyroscopeData(alpha, beta, gamma) {
+  h3Element.innerHTML = `alpha is ${alpha}, beta is ${beta}, gamma is ${gamma}`;
+}
+
 socket.on('connect', function() {
   h1Element.innerHTML = `inside socket connect, room is ${room}`;
   socket.emit('createRoom', room);
 });
-
-// function to emit tap event
-function emitTap() {
-  console.log('Tap Event Emitted');
-  socket.emit('tap', room);
-}
-
-// tapping into phone sensor functionality
-// if (window.DeviceMotionEvent==undefined) {
-// }
-
-function printAccelerationData(x, y, z) {
-  h2Element.innerHTML = `Ax is ${x}, Ay is ${y}, Az is ${z}`;
-}
 
 // accelerometer data
 window.ondevicemotion = function (event) {
   var ax = Math.round(event.accelerationIncludingGravity.x);
   var ay = Math.round(event.accelerationIncludingGravity.y);
   var az = Math.round(event.accelerationIncludingGravity.z);
-  var rotation = event.rotationRate;
-  if (rotation != null) {
-    var arAlpha = Math.round(rotation.alpha);
-    var arBeta = Math.round(rotation.beta);
-    var arGamma = Math.round(rotation.gamma);
-  }
-  // h2Element.innerHTML= 'inside accelerometer';
   printAccelerationData(ax, ay, az);
   var accObject = {
     x: ax,
@@ -45,10 +32,6 @@ window.ondevicemotion = function (event) {
   };
   socket.emit('acceleration', room, accObject);
 };
-
-function printGyroscopeData(alpha, beta, gamma) {
-  h3Element.innerHTML = `alpha is ${alpha}, beta is ${beta}, gamma is ${gamma}`;
-}
 
 // gyroscope data
 window.ondeviceorientation = function (event) {
@@ -63,3 +46,9 @@ window.ondeviceorientation = function (event) {
   };
   socket.emit('gyroscope', room, gyroObject);
 };
+
+// function to emit tap event
+function emitTap() {
+  console.log('Tap Event Emitted');
+  socket.emit('tap', room);
+}

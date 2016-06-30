@@ -8,9 +8,9 @@ module.exports = [
     output: {
       path: `${__dirname}/client/lib/echoLoJS`,
       filename: 'echoLoJS-library.js',
-      library: 'echoLoJS-library',
-      libraryTarget: 'umd', // This is exporting as a universal module
-      umdNamedDefine: true,
+      // library: 'echoLoJS-library',
+      // libraryTarget: 'umd', // This is exporting as a universal module
+      // umdNamedDefine: true,
       // explore externals for things we may not want to include in our bundle
     },
     watch: true,
