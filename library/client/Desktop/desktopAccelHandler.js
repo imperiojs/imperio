@@ -1,3 +1,7 @@
 const socket = io();
-import getCookie from './../getCookie.js';
-const room = getCookie('roomId');
+
+const accelHandle = callback => {
+  socket.on('acceleration', callback);
+};
+
+module.exports = accelHandle;
