@@ -29,12 +29,12 @@ module.exports = [
       // new webpack.HotModuleReplacementPlugin(),
     ],
   // IF WE WANT TO USE THE WEBPACK SERVER - NOT USING FOR NOW SINCE WE HAVE OUR OWN SERVER.
-  // devServer: {
-  // contentBase: "./public",
-  //   colors: true,
-  //   historyApiFallback: true,
-  //   inline: true,
-  //   hot: true,
-  // },
+    // devServer: {
+    //   contentBase: './library/client/mainClient.js',
+    //   colors: true,
+    //   historyApiFallback: true,
+    //   inline: true,
+    //   hot: true,
+    // },
   },
 ];

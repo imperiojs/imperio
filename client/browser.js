@@ -11,13 +11,14 @@ const aZ = document.getElementById('acceleration-z');
 const alpha = document.getElementById('alpha');
 const beta = document.getElementById('beta');
 const gamma = document.getElementById('gamma');
-const room = frontEndEcho.Cookies.get('roomId');
+const room = document.cookie.slice(7, 43);
 
 // Add nonce code to screen for mobile users to enter
-document.getElementById('nonceContainer').innerHTML = `Mobile code: 
-  ${frontEndEcho.Cookies.get('nonce')}`;
+document.getElementById('nonceContainer').innerHTML = `Mobile code:
+  ${document.cookie.slice(-5)}`;
 
 function changeBodyClass() {
+  console.log(`let's change body`);
   if (bodyElement.classList.contains('class1')) {
     bodyElement.classList.remove('class1');
     bodyElement.classList.add('class2');
@@ -39,13 +40,15 @@ function updateGyroscopeData(gyroscopeDataObject) {
   gamma.innerHTML = `${gyroscopeDataObject.gamma}`;
 }
 
-// Use roomId from cookies to create a room
-socket.on('connect', () => {
+function showSocketConnection() {
   h6Element.innerHTML = `Socket connection, in ${room}`;
-  socket.emit('createRoom', room);
-});
+}
+
+// Use roomId from cookies to create a room
+frontEndEcho.desktopRoomSetup(showSocketConnection);
 
 // Define socket listeners and callback functions
-socket.on('tap', changeBodyClass);
-socket.on('acceleration', updateAccelerationData);
-socket.on('gyroscope', updateGyroscopeData);
+frontEndEcho.desktopTapHandler(changeBodyClass);
+frontEndEcho.desktopAccelHandler(updateAccelerationData);
+frontEndEcho.desktopGyroHandler(updateGyroscopeData);
+
