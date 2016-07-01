@@ -1,15 +1,16 @@
 {
-  "name": "project-start",
-  "description": "starting repo for production project",
-  "main": "index.js",
+  "name": "imperio",
+  "version": "0.0.1",
+  "description": "Control your desktop experience from a mobile device.",
+  "main": "./dist/imperio.js",
   "authors": [
     "Austin <austin.lyon@gmail.com>",
     "Austin <anwaukoni@gmail.com>",
     "Matt <mclaugmg@gmail.com>",
     "Michael <michael.james.blanchard@gmail.com>"
   ],
-  "license": "ISC",
-  "homepage": "https://github.com/echoLoJS/project-start",
+  "license": "MIT",
+  "homepage": "https://github.com/imperiojs/imperio",
   "ignore": [
     "**/.*",
     "node_modules",

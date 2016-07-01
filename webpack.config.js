@@ -2,18 +2,16 @@ const webpack = require('webpack');
 
 module.exports = [
   {
-    name: 'client side output to ./library',
     devtool: 'source-map', // or use source-map-eval
-    entry: `${__dirname}/library/client/mainClient.js`,
+    entry: `${__dirname}/lib/client/mainClient.js`,
     output: {
-      path: `${__dirname}/client/lib/echoLoJS`,
-      filename: 'echoLoJS-library.js',
-      // library: 'echoLoJS-library',
+      path: `${__dirname}/dist`,
+      filename: 'imperio.js',
+      // library: 'imperio',
       // libraryTarget: 'umd', // This is exporting as a universal module
       // umdNamedDefine: true,
       // explore externals for things we may not want to include in our bundle
     },
-    watch: true,
     module: {
       loaders: [
         {
@@ -24,10 +22,10 @@ module.exports = [
         //{},
       ],
     },
-    plugins: [
-      new webpack.BannerPlugin('Copyright MA\'AM inc.'),
-      // new webpack.HotModuleReplacementPlugin(),
-    ],
+    // plugins: [
+    //   new webpack.BannerPlugin('Copyright Imperiojs'),
+    //   // new webpack.HotModuleReplacementPlugin(),
+    // ],
   // IF WE WANT TO USE THE WEBPACK SERVER - NOT USING FOR NOW SINCE WE HAVE OUR OWN SERVER.
     // devServer: {
     //   contentBase: './library/client/mainClient.js',

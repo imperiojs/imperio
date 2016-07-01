@@ -1,12 +1,12 @@
 "use strict"; // eslint-disable-line
 /* eslint-disable no-console, global-require, no-param-reassign */
 function initializeEcho(server) {
-  const Echo = {};
-  Echo.desktopController = require('./desktopController.js');
-  Echo.mobileController = require('./mobileController.js');
-  Echo.activeConnectRequests = {};
+  const imperio = {};
+  imperio.desktopController = require('./lib/server/desktopController.js');
+  imperio.mobileController = require('./lib/server/mobileController.js');
+  imperio.activeConnectRequests = {};
 
-  Echo.init = function echoInit() {
+  imperio.init = function imperioInit() {
     console.log('init called');
     const that = this;
     // Include our dependency middleware
@@ -14,7 +14,7 @@ function initializeEcho(server) {
     const cookieParser = require('cookie-parser');
     const useragent = require('express-useragent');
 
-    function echoMiddleware(req, res, next) {
+    function imperioMiddleware(req, res, next) {
       if (req.method === 'GET') {
         // If this is a get request (for now, at '/'), run these
         // Only execute this func if we're accessing it from a desktop
@@ -33,12 +33,12 @@ function initializeEcho(server) {
     return (req, res, next) => {
       // console.log('middleware called');
       // Create an object on the req object that we can store stuff in
-      req.echo = {};
-      req.echo.connected = false;
+      req.imperio = {};
+      req.imperio.connected = false;
 
       // Bind our middleware dependencies, then finally our middleware function
       const bpArgs = { extended: true };
-      const em = echoMiddleware.bind(null, req, res, next);
+      const em = imperioMiddleware.bind(null, req, res, next);
       const cp = cookieParser().bind(null, req, res, em);
       const bp = bodyParser.urlencoded(bpArgs).bind(null, req, res, cp);
       const ua = useragent.express().bind(null, req, res, bp);
@@ -50,7 +50,7 @@ function initializeEcho(server) {
 
   // uh oh
   const io = require('socket.io')(server);
-  Echo.socket = io;
+  imperio.socket = io;
 
   io.on('connection', socket => {
     // console.log('A socket has a connection');
@@ -68,16 +68,15 @@ function initializeEcho(server) {
       io.emit('user disconnected');
     });
     socket.on('acceleration', (room, accObject) => {
-      // console.log(`accel evet received`);
+      // console.log(`accel event received`);
       io.sockets.in(room).emit('acceleration', accObject);
     });
     socket.on('gyroscope', (room, gyroObject) => {
-      // console.log(`gyro evet received`);
+      // console.log(`gyro event received`);
       io.sockets.in(room).emit('gyroscope', gyroObject);
     });
   });
-
-  return Echo;
+  return imperio;
 }
 
 module.exports = initializeEcho;
