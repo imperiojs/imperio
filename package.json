@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/echoLoJS/project-start.git"
+    "url": "git+https://github.com/imperiojs/imperio.git"
   },
   "authors": [
     "Austin <austin.lyon@gmail.com>",
@@ -20,9 +20,9 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/echoLoJS/project-start/issues"
+    "url": "https://github.com/imperiojs/imperio/issues"
   },
-  "homepage": "https://github.com/echoLoJS/project-start#readme",
+  "homepage": "https://github.com/imperiojs/imperio#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
     "browser-request": "^0.3.3",
