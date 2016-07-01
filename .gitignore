@@ -3,9 +3,7 @@
 logs
 *.log
 npm-debug.log*
-mobileBundle.js
-mobileBundle.js.map
-keys.js
+imperio.js.map
 
 # Runtime data
 pids
