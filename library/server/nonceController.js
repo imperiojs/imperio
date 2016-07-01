@@ -18,4 +18,7 @@ nonceController.generateConnectRequest = roomId => ({
   createdAt: Date.now(),
 });
 
+nonceController.connectRequestIsValid = (connectRequests, nonce) =>
+  connectRequests.hasOwnProperty(nonce);
+
 module.exports = nonceController;
