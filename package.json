@@ -4,7 +4,7 @@
   "description": "starting repo for production project",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server/server.js",
+    "start": "webpack --watch & nodemon server/server.js",
     "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --progress",
     "test": "mocha ./test/test.js"
   },
