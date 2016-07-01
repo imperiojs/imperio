@@ -1,5 +1,19 @@
-# EchoPhone
+# Imperio
 EchoPhone provides developers with an SDK that creates a bridge between native mobile inputs and sensor data with desktop interaction, requiring minimal code and knowledge of the underlying technologies.
+
+### Features
+#### Capturing Mobile inputs
+* Touch Gestures
+* Accelerometer
+* Gyroscope
+
+#### Phone to Desktop Connections
+* Sockets
+
+#### Various Forms of Authenticating Mobile to Desktop Sessions
+* URL + shortcode
+* Alphanumeric Client Password
+* Cookie/ Token Sessions
 
 ### Installation
 ```bash
