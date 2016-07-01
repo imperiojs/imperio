@@ -1,9 +1,9 @@
-const socket = io();
-import getCookie from './../getCookie.js';
-const room = getCookie('roomId');
+// const socket = io();
+// import getCookie from './../getCookie.js';
+// const room = getCookie('roomId');
 
 function emitTap() {
-  socket.emit('tap', room);
+  frontEndEcho.socket.emit('tap', frontEndEcho.room);
 }
 
 module.exports = emitTap;

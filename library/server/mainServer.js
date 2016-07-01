@@ -34,7 +34,7 @@ function initializeEcho(server) {
   // Echo.socket = io;
 
   io.on('connection', socket => {
-    console.log('A socket has a connection');
+    // console.log('A socket has a connection');
     socket.on('createRoom', room => {
       console.log(`Joined ${room}`);
       // decrypt token?
@@ -45,15 +45,15 @@ function initializeEcho(server) {
       io.sockets.in(room).emit('tap');
     });
     socket.on('disconnect', () => {
-      console.log('A user has disconnected');
+      // console.log('A user has disconnected');
       io.emit('user disconnected');
     });
     socket.on('acceleration', (room, accObject) => {
-      // console.log(accObject);
+      // console.log(`accel evet received`);
       io.sockets.in(room).emit('acceleration', accObject);
     });
     socket.on('gyroscope', (room, gyroObject) => {
-      // console.log(gyroObject);
+      // console.log(`gyro evet received`);
       io.sockets.in(room).emit('gyroscope', gyroObject);
     });
   });

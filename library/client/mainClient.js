@@ -1,18 +1,19 @@
 'use strict';
-// const socket = io();
+import getCookie from './getCookie.js';
 const frontEndEcho = {};
-// import Cookies from './../../client/lib/cookies-js/dist/cookies.js';
-// frontEndEcho.Cookies = Cookies;
-// require('./../../client/lib/cookies-js/dist/cookies.js');
+frontEndEcho.socket = io();
+frontEndEcho.room = getCookie('roomId');
+frontEndEcho.nonce = getCookie('nonce');
 frontEndEcho.mobileTapShare = require('./Mobile/mobileTapShare.js');
 frontEndEcho.mobileAccelShare = require('./Mobile/mobileAccelShare.js');
 frontEndEcho.mobileGyroShare = require('./Mobile/mobileGyroShare.js');
 frontEndEcho.mobileRoomSetup = require('./Mobile/mobileRoomSetup.js');
-frontEndEcho.DesktopTapHandler = require('./Desktop/desktopTapHandler.js');
-frontEndEcho.DesktopAccelHandler = require('./Desktop/desktopTapHandler.js');
-frontEndEcho.DesktopGyroHandler = require('./Desktop/desktopTapHandler.js');
-frontEndEcho.DesktopRoomSetup = require('./Desktop/desktopTapHandler.js');
+frontEndEcho.desktopTapHandler = require('./Desktop/desktopTapHandler.js');
+frontEndEcho.desktopAccelHandler = require('./Desktop/desktopAccelHandler.js');
+frontEndEcho.desktopGyroHandler = require('./Desktop/desktopGyroHandler.js');
+frontEndEcho.desktopRoomSetup = require('./Desktop/desktopRoomSetup.js');
 
+window.frontEndEcho = frontEndEcho;
 
-if (typeof module === 'undefined') module.exports = frontEndEcho;
-else window.frontEndEcho = frontEndEcho;
+// if (typeof module === 'undefined') module.exports = frontEndEcho;
+// else window.frontEndEcho = frontEndEcho;
