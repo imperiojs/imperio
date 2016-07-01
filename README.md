@@ -17,7 +17,7 @@ Imperio provides developers with an SDK that creates a bridge between native mob
 
 ## Installation
 ```bash
-npm install echo-phone
+npm install imperio-phone
 ```
 
 ## Getting Started
@@ -28,7 +28,7 @@ Client-side functionality can be accessed by:
 
 ```javascript
 <script src = 'https://cdn.socket.io/socket-io-1.4.5.js'></script>
-<script src = './client/lib/echoloJS/echoloJS-client.js'></script>
+<script src = './client/lib/imperio/imperio-client.js'></script>
 ```
 This above code needs to be included on the mobile browser and desktop browser.
 
@@ -40,11 +40,11 @@ Imperio's server functions are currently Express middleware. Implementing Imperi
 Imperio's server-side functionality can be enable with just a couple lines of javascrips:
 Just require the module and pass it the server object of your app
 ```javascript
-const echo = require('echo-phone')(server);
+const imperio = require('imperio-phone')(server);
 ```
 Then have your app use the returned object as middleware
 ```javascript
-app.use(echo.init());
+app.use(imperio.init());
 ```
 Imperio will handle the mobile-to-desktop connections for you!
 
@@ -54,12 +54,12 @@ In this example, we'll include a button in the mobile browser, which on "tap", w
 mobile.html :
 ```javascript
 <body>
-  <button type="button" name="button" onclick="frontEndEcho.mobileTapShare()">Tap Here</button>
+  <button type="button" name="button" class="tap" onclick="frontEndEcho.mobileTapShare()">Tap Here</button>
   <h2>Hello World</h2
 </body>
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <!-- <script src="./lib/cookies-js/dist/cookies.js"></script> -->
-<script src="./lib/echoLoJS/echoLoJS-library.js"></script>
+<script src="./lib/imperioLoJS/imperioLoJS-library.js"></script>
 </body>
 ```
 
@@ -79,9 +79,20 @@ desktopBrowser.html:
 </body>
 ```
 
-
 desktopBrowser.js
 ```javascript
+
+function changeBodyClass() {
+  // console.log(`let's change body`);
+  if (bodyElement.classList.contains('class1')) {
+    bodyElement.classList.remove('class1');
+    bodyElement.classList.add('class2');
+  } else {
+    bodyElement.classList.remove('class2');
+    bodyElement.classList.add('class1');
+  }
+}
+
 ```
 
 
@@ -95,7 +106,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const useragent = require('express-useragent');
 // *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-const echo = require('echo-phone')(server);
+const imperio = require('imperio-phone')(server);
 // *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
 app.use(express.static(path.join(`${__dirname}/../client`)));
@@ -104,7 +115,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.set('view engine', 'ejs');
 // *-*-*-*-*-*-*-*-*-
-app.use(echo.init());
+app.use(imperio.init());
 // *-*-*-*-*-*-*-*-*-
 
 // Handle Routes
