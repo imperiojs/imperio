@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack --watch",
-    "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --progress",
     "test": "mocha ./test/test.js"
   },
   "repository": {

@@ -22,10 +22,11 @@ module.exports = [
         //{},
       ],
     },
-    // plugins: [
-    //   new webpack.BannerPlugin('Copyright Imperiojs'),
-    //   // new webpack.HotModuleReplacementPlugin(),
-    // ],
+    plugins: [
+      new webpack.BannerPlugin('Copyright Imperiojs'),
+      new webpack.optimize.OccurenceOrderPlugin(),
+      // new webpack.optimize.UglifyJsPlugin(),
+    ],
   // IF WE WANT TO USE THE WEBPACK SERVER - NOT USING FOR NOW SINCE WE HAVE OUR OWN SERVER.
     // devServer: {
     //   contentBase: './library/client/mainClient.js',

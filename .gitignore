@@ -3,7 +3,6 @@
 logs
 *.log
 npm-debug.log*
-keys.js
 imperio.js.map
 
 # Runtime data
