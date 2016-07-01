@@ -1,6 +1,6 @@
 {
-  "name": "project-start",
-  "version": "1.0.0",
+  "name": "imperio",
+  "version": "0.0.1",
   "description": "starting repo for production project",
   "main": "index.js",
   "scripts": {
