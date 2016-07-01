@@ -1,8 +1,8 @@
-const socket = io();
-import getCookie from './../getCookie.js';
-const room = getCookie('roomId');
+// const socket = io();
+// import getCookie from './../getCookie.js';
+// const room = getCookie('roomId');
 
-const mobileRoomSetup = callback => {
+const mobileRoomSetup = (socket, room, callback) => {
   socket.on('connect', () => {
     socket.emit('createRoom', room);
     callback();

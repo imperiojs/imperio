@@ -1,9 +1,9 @@
-const socket = io();
-import getCookie from './../getCookie.js';
-const room = getCookie('roomId');
+// const socket = io();
+// import getCookie from './../getCookie.js';
+// const room = getCookie('roomId');
 
 // gyroscope data
-const mobileGyro = callback => {
+const mobileGyro = (socket, room, callback) => {
   window.ondeviceorientation = event => {
     const alpha = Math.round(event.alpha);
     const beta = Math.round(event.beta);

@@ -1,8 +1,8 @@
-const socket = io();
-import getCookie from './../getCookie.js';
-const room = getCookie('roomId');
+// const socket = io();
+// import getCookie from './../getCookie.js';
+// const room = getCookie('roomId');
 
-const mobileAccel = callback => {
+const mobileAccel = (socket, room, callback) => {
   window.ondevicemotion = event => {
     const ax = Math.round(event.accelerationIncludingGravity.x);
     const ay = Math.round(event.accelerationIncludingGravity.y);
