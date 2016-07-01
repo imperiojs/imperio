@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app); // eslint-disable-line
 const path = require('path');
-const echo = require('./../library/server/mainServer.js')(server); // ********
+const echo = require('./../library/server/mainServer.js')(server);
 
 app.use(express.static(path.join(`${__dirname}/../client`)));
 app.set('view engine', 'ejs');
@@ -30,10 +30,11 @@ app.post('/',
   (req, res) => {
     if (req.useragent && req.useragent.isMobile) {
       // TODO Validate nonce match, if it doesn't, serve rootmobile
+      console.log(req.echo);
       if (req.echo.connected) {
         res.render(`${__dirname}/../client/tapmobile`, { error: null });
       } else {
-        res.render(`${__dirname}/../client/taproot`, { error: null });
+        res.render(`${__dirname}/../client/rootmobile`, { error: null });
       }
     } else {
       res.status(404)
