@@ -4,7 +4,7 @@
   "description": "Control your desktop experience from a mobile device.",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --watch",
+    "start": "webpack --watch & PROD_ENV=1 webpack --watch",
     "test": "mocha ./test/test.js"
   },
   "repository": {
