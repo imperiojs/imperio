@@ -54,20 +54,16 @@ In this example, we'll include a button in the mobile browser, which on "tap", w
 mobile.html :
 ```javascript
 <body>
-  <button type="button" name="button" class="tap" onclick="frontEndEcho.mobileTapShare()">Tap Here</button>
+  <button type="button" name="button" class="tap" onclick="imperio.mobileTapShare()">Tap Here</button>
   <h2>Hello World</h2
 </body>
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-<!-- <script src="./lib/cookies-js/dist/cookies.js"></script> -->
 <script src="./lib/imperio/imperio.js"></script>
-</body>
 ```
-
-
-
 
 mobile.js:
 ```javascript
+imperio.mobileRoomSetup(imperio.socket, imperio.room);
 ```
 
 
@@ -83,7 +79,6 @@ desktopBrowser.js
 ```javascript
 
 function changeBodyClass() {
-  // console.log(`let's change body`);
   if (bodyElement.classList.contains('class1')) {
     bodyElement.classList.remove('class1');
     bodyElement.classList.add('class2');
@@ -121,9 +116,9 @@ app.use(imperio.init());
 // Handle Routes
 app.get('/', (req, res) => {
   if (req.useragent && req.useragent.isDesktop) {
-    res.sendFile(path.join(`${__dirname}/path/to/desktop/page`));
+    res.sendFile(path.join(`${__dirname}/path/to/desktopBrowser.html`));
   } else if (req.useragent && req.useragent.isMobile) {
-    res.sendFile(path.join(`${__dirname}/path/to/mobile/page`));
+    res.sendFile(path.join(`${__dirname}/path/to/mobile.html`));
   }
 });
 
@@ -135,5 +130,16 @@ server.listen(3000, () => {
 ### Available Functions
 All of the Functions
 
+### TODO
+
+- [ ] Tell Austin about adding parameter for non-Nonce implementation of SDK
+- [ ] Add different url form of authentication
+- [ ] Look at testing suite for Sockets and Implement some socket testing
+
+
+
 ### License
-To Kill
+MIT
+
+### On That Note....
+Go forth and build awesome things!
