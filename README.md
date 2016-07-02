@@ -28,7 +28,7 @@ Client-side functionality can be accessed by:
 
 ```javascript
 <script src = 'https://cdn.socket.io/socket-io-1.4.5.js'></script>
-<script src = './client/lib/imperio/imperio-client.js'></script>
+<script src = './client/lib/imperio/imperio.js'></script>
 ```
 This above code needs to be included on the mobile browser and desktop browser.
 
@@ -40,7 +40,7 @@ Imperio's server functions are currently Express middleware. Implementing Imperi
 Imperio's server-side functionality can be enable with just a couple lines of javascrips:
 Just require the module and pass it the server object of your app
 ```javascript
-const imperio = require('imperio-phone')(server);
+const imperio = require('imperio')(server);
 ```
 Then have your app use the returned object as middleware
 ```javascript
@@ -59,7 +59,7 @@ mobile.html :
 </body>
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <!-- <script src="./lib/cookies-js/dist/cookies.js"></script> -->
-<script src="./lib/imperioLoJS/imperioLoJS-library.js"></script>
+<script src="./lib/imperio/imperio.js"></script>
 </body>
 ```
 
@@ -106,7 +106,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const useragent = require('express-useragent');
 // *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-const imperio = require('imperio-phone')(server);
+const imperio = require('imperio')(server);
 // *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
 app.use(express.static(path.join(`${__dirname}/../client`)));
