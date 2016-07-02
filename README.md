@@ -128,7 +128,68 @@ server.listen(3000, () => {
 ```
 
 ### Available Functions
-All of the Functions
+#### Client Side Methods
+
+
+* instantiate our shared socket
+``` javascript
+imperio.socket = io();
+```
+
+* store roomID to pass to server for room creation and correctly routing the emissions
+``` javascript
+imperio.room = getCookie('roomId');
+```
+
+* store nonce to use to display and show mobile user how to connect
+``` javascript
+imperio.nonce = getCookie('nonce');
+```
+
+* take a tap event from mobile browser and emit the tap event
+``` javascript
+imperio.mobileTapShare = require('./Mobile/mobileTapShare.js');
+```
+* sets up listener for motion data from mobile browser and emits object containing x,y,z coords
+``` javascript
+imperio.mobileAccelShare = require('./Mobile/mobileAccelShare.js');
+```
+
+* sets up a listener for orientation data from mobile browser and emits object containing alpha, beta, and gamma data
+``` javascript
+imperio.mobileGyroShare = require('./Mobile/mobileGyroShare.js');
+```
+
+* establishes connection to socket and shares room it should connnect to
+``` javascript
+imperio.mobileRoomSetup = require('./Mobile/mobileRoomSetup.js');
+```
+
+* sets up listener for tap event on desktop browser
+``` javascript
+imperio.desktopTapHandler = require('./Desktop/desktopTapHandler.js');
+```
+
+* sets up listener for accel event/data on desktop browser
+``` javascript
+imperio.desktopAccelHandler = require('./Desktop/desktopAccelHandler.js');
+```
+
+* sets up listener for gyro event/data on desktop browser
+``` javascript
+imperio.desktopGyroHandler = require('./Desktop/desktopGyroHandler.js');
+```
+
+* establishes connection to socket and shares room it should connnect to
+``` javascript
+imperio.desktopRoomSetup = require('./Desktop/desktopRoomSetup.js');
+```
+
+
+#### Server Side Methods
+
+
+
 
 ### TODO
 
