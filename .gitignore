@@ -4,6 +4,7 @@ logs
 *.log
 npm-debug.log*
 imperio.js.map
+imperio.min.js.map
 
 # Runtime data
 pids
