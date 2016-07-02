@@ -1,12 +1,14 @@
 const webpack = require('webpack');
 
+const PROD = JSON.parse(process.env.PROD_ENV || '0');
+
 module.exports = [
   {
     devtool: 'source-map', // or use source-map-eval
     entry: `${__dirname}/lib/client/mainClient.js`,
     output: {
       path: `${__dirname}/dist`,
-      filename: 'imperio.js',
+      filename: PROD ? 'imperio.min.js' : 'imperio.js',
       // library: 'imperio',
       // libraryTarget: 'umd', // This is exporting as a universal module
       // umdNamedDefine: true,
@@ -22,10 +24,15 @@ module.exports = [
         //{},
       ],
     },
-    plugins: [
+    plugins: PROD ? [
       new webpack.BannerPlugin('Copyright Imperiojs'),
       new webpack.optimize.OccurenceOrderPlugin(),
-      // new webpack.optimize.UglifyJsPlugin(),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: { warnings: false },
+      }),
+    ] : [
+      new webpack.BannerPlugin('Copyright Imperiojs'),
+      new webpack.optimize.OccurenceOrderPlugin(),
     ],
   // IF WE WANT TO USE THE WEBPACK SERVER - NOT USING FOR NOW SINCE WE HAVE OUR OWN SERVER.
     // devServer: {
