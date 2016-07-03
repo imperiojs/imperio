@@ -13,11 +13,11 @@ Imperio provides developers with an SDK that creates a bridge between native mob
 #### Various Forms of Authenticating Mobile to Desktop Sessions
 * URL + shortcode
 * Alphanumeric Client Password
-* Cookie/ Token Sessions
+* Cookie/Token Sessions
 
 ## Installation
 ```bash
-npm install imperio-phone
+npm install imperio
 ```
 
 ## Getting Started
@@ -28,7 +28,7 @@ Client-side functionality can be accessed by:
 
 ```javascript
 <script src = 'https://cdn.socket.io/socket-io-1.4.5.js'></script>
-<script src = './client/lib/imperio/imperio.js'></script>
+<script src='./dist/imperio.min.js'></script>
 ```
 This above code needs to be included on the mobile browser and desktop browser.
 
@@ -42,6 +42,12 @@ Just require the module and pass it the server object of your app
 ```javascript
 const imperio = require('imperio')(server);
 ```
+
+Add a static route so your client will get the correct files from our node module
+```javascript
+app.use(express.static(path.join(`${__dirname}/../node_modules/imperio`)));
+```
+
 Then have your app use the returned object as middleware
 ```javascript
 app.use(imperio.init());
@@ -58,7 +64,7 @@ mobile.html :
   <h2>Hello World</h2
 </body>
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-<script src="./lib/imperio/imperio.js"></script>
+<script src='./dist/imperio.min.js'></script>
 ```
 
 mobile.js:
@@ -105,9 +111,7 @@ const imperio = require('imperio')(server);
 // *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
 app.use(express.static(path.join(`${__dirname}/../client`)));
-app.use(useragent.express()); // TODO tie this into our library somehow?
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(express.static(path.join(`${__dirname}/../node_modules/imperio`)));
 app.set('view engine', 'ejs');
 // *-*-*-*-*-*-*-*-*-
 app.use(imperio.init());
@@ -185,9 +189,7 @@ imperio.desktopGyroHandler = require('./Desktop/desktopGyroHandler.js');
 imperio.desktopRoomSetup = require('./Desktop/desktopRoomSetup.js');
 ```
 
-
 #### Server Side Methods
-
 
 
 
@@ -196,7 +198,6 @@ imperio.desktopRoomSetup = require('./Desktop/desktopRoomSetup.js');
 - [ ] Tell Austin about adding parameter for non-Nonce implementation of SDK
 - [ ] Add different url form of authentication
 - [ ] Look at testing suite for Sockets and Implement some socket testing
-
 
 
 ### License
