@@ -1,11 +1,18 @@
 "use strict"; // eslint-disable-line
 /* eslint-disable no-console, global-require, no-param-reassign */
-function initializeEcho(server) {
+function initializeImperio(server) {
   const imperio = {};
   imperio.desktopController = require('./lib/server/desktopController.js');
   imperio.mobileController = require('./lib/server/mobileController.js');
   imperio.activeConnectRequests = {};
 
+  /**
+   * Returns a function to be used as express middleware. Dependency middleware
+   * is invoked before imperio middleware is invoked. Middleware handles the
+   * creation of connection sessions and authenticates connections to these
+   * sessions.
+   * @return {function} express middleware
+   */
   imperio.init = function imperioInit() {
     console.log('init called');
     const that = this;
@@ -14,9 +21,14 @@ function initializeEcho(server) {
     const cookieParser = require('cookie-parser');
     const useragent = require('express-useragent');
 
+    /**
+     * Handles socket room connection and authentication
+     * @param {Object} req - request object
+     * @param {Object} res - response object
+     * @param {function} next - callback function to continue middleware chain
+     */
     function imperioMiddleware(req, res, next) {
       if (req.method === 'GET') {
-        // If this is a get request (for now, at '/'), run these
         // Only execute this func if we're accessing it from a desktop
         that.desktopController.handleRequest(req, res, that.activeConnectRequests);
         // Only execute this func if we're accessing it from a mobile device
@@ -30,8 +42,15 @@ function initializeEcho(server) {
       next();
     }
 
+    /**
+     * Returned function will invoke dependency middleware and then imperio's
+     * middleware. It will attach a parameter 'imperio' to the request object
+     * that imperio's middle will use to pass and store connection data.
+     * @param {Object} req - request object
+     * @param {Object} res - response object
+     * @param {function} next - callback function to continue middleware chain
+     */
     return (req, res, next) => {
-      // console.log('middleware called');
       // Create an object on the req object that we can store stuff in
       req.imperio = {};
       req.imperio.connected = false;
@@ -48,24 +67,44 @@ function initializeEcho(server) {
     };
   };
 
-  // uh oh
+  // Require socket.io and store a reference to the socket object on imperio
   const io = require('socket.io')(server);
   imperio.socket = io;
+  // Initialize some objects on the imperio object for data handling
+  imperio.openSockets = {};
+  imperio.roomData = {};
 
+  /* ------------------------
+   * --  Socket Listeners  --
+   * ------------------------ */
   io.on('connection', socket => {
-    // console.log('A socket has a connection');
+    // keep track of sockets connected
+    // console.log(`socket connected with id: ${socket.id}`);
+    imperio.openSockets[socket.id] = null;
+
     socket.on('createRoom', room => {
-      console.log(`Joined ${room}`);
-      // decrypt token?
+      // decrypt token here if using jwt's
+      // console.log(`client ${socket.id} joined room ${room}`);
+      imperio.roomData[room] = imperio.roomData[room] || {
+        connections: 0,
+        clients: {},
+      };
+      const roomData = imperio.roomData[room];
+      roomData.connections += 1;
+      imperio.openSockets[socket.id] = room;
+      // console.log('the open sockets are:', imperio.openSockets);
       socket.join(room);
     });
+    // Handles client disconnect
+    socket.on('disconnect', () => {
+      // console.log(`${socket.id} disconnected`);
+      io.emit('user disconnected');
+    });
+
+    // Mobile input socket listeners
     socket.on('tap', room => {
       console.log('Tap from mobile!');
       io.sockets.in(room).emit('tap');
-    });
-    socket.on('disconnect', () => {
-      // console.log('A user has disconnected');
-      io.emit('user disconnected');
     });
     socket.on('acceleration', (room, accObject) => {
       // console.log(`accel event received`);
@@ -79,4 +118,4 @@ function initializeEcho(server) {
   return imperio;
 }
 
-module.exports = initializeEcho;
+module.exports = initializeImperio;
