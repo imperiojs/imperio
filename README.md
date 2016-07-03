@@ -1,5 +1,5 @@
-# Imperio
-Imperio provides developers with an SDK that creates a bridge between native mobile inputs and sensor data with desktop interaction, requiring minimal code and knowledge of the underlying technologies.
+# imperio
+imperio provides developers with an SDK that creates a bridge between native mobile inputs and sensor data with desktop interaction, requiring minimal code and knowledge of the underlying technologies.
 
 ## Features
 #### Capturing Mobile inputs
@@ -13,40 +13,46 @@ Imperio provides developers with an SDK that creates a bridge between native mob
 #### Various Forms of Authenticating Mobile to Desktop Sessions
 * URL + shortcode
 * Alphanumeric Client Password
-* Cookie/ Token Sessions
+* Cookie/Token Sessions
 
 ## Installation
 ```bash
-npm install imperio-phone
+npm install imperio
 ```
 
 ## Getting Started
 
 #### Client Side Implementation
-The client side implementation of Imperio represents the use of the mobile functionality to influence browser interaction.
+The client side implementation of imperio represents the use of the mobile functionality to influence browser interaction.
 Client-side functionality can be accessed by:
 
 ```javascript
 <script src = 'https://cdn.socket.io/socket-io-1.4.5.js'></script>
-<script src = './client/lib/imperio/imperio.js'></script>
+<script src='./dist/imperio.min.js'></script>
 ```
 This above code needs to be included on the mobile browser and desktop browser.
 
 
 #### Server Side Implementation
 
-Imperio's server functions are currently Express middleware. Implementing Imperio will require Express to be installed and required.
+imperio's server functions are currently Express middleware. Implementing imperio will require Express to be installed and required.
 
-Imperio's server-side functionality can be enable with just a couple lines of javascrips:
+imperio's server-side functionality can be enable with just a couple lines of javascript:
 Just require the module and pass it the server object of your app
 ```javascript
 const imperio = require('imperio')(server);
 ```
+
+Add a static route so your client will get the correct files from our node module
+```javascript
+app.use(express.static(path.join(`${__dirname}/../node_modules/imperio`)));
+```
+
 Then have your app use the returned object as middleware
 ```javascript
 app.use(imperio.init());
 ```
-Imperio will handle the mobile-to-desktop connections for you!
+imperio will handle the mobile-to-desktop connections for you!
 
 ### A Simple Example
 In this example, we'll include a button in the mobile browser, which on "tap", will alter the Dom of the desktop browser.
@@ -58,7 +64,7 @@ mobile.html :
   <h2>Hello World</h2
 </body>
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-<script src="./lib/imperio/imperio.js"></script>
+<script src='./dist/imperio.min.js'></script>
 ```
 
 mobile.js:
@@ -70,7 +76,7 @@ imperio.mobileRoomSetup(imperio.socket, imperio.room);
 desktopBrowser.html:
 ```javascript
 <body class='class1'>
-  <h1> Welcome, Imperio User!</h1>
+  <h1> Welcome, imperio User!</h1>
   <div id= "nonceContainer"></div>
 </body>
 ```
@@ -105,9 +111,7 @@ const imperio = require('imperio')(server);
 // *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
 app.use(express.static(path.join(`${__dirname}/../client`)));
-app.use(useragent.express()); // TODO tie this into our library somehow?
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(express.static(path.join(`${__dirname}/../node_modules/imperio`)));
 app.set('view engine', 'ejs');
 // *-*-*-*-*-*-*-*-*-
 app.use(imperio.init());
@@ -185,9 +189,7 @@ imperio.desktopGyroHandler = require('./Desktop/desktopGyroHandler.js');
 imperio.desktopRoomSetup = require('./Desktop/desktopRoomSetup.js');
 ```
 
-
 #### Server Side Methods
-
 
 
 
@@ -196,7 +198,6 @@ imperio.desktopRoomSetup = require('./Desktop/desktopRoomSetup.js');
 - [ ] Tell Austin about adding parameter for non-Nonce implementation of SDK
 - [ ] Add different url form of authentication
 - [ ] Look at testing suite for Sockets and Implement some socket testing
-
 
 
 ### License
