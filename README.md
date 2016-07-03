@@ -54,20 +54,16 @@ In this example, we'll include a button in the mobile browser, which on "tap", w
 mobile.html :
 ```javascript
 <body>
-  <button type="button" name="button" class="tap" onclick="frontEndEcho.mobileTapShare()">Tap Here</button>
+  <button type="button" name="button" class="tap" onclick="imperio.mobileTapShare()">Tap Here</button>
   <h2>Hello World</h2
 </body>
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-<!-- <script src="./lib/cookies-js/dist/cookies.js"></script> -->
 <script src="./lib/imperio/imperio.js"></script>
-</body>
 ```
-
-
-
 
 mobile.js:
 ```javascript
+imperio.mobileRoomSetup(imperio.socket, imperio.room);
 ```
 
 
@@ -83,7 +79,6 @@ desktopBrowser.js
 ```javascript
 
 function changeBodyClass() {
-  // console.log(`let's change body`);
   if (bodyElement.classList.contains('class1')) {
     bodyElement.classList.remove('class1');
     bodyElement.classList.add('class2');
@@ -121,9 +116,9 @@ app.use(imperio.init());
 // Handle Routes
 app.get('/', (req, res) => {
   if (req.useragent && req.useragent.isDesktop) {
-    res.sendFile(path.join(`${__dirname}/path/to/desktop/page`));
+    res.sendFile(path.join(`${__dirname}/path/to/desktopBrowser.html`));
   } else if (req.useragent && req.useragent.isMobile) {
-    res.sendFile(path.join(`${__dirname}/path/to/mobile/page`));
+    res.sendFile(path.join(`${__dirname}/path/to/mobile.html`));
   }
 });
 
@@ -133,7 +128,79 @@ server.listen(3000, () => {
 ```
 
 ### Available Functions
-All of the Functions
+#### Client Side Methods
+
+
+* instantiate our shared socket
+``` javascript
+imperio.socket = io();
+```
+
+* store roomID to pass to server for room creation and correctly routing the emissions
+``` javascript
+imperio.room = getCookie('roomId');
+```
+
+* store nonce to use to display and show mobile user how to connect
+``` javascript
+imperio.nonce = getCookie('nonce');
+```
+
+* take a tap event from mobile browser and emit the tap event
+``` javascript
+imperio.mobileTapShare = require('./Mobile/mobileTapShare.js');
+```
+* sets up listener for motion data from mobile browser and emits object containing x,y,z coords
+``` javascript
+imperio.mobileAccelShare = require('./Mobile/mobileAccelShare.js');
+```
+
+* sets up a listener for orientation data from mobile browser and emits object containing alpha, beta, and gamma data
+``` javascript
+imperio.mobileGyroShare = require('./Mobile/mobileGyroShare.js');
+```
+
+* establishes connection to socket and shares room it should connnect to
+``` javascript
+imperio.mobileRoomSetup = require('./Mobile/mobileRoomSetup.js');
+```
+
+* sets up listener for tap event on desktop browser
+``` javascript
+imperio.desktopTapHandler = require('./Desktop/desktopTapHandler.js');
+```
+
+* sets up listener for accel event/data on desktop browser
+``` javascript
+imperio.desktopAccelHandler = require('./Desktop/desktopAccelHandler.js');
+```
+
+* sets up listener for gyro event/data on desktop browser
+``` javascript
+imperio.desktopGyroHandler = require('./Desktop/desktopGyroHandler.js');
+```
+
+* establishes connection to socket and shares room it should connnect to
+``` javascript
+imperio.desktopRoomSetup = require('./Desktop/desktopRoomSetup.js');
+```
+
+
+#### Server Side Methods
+
+
+
+
+### TODO
+
+- [ ] Tell Austin about adding parameter for non-Nonce implementation of SDK
+- [ ] Add different url form of authentication
+- [ ] Look at testing suite for Sockets and Implement some socket testing
+
+
 
 ### License
-To Kill
+MIT
+
+### On That Note....
+Go forth and build awesome things!
