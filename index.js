@@ -80,18 +80,18 @@ function initializeImperio(server) {
   io.on('connection', socket => {
     // keep track of sockets connected
     // console.log(`socket connected with id: ${socket.id}`);
-    imperio.openSockets[socket.id] = null;
+    // imperio.openSockets[socket.id] = null;
 
     socket.on('createRoom', room => {
       // decrypt token here if using jwt's
       // console.log(`client ${socket.id} joined room ${room}`);
-      imperio.roomData[room] = imperio.roomData[room] || {
-        connections: 0,
-        clients: {},
-      };
-      const roomData = imperio.roomData[room];
-      roomData.connections += 1;
-      imperio.openSockets[socket.id] = room;
+      // imperio.roomData[room] = imperio.roomData[room] || {
+      //   connections: 0,
+      //   clients: {},
+      // };
+      // const roomData = imperio.roomData[room];
+      // roomData.connections += 1;
+      // imperio.openSockets[socket.id] = room;
       // console.log('the open sockets are:', imperio.openSockets);
       socket.join(room);
     });
