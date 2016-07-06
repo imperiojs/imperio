@@ -29,7 +29,7 @@ function initializeImperio(server) {
      */
     function imperioMiddleware(req, res, next) {
       if (req.method === 'GET') {
-        // we will check for cookie, then param and query for connect none/roomId
+        // check for nonce in param and query and create session if not found
         that.hostController.handleGet(req, res, that.activeConnectRequests);
       } else if (req.method === 'POST') {
         // Else if this is a post request (for now, at '/'), run these
