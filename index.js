@@ -30,9 +30,9 @@ function initializeImperio(server) {
     function imperioMiddleware(req, res, next) {
       if (req.method === 'GET') {
         // Only execute this func if we're accessing it from a desktop
-        that.desktopController.handleRequest(req, res, that.activeConnectRequests);
+        that.desktopController.handleGet(req, res, that.activeConnectRequests);
         // Only execute this func if we're accessing it from a mobile device
-        that.mobileController.handleRequest(req, res, that.activeConnectRequests);
+        that.mobileController.handleGet(req, res, that.activeConnectRequests);
       } else if (req.method === 'POST') {
         // Else if this is a post request (for now, at '/'), run these
         that.mobileController.handlePost(req, res, that.activeConnectRequests);
@@ -56,14 +56,16 @@ function initializeImperio(server) {
       req.imperio.connected = false;
 
       // Bind our middleware dependencies, then finally our middleware function
-      const bpArgs = { extended: true };
-      const em = imperioMiddleware.bind(null, req, res, next);
-      const cp = cookieParser().bind(null, req, res, em);
-      const bp = bodyParser.urlencoded(bpArgs).bind(null, req, res, cp);
-      const ua = useragent.express().bind(null, req, res, bp);
+      const bodyParserMiddlewareArgs = { extended: true };
+      const boundImperioMiddleware = imperioMiddleware.bind(null, req, res, next);
+      const boundCookieParserMiddleware = cookieParser().bind(null, req, res, boundImperioMiddleware);
+      const boundBodyParserMiddleware = bodyParser.urlencoded(bodyParserMiddlewareArgs)
+            .bind(null, req, res, boundCookieParserMiddleware);
+      const boundUserAgentMiddleware = useragent.express()
+            .bind(null, req, res, boundBodyParserMiddleware);
 
       // Execute the bound chain of middleware
-      ua();
+      boundUserAgentMiddleware();
     };
   };
 
