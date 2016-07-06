@@ -2,8 +2,8 @@
 /* eslint-disable no-console, global-require, no-param-reassign */
 function initializeImperio(server) {
   const imperio = {};
-  imperio.hostController = require('./lib/server/hostController.js');
-  imperio.clientController = require('./lib/server/clientController.js');
+  imperio.connectionController = require('./lib/server/connectionController.js');
+  // imperio.clientController = require('./lib/server/clientController.js');
   imperio.activeConnectRequests = {};
 
   /**
@@ -30,12 +30,12 @@ function initializeImperio(server) {
     function imperioMiddleware(req, res, next) {
       if (req.method === 'GET') {
         // check for nonce in param and query and create session if not found
-        that.hostController.handleGet(req, res, that.activeConnectRequests);
+        that.connectionController.handleGet(req, res, that.activeConnectRequests);
       } else if (req.method === 'POST') {
         // Else if this is a post request (for now, at '/'), run these
         // 'codeCheck' is our currently provided var in the body to attach the nonce
         // TODO: make codeCheck configurable in the user config.
-        that.clientController.handlePost(req, res, that.activeConnectRequests, 'codeCheck');
+        that.connectionController.handlePost(req, res, that.activeConnectRequests, 'codeCheck');
       }
 
       // Execute the next middleware function in the express middleware chain
@@ -56,14 +56,16 @@ function initializeImperio(server) {
       req.imperio.connected = false;
 
       // Bind our middleware dependencies, then finally our middleware function
-      const bodyParserMiddlewareArgs = { extended: true };
-      const boundImperioMiddleware = imperioMiddleware.bind(null, req, res, next);
+      const boundImperioMiddleware = imperioMiddleware
+            .bind(null, req, res, next);
       const boundCookieParserMiddleware = cookieParser()
             .bind(null, req, res, boundImperioMiddleware);
-      const boundBodyParserMiddleware = bodyParser.urlencoded(bodyParserMiddlewareArgs)
+      const boundBodyParserJsonMiddleware = bodyParser.json()
             .bind(null, req, res, boundCookieParserMiddleware);
+      const boundBodyParserUrlMiddleware = bodyParser.urlencoded({ extended: true })
+            .bind(null, req, res, boundBodyParserJsonMiddleware);
       const boundUserAgentMiddleware = useragent.express()
-            .bind(null, req, res, boundBodyParserMiddleware);
+            .bind(null, req, res, boundBodyParserUrlMiddleware);
 
       // Execute the bound chain of middleware
       boundUserAgentMiddleware();
@@ -104,7 +106,7 @@ function initializeImperio(server) {
       io.emit('user disconnected');
     });
 
-    // Mobile input socket listeners
+    // client input socket listeners
     socket.on('tap', room => {
       console.log('Tap from mobile!');
       io.sockets.in(room).emit('tap');
