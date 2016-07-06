@@ -2,8 +2,8 @@
 /* eslint-disable no-console, global-require, no-param-reassign */
 function initializeImperio(server) {
   const imperio = {};
-  imperio.desktopController = require('./lib/server/desktopController.js');
-  imperio.mobileController = require('./lib/server/mobileController.js');
+  imperio.hostController = require('./lib/server/hostController.js');
+  imperio.clientController = require('./lib/server/clientController.js');
   imperio.activeConnectRequests = {};
 
   /**
@@ -29,13 +29,13 @@ function initializeImperio(server) {
      */
     function imperioMiddleware(req, res, next) {
       if (req.method === 'GET') {
-        // Only execute this func if we're accessing it from a desktop
-        that.desktopController.handleGet(req, res, that.activeConnectRequests);
-        // Only execute this func if we're accessing it from a mobile device
-        that.mobileController.handleGet(req, res, that.activeConnectRequests);
+        // we will check for cookie, then param and query for connect none/roomId
+        that.hostController.handleGet(req, res, that.activeConnectRequests);
       } else if (req.method === 'POST') {
         // Else if this is a post request (for now, at '/'), run these
-        that.mobileController.handlePost(req, res, that.activeConnectRequests);
+        // 'codeCheck' is our currently provided var in the body to attach the nonce
+        // TODO: make codeCheck configurable in the user config.
+        that.clientController.handlePost(req, res, that.activeConnectRequests, 'codeCheck');
       }
 
       // Execute the next middleware function in the express middleware chain
@@ -58,7 +58,8 @@ function initializeImperio(server) {
       // Bind our middleware dependencies, then finally our middleware function
       const bodyParserMiddlewareArgs = { extended: true };
       const boundImperioMiddleware = imperioMiddleware.bind(null, req, res, next);
-      const boundCookieParserMiddleware = cookieParser().bind(null, req, res, boundImperioMiddleware);
+      const boundCookieParserMiddleware = cookieParser()
+            .bind(null, req, res, boundImperioMiddleware);
       const boundBodyParserMiddleware = bodyParser.urlencoded(bodyParserMiddlewareArgs)
             .bind(null, req, res, boundCookieParserMiddleware);
       const boundUserAgentMiddleware = useragent.express()
