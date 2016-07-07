@@ -42,10 +42,12 @@
     "eslint-plugin-import": "1.9.2",
     "eslint-plugin-jsx-a11y": "1.5.3",
     "eslint-plugin-react": "5.2.2",
+    "expect": "1.20.2",
     "mocha": "2.5.3",
     "nodemon": "1.9.2",
     "react-transform-hmr": "1.0.4",
     "socket.io-client": "1.4.6",
+    "supertest": "1.2.0",
     "webpack": "1.13.1"
   }
 }
