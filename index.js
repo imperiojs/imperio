@@ -119,6 +119,10 @@ function initializeImperio(server) {
       // console.log(`gyro event received`);
       io.sockets.in(room).emit('gyroscope', gyroObject);
     });
+    socket.on('geoLocation', (room, locationObject) => {
+      // console.log(`location event received`);
+      io.sockets.in(room).emit('geoLocation', locationObject);
+    });
   });
   return imperio;
 }
