@@ -114,6 +114,9 @@ function initializeImperio(server) {
       // console.log(`gyro event received`);
       io.sockets.in(room).emit('gyroscope', gyroObject);
     });
+    socket.on('gyroscopeTimer', (room, gyroObject, emitDate) => {
+      io.sockets.in(room).emit('gyroscopeTimer', gyroObject, emitDate, Date.now());
+    });
   });
   return imperio;
 }
