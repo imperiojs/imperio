@@ -70,7 +70,7 @@
 	imperio.mobileAccelShare = __webpack_require__(5);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
 	imperio.mobileGyroShare = __webpack_require__(6);
-	//sets up an event that emits the location of mobile browser
+	// sets up an event that emits the location of mobile browser
 	imperio.mobileLocationShare = __webpack_require__(7);
 	// establishes connection to socket and shares room it should connnect to
 	imperio.mobileRoomSetup = __webpack_require__(8);
