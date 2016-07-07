@@ -235,37 +235,22 @@
 	'use strict';
 	
 	var mobileLocationShare = function mobileLocationShare(socket, room, callback) {
-	
-	  if (!navigator.geolocation) {
-	    console.log('This browser does not support Geolocation');
-	  }
 	  /**
 	   * @param The getCurrentPosition.coords property has several properties eg:
 	   *        accuracy,altitude, altitudeAccuracy, heading, latitude, longitude
 	   *        & speed
-	   * @param Tell the developer in readme that whatever is being returned in the callback
-	   *         has to be an object
 	   */
+	  if (!navigator.geolocation) {
+	    console.log('This browser does not support Geolocation');
+	  }
 	  var locationPosition = navigator.geolocation.getCurrentPosition(function (position) {
 	    return position;
 	  });
-	
-	  var locationProperties = {
-	    locationPosition: locationPosition
-	  };
-	
-	  var sendLocationData = function sendLocationData() {
-	    if (callback) {
-	      return callback(locationPosition);
-	    } else {
-	      return locationProperties;
-	    }
-	  };
-	
-	  frontEndEcho.socket.emit('geoLocation', frontEndEcho.room, sendLocationData());
+	  socket.emit('geoLocation', room, locationPosition);
+	  if (callback) return callback(locationPosition);
 	};
 	
-	mobile.exports = mobileLocationShare;
+	module.exports = mobileLocationShare;
 
 /***/ },
 /* 8 */
