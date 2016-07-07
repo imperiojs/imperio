@@ -45,11 +45,11 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict'; // eslint-disable-line
+	'use strict';
 	// import our getCookie function which we will use to pull
 	// out the roomID and nonce cookie for socket connection and display on client
 	
-	var _getCookie = __webpack_require__(11);
+	var _getCookie = __webpack_require__(10);
 	
 	var _getCookie2 = _interopRequireDefault(_getCookie);
 	
@@ -59,21 +59,19 @@
 	// initialize library storage object
 	var imperio = {};
 	// instantiate our shared socket
-	imperio.socket = io(); // eslint-disable-line // HACK - is dependency on CDN OK?
+	imperio.socket = io();
 	// store roomID to pass to server for room creation and correctly routing the emissions
 	imperio.room = (0, _getCookie2.default)('roomId');
 	// store nonce to use to display and show mobile user how to connect
 	imperio.nonce = (0, _getCookie2.default)('nonce');
 	// take a tap event and emit the tap event
-	imperio.mobileTapShare = __webpack_require__(9);
+	imperio.mobileTapShare = __webpack_require__(8);
 	// sets up listener for motion data and emits object containing x,y,z coords
 	imperio.mobileAccelShare = __webpack_require__(5);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
 	imperio.mobileGyroShare = __webpack_require__(6);
-	// sets up an event that emits the location of mobile browser
-	imperio.mobileLocationShare = __webpack_require__(7);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.mobileRoomSetup = __webpack_require__(8);
+	imperio.mobileRoomSetup = __webpack_require__(7);
 	// sets up listener for tap event on desktop
 	imperio.desktopTapHandler = __webpack_require__(4);
 	// sets up listener for accel event/data on desktop
@@ -84,6 +82,9 @@
 	imperio.desktopRoomSetup = __webpack_require__(3);
 	// attaches our library object to the window so it is accessible when we use the script tag
 	window.imperio = imperio;
+	
+	// if (typeof module === 'undefined') module.exports = frontEndEcho;
+	// else window.frontEndEcho = frontEndEcho;
 
 /***/ },
 /* 1 */
@@ -234,30 +235,6 @@
 
 	'use strict';
 	
-	var mobileLocationShare = function mobileLocationShare(socket, room, callback) {
-	  /**
-	   * @param The getCurrentPosition.coords property has several properties eg:
-	   *        accuracy,altitude, altitudeAccuracy, heading, latitude, longitude
-	   *        & speed
-	   */
-	  if (!navigator.geolocation) {
-	    console.log('This browser does not support Geolocation');
-	  }
-	  var locationPosition = navigator.geolocation.getCurrentPosition(function (position) {
-	    return position;
-	  });
-	  socket.emit('geoLocation', room, locationPosition);
-	  if (callback) return callback(locationPosition);
-	};
-	
-	module.exports = mobileLocationShare;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
 	// Establishes a connection to the socket and shares the room it should connnect to.
 	// Accepts 3 arguments:
 	// 1. The socket you would like to connect to.
@@ -274,7 +251,7 @@
 	module.exports = mobileRoomSetup;
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -293,7 +270,7 @@
 	module.exports = mobileTapShare;
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -346,12 +323,12 @@
 	})("undefined" === typeof window ? undefined : window);
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _cookiesMin = __webpack_require__(10);
+	var _cookiesMin = __webpack_require__(9);
 	
 	var _cookiesMin2 = _interopRequireDefault(_cookiesMin);
 	
