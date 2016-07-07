@@ -1,8 +1,8 @@
 {
   "name": "imperio",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Control your desktop experience from a mobile device.",
-  "main": "./dist/imperio.js",
+  "main": "./dist/imperio.min.js",
   "authors": [
     "Austin <austin.lyon@gmail.com>",
     "Austin <anwaukoni@gmail.com>",
@@ -19,7 +19,5 @@
     "tests"
   ],
   "dependencies": {
-    "cookies-js": "^1.2.2",
-    "socket.io-client": "^1.4.6"
   }
 }
