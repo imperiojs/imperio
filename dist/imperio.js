@@ -240,7 +240,6 @@
 	    console.log('This browser does not support Geolocation');
 	  }
 	  /**
-	   *
 	   * @param The getCurrentPosition.coords property has several properties eg:
 	   *        accuracy,altitude, altitudeAccuracy, heading, latitude, longitude
 	   *        & speed
@@ -252,7 +251,7 @@
 	  });
 	
 	  var locationProperties = {
-	    locationProperties: locationProperties
+	    locationPosition: locationPosition
 	  };
 	
 	  var sendLocationData = function sendLocationData() {
