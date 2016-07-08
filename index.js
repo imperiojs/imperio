@@ -3,7 +3,6 @@
 function initializeImperio(server) {
   const imperio = {};
   imperio.connectionController = require('./lib/server/connectionController.js');
-  // imperio.clientController = require('./lib/server/clientController.js');
   imperio.activeConnectRequests = {};
 
   /**
