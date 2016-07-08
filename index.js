@@ -14,7 +14,6 @@ function initializeImperio(server) {
    * @return {function} express middleware
    */
   imperio.init = function imperioInit() {
-    console.log('init called');
     const that = this;
     // Include our dependency middleware
     const bodyParser = require('body-parser');
@@ -54,7 +53,6 @@ function initializeImperio(server) {
       // Create an object on the req object that we can store stuff in
       req.imperio = {};
       req.imperio.connected = false;
-
       // Bind our middleware dependencies, then finally our middleware function
       const boundImperioMiddleware = imperioMiddleware
             .bind(null, req, res, next);
@@ -122,6 +120,8 @@ function initializeImperio(server) {
     socket.on('geoLocation', (room, locationObject) => {
       // console.log(`location event received`);
       io.sockets.in(room).emit('geoLocation', locationObject);
+    socket.on('gyroscopeTimer', (room, gyroObject, emitDate) => {
+      io.sockets.in(room).emit('gyroscopeTimer', gyroObject, emitDate, Date.now());
     });
   });
   return imperio;
