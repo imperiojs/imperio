@@ -49,7 +49,7 @@
 	// import our getCookie function which we will use to pull
 	// out the roomID and nonce cookie for socket connection and display on client
 	
-	var _getCookie = __webpack_require__(11);
+	var _getCookie = __webpack_require__(12);
 	
 	var _getCookie2 = _interopRequireDefault(_getCookie);
 	
@@ -65,23 +65,23 @@
 	// store nonce to use to display and show mobile user how to connect
 	imperio.nonce = (0, _getCookie2.default)('nonce');
 	// take a tap event and emit the tap event
-	imperio.mobileTapShare = __webpack_require__(9);
+	imperio.mobileTapShare = __webpack_require__(10);
 	// sets up listener for motion data and emits object containing x,y,z coords
-	imperio.mobileAccelShare = __webpack_require__(5);
+	imperio.mobileAccelShare = __webpack_require__(6);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
-	imperio.mobileGyroShare = __webpack_require__(6);
-	// sets up an event that emits the location of mobile browser
-	imperio.mobileLocationShare = __webpack_require__(7);
+	imperio.mobileGyroShare = __webpack_require__(7);
+	imperio.mobileGyroTimer = __webpack_require__(8);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.mobileRoomSetup = __webpack_require__(8);
+	imperio.mobileRoomSetup = __webpack_require__(9);
 	// sets up listener for tap event on desktop
-	imperio.desktopTapHandler = __webpack_require__(4);
+	imperio.desktopTapHandler = __webpack_require__(5);
 	// sets up listener for accel event/data on desktop
 	imperio.desktopAccelHandler = __webpack_require__(1);
 	// sets up listener for gyro event/data on desktop
 	imperio.desktopGyroHandler = __webpack_require__(2);
+	imperio.desktopGyroTimer = __webpack_require__(3);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.desktopRoomSetup = __webpack_require__(3);
+	imperio.desktopRoomSetup = __webpack_require__(4);
 	// attaches our library object to the window so it is accessible when we use the script tag
 	window.imperio = imperio;
 
@@ -129,6 +129,20 @@
 
 	'use strict';
 	
+	var desktopGyroTimer = function desktopGyroTimer(socket, callback) {
+	  socket.on('gyroscopeTimer', function (gyroObj, emitDate, serverDate) {
+	    if (callback) callback(gyroObj, emitDate, serverDate);
+	  });
+	};
+	
+	module.exports = desktopGyroTimer;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
 	// Establishes a connection to the socket and shares the room it should connnect to.
 	// Accepts 3 arguments:
 	// 1. The socket you would like to connect to.
@@ -145,7 +159,7 @@
 	module.exports = desktopRoomSetup;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -163,7 +177,7 @@
 	module.exports = desktopTapHandler;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -199,7 +213,7 @@
 	module.exports = mobileAccelShare;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -229,31 +243,31 @@
 	module.exports = mobileGyroShare;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
 	
-	var mobileLocationShare = function mobileLocationShare(socket, room, callback) {
-	  /**
-	   * @param The getCurrentPosition.coords property has several properties eg:
-	   *        accuracy,altitude, altitudeAccuracy, heading, latitude, longitude
-	   *        & speed
-	   */
-	  if (!navigator.geolocation) {
-	    console.log('This browser does not support Geolocation');
-	  }
-	  var locationPosition = navigator.geolocation.getCurrentPosition(function (position) {
-	    return position;
-	  });
-	  socket.emit('geoLocation', room, locationPosition);
-	  if (callback) return callback(locationPosition);
+	var mobileGyroTimer = function mobileGyroTimer(socket, room, callback) {
+	  window.ondeviceorientation = function (event) {
+	    var alpha = Math.round(event.alpha);
+	    var beta = Math.round(event.beta);
+	    var gamma = Math.round(event.gamma);
+	    var gyroObject = {
+	      alpha: alpha,
+	      beta: beta,
+	      gamma: gamma
+	    };
+	    var emitDate = Date.now();
+	    socket.emit('gyroscopeTimer', room, gyroObject, emitDate);
+	    if (callback) callback(gyroObject);
+	  };
 	};
 	
-	module.exports = mobileLocationShare;
+	module.exports = mobileGyroTimer;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -274,7 +288,7 @@
 	module.exports = mobileRoomSetup;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -293,7 +307,7 @@
 	module.exports = mobileTapShare;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -346,12 +360,12 @@
 	})("undefined" === typeof window ? undefined : window);
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _cookiesMin = __webpack_require__(10);
+	var _cookiesMin = __webpack_require__(11);
 	
 	var _cookiesMin2 = _interopRequireDefault(_cookiesMin);
 	
