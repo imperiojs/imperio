@@ -2,8 +2,8 @@
 /* eslint-disable no-console, global-require, no-param-reassign */
 function initializeImperio(server) {
   const imperio = {};
-  imperio.connectionController = require('./lib/server/connectionController.js');
-  // imperio.clientController = require('./lib/server/clientController.js');
+  imperio.desktopController = require('./lib/server/desktopController.js');
+  imperio.mobileController = require('./lib/server/mobileController.js');
   imperio.activeConnectRequests = {};
 
   /**
@@ -29,13 +29,13 @@ function initializeImperio(server) {
      */
     function imperioMiddleware(req, res, next) {
       if (req.method === 'GET') {
-        // check for nonce in param and query and create session if not found
-        that.connectionController.handleGet(req, res, that.activeConnectRequests);
+        // Only execute this func if we're accessing it from a desktop
+        that.desktopController.handleRequest(req, res, that.activeConnectRequests);
+        // Only execute this func if we're accessing it from a mobile device
+        that.mobileController.handleRequest(req, res, that.activeConnectRequests);
       } else if (req.method === 'POST') {
         // Else if this is a post request (for now, at '/'), run these
-        // 'codeCheck' is our currently provided var in the body to attach the nonce
-        // TODO: make codeCheck configurable in the user config.
-        that.connectionController.handlePost(req, res, that.activeConnectRequests, 'codeCheck');
+        that.mobileController.handlePost(req, res, that.activeConnectRequests);
       }
 
       // Execute the next middleware function in the express middleware chain
@@ -56,19 +56,14 @@ function initializeImperio(server) {
       req.imperio.connected = false;
 
       // Bind our middleware dependencies, then finally our middleware function
-      const boundImperioMiddleware = imperioMiddleware
-            .bind(null, req, res, next);
-      const boundCookieParserMiddleware = cookieParser()
-            .bind(null, req, res, boundImperioMiddleware);
-      const boundBodyParserJsonMiddleware = bodyParser.json()
-            .bind(null, req, res, boundCookieParserMiddleware);
-      const boundBodyParserUrlMiddleware = bodyParser.urlencoded({ extended: true })
-            .bind(null, req, res, boundBodyParserJsonMiddleware);
-      const boundUserAgentMiddleware = useragent.express()
-            .bind(null, req, res, boundBodyParserUrlMiddleware);
+      const bpArgs = { extended: true };
+      const em = imperioMiddleware.bind(null, req, res, next);
+      const cp = cookieParser().bind(null, req, res, em);
+      const bp = bodyParser.urlencoded(bpArgs).bind(null, req, res, cp);
+      const ua = useragent.express().bind(null, req, res, bp);
 
       // Execute the bound chain of middleware
-      boundUserAgentMiddleware();
+      ua();
     };
   };
 
@@ -106,7 +101,7 @@ function initializeImperio(server) {
       io.emit('user disconnected');
     });
 
-    // client input socket listeners
+    // Mobile input socket listeners
     socket.on('tap', room => {
       console.log('Tap from mobile!');
       io.sockets.in(room).emit('tap');
