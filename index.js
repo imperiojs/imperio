@@ -120,6 +120,7 @@ function initializeImperio(server) {
     socket.on('geoLocation', (room, locationObject) => {
       // console.log(`location event received`);
       io.sockets.in(room).emit('geoLocation', locationObject);
+    });
     socket.on('gyroscopeTimer', (room, gyroObject, emitDate) => {
       io.sockets.in(room).emit('gyroscopeTimer', gyroObject, emitDate, Date.now());
     });
