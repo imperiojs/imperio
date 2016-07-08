@@ -153,7 +153,7 @@
 	/**
 	 * Sets up a listener for a tap event on the desktop.
 	 * @param {Object} socket - The socket you would like to connect to
-	 * @param {funciton} callback - A callback function
+	 * @param {function} callback - A callback function
 	 *        that will be run every time the tap event is triggered
 	 */
 	var desktopTapHandler = function desktopTapHandler(socket, callback) {
@@ -249,7 +249,7 @@
 	    return position;
 	  });
 	  socket.emit('geoLocation', room, locationPosition);
-	  if (callback) return callback(locationPosition);
+	  if (callback) callback(locationPosition);
 	};
 	
 	module.exports = mobileLocationShare;
