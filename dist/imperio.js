@@ -95,7 +95,7 @@
 	// with the acceleration data in the form of {x: x, y:y, z:z}.
 	// Accepts 2 arguments:
 	// 1. The socket you would like to connect to.
-	// 2. A callback function that will be run every time the tap event is triggered.
+	// 2. A callback function that will be run every time the acceleration event is triggered.
 	var desktopAccelHandler = function desktopAccelHandler(socket, callback) {
 	  socket.on('acceleration', function (accelObj) {
 	    if (callback) callback(accelObj);
@@ -114,7 +114,7 @@
 	// with the gyroscope data in the form of {alpha: alpha, beta:beta, gamma:gamma}.
 	// Accepts 2 arguments:
 	// 1. The socket you would like to connect to.
-	// 2. A callback function that will be run every time the tap event is triggered.
+	// 2. A callback function that will be run every time the gyroscope event is triggered.
 	var desktopGyroHandler = function desktopGyroHandler(socket, callback) {
 	  socket.on('gyroscope', function (gyroObj) {
 	    if (callback) callback(gyroObj);
@@ -164,10 +164,12 @@
 
 	'use strict';
 	
-	// Sets up a listener for a tap event on the desktop.
-	// Accepts 2 arguments:
-	// 1. The socket you would like to connect to as the first parameter.
-	// 2. A callback function that will be run every time the tap event is triggered.
+	/**
+	 * Sets up a listener for a tap event on the desktop.
+	 * @param {Object} socket - The socket you would like to connect to
+	 * @param {function} callback - A callback function
+	 *        that will be run every time the tap event is triggered
+	 */
 	var desktopTapHandler = function desktopTapHandler(socket, callback) {
 	  socket.on('tap', function () {
 	    if (callback) callback();
@@ -298,11 +300,10 @@
 	// 1. The socket you would like to connect to as the first parameter.
 	// 2. Accepts a room name that will inform the server which room to emit the tap event to.
 	// 3. A callback function that will be run every time the tap event is triggered.
-	// TODO: remove hard coded socket and room.
-	function mobileTapShare(socket, room, callback) {
-	  imperio.socket.emit('tap', imperio.room);
+	var mobileTapShare = function mobileTapShare(socket, room, callback) {
+	  socket.emit('tap', room);
 	  if (callback) callback();
-	}
+	};
 	
 	module.exports = mobileTapShare;
 

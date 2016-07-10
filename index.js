@@ -3,7 +3,6 @@
 function initializeImperio(server) {
   const imperio = {};
   imperio.connectionController = require('./lib/server/connectionController.js');
-  // imperio.clientController = require('./lib/server/clientController.js');
   imperio.activeConnectRequests = {};
 
   /**
@@ -116,6 +115,10 @@ function initializeImperio(server) {
     socket.on('gyroscope', (room, gyroObject) => {
       // console.log(`gyro event received`);
       io.sockets.in(room).emit('gyroscope', gyroObject);
+    });
+    socket.on('geoLocation', (room, locationObject) => {
+      // console.log(`location event received`);
+      io.sockets.in(room).emit('geoLocation', locationObject);
     });
     socket.on('gyroscopeTimer', (room, gyroObject, emitDate) => {
       io.sockets.in(room).emit('gyroscopeTimer', gyroObject, emitDate, Date.now());
