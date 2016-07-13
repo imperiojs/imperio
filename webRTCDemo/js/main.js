@@ -7,11 +7,7 @@
 const configuration = {
   iceServers: [{ url: 'stun:stun.l.google.com:19302' }],
 };
-// const Buffer = require('buffer');
-const dataChannelSend = document.querySelector('textarea#dataChannelSend');
 const dataChannelReceive = document.querySelector('textarea#dataChannelReceive');
-const sendButton = document.querySelector('button#sendButton');
-sendButton.onclick = sendData;
 
 // Create a random room if not already present in the URL.
 let isInitiator;
@@ -26,10 +22,6 @@ if (!room) {
 
 // Connect to the signaling server
 const socket = io.connect();
-
-socket.on('ipaddr', ipaddr => {
-  console.log(`Server IP address is: ${ipaddr}`);
-});
 
 socket.on('created', (room, clientId) => {
   console.log(`Created room, ${room} - my client ID is, ${clientId}`);
@@ -153,15 +145,14 @@ function signalingMessageCallback(message) {
 }
 
 function onLocalSessionCreated(desc) {
-  // console.log('local session created:', desc);
   peerConn.setLocalDescription(desc, () => {
-    // console.log('sending local desc:', peerConn.localDescription);
     sendMessage(peerConn.localDescription);
   }, logError);
 }
 
+const webRTCDataObject = {};
+
 function onDataChannelCreated(channel) {
-  // console.log('onDataChannelCreated:', channel);
   channel.onopen = () => {
     console.log('CHANNEL opened!!!');
   };
@@ -174,11 +165,27 @@ function onDataChannelCreated(channel) {
       y,
       z,
     };
-    // const accObjToSend = JSON.stringify(accObject);
-    channel.send(JSON.stringify(accObject));
+    webRTCDataObject.accObject = accObject;
+    // channel.send(JSON.stringify(webRTCDataObject));
   };
+
+  window.ondeviceorientation = event => {
+    console.log(event);
+    const alpha = Math.round(event.alpha);
+    const beta = Math.round(event.beta);
+    const gamma = Math.round(event.gamma);
+    const gyroObject = {
+      alpha,
+      beta,
+      gamma,
+    };
+    webRTCDataObject.gyroObject = gyroObject;
+    channel.send(JSON.stringify(webRTCDataObject));
+  };
+
   channel.onmessage = event => {
-    console.log(JSON.parse(event.data).x);
-    dataChannelReceive.innerHTML = `x accel is ${JSON.parse(event.data).x}`;
+    console.log(JSON.parse(event.data));
+    dataChannelReceive.innerHTML = `x:${JSON.parse(event.data).accObject.x}, y:${JSON.parse(event.data).accObject.y}, z:${JSON.parse(event.data).accObject.z},
+    a:${JSON.parse(event.data).gyroObject.alpha}, b:${JSON.parse(event.data).gyroObject.beta}, g:${JSON.parse(event.data).gyroObject.gamma}`;
   };
 }
