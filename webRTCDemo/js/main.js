@@ -98,12 +98,6 @@ function trace(text) {
   } else console.log(text);
 }
 
-function sendData() {
-  const data = dataChannelSend.value;
-  dataChannel.send(data);
-  trace(`Sent Data: ${data}`);
-}
-
 /* **************************************************************************
 * WebRTC peer connection and data channel
 ****************************************************************************/
@@ -159,15 +153,15 @@ function signalingMessageCallback(message) {
 }
 
 function onLocalSessionCreated(desc) {
-  console.log('local session created:', desc);
+  // console.log('local session created:', desc);
   peerConn.setLocalDescription(desc, () => {
-    console.log('sending local desc:', peerConn.localDescription);
+    // console.log('sending local desc:', peerConn.localDescription);
     sendMessage(peerConn.localDescription);
   }, logError);
 }
 
 function onDataChannelCreated(channel) {
-  console.log('onDataChannelCreated:', channel);
+  // console.log('onDataChannelCreated:', channel);
   channel.onopen = () => {
     console.log('CHANNEL opened!!!');
   };
