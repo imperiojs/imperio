@@ -7,7 +7,7 @@
 const configuration = {
   iceServers: [{ url: 'stun:stun.l.google.com:19302' }],
 };
-
+// const Buffer = require('buffer');
 const dataChannelSend = document.querySelector('textarea#dataChannelSend');
 const dataChannelReceive = document.querySelector('textarea#dataChannelReceive');
 const sendButton = document.querySelector('button#sendButton');
@@ -158,7 +158,6 @@ function signalingMessageCallback(message) {
   }
 }
 
-
 function onLocalSessionCreated(desc) {
   console.log('local session created:', desc);
   peerConn.setLocalDescription(desc, () => {
@@ -172,32 +171,20 @@ function onDataChannelCreated(channel) {
   channel.onopen = () => {
     console.log('CHANNEL opened!!!');
   };
-  channel.onmessage = (adapter.browserDetails.browser === 'firefox') ?
-  receiveDataFirefoxFactory() : receiveDataChromeFactory();
-}
-
-function receiveDataChromeFactory() {
-  let buf, count;
-
-  return function onmessage(event) {
-    if (typeof event.data === 'string') {
-      buf = window.buf = new Uint8ClampedArray(parseInt(event.data));
-      count = 0;
-      console.log(event.data);
-      dataChannelReceive.innerHTML = event.data;
-      // console.log('Expecting a total of ' + buf.byteLength + ' bytes of codes');
-      return;
-    }
-
-    let data = new Uint8ClampedArray(event.data);
-    buf.set(data, count);
-
-    count += data.byteLength;
-    console.log('count: ' + count);
-
-    if (count === buf.byteLength) {
-      // we're done: all data chunks have been received
-      console.log('Done. Rendering photo.');
-    }
+  window.ondevicemotion = event => {
+    const x = Math.round(event.accelerationIncludingGravity.x);
+    const y = Math.round(event.accelerationIncludingGravity.y);
+    const z = Math.round(event.accelerationIncludingGravity.z);
+    const accObject = {
+      x,
+      y,
+      z,
+    };
+    // const accObjToSend = JSON.stringify(accObject);
+    channel.send(JSON.stringify(accObject));
+  };
+  channel.onmessage = event => {
+    console.log(JSON.parse(event.data).x);
+    dataChannelReceive.innerHTML = `x accel is ${JSON.parse(event.data).x}`;
   };
 }
