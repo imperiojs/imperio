@@ -104,6 +104,11 @@ function initializeImperio(server) {
     });
 
     // client input socket listeners
+    socket.on('swipeleft', room => {
+      console.log('Swipe Left from Mobile');
+      io.sockets.in(room).emit('swipeleft');
+    });
+
     socket.on('tap', room => {
       console.log('Tap from mobile!');
       io.sockets.in(room).emit('tap');
