@@ -32,8 +32,8 @@ function initializeImperio(server) {
      */
     function imperioMiddleware(req, res, next) {
       // Provide useragent properties to the imperio object
-      imperio.isDesktop = req.useragent.isDesktop;
-      imperio.isMobile = req.useragent.isMobil;
+      req.imperio.isDesktop = req.useragent.isDesktop;
+      req.imperio.isMobile = req.useragent.isMobil;
 
       if (req.method === 'GET') {
         // check for nonce in param and query and create session if not found
