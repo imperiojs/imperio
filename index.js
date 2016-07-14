@@ -3,7 +3,12 @@
 function initializeImperio(server) {
   const imperio = {};
   imperio.connectionController = require('./lib/server/connectionController.js');
+  imperio.nonceController = require('./lib/server/nonceController.js');
   imperio.activeConnectRequests = {};
+  imperio.clientRooms = {};
+  // set global imperio config variables. TODO have these set with config object
+  imperio.globalRoomLimit = 4;
+  imperio.connectRequestTimeout = 1000 * 60 * 5; // 5 minutes
 
   /**
    * Returns a function to be used as express middleware. Dependency middleware
@@ -26,6 +31,10 @@ function initializeImperio(server) {
      * @param {function} next - callback function to continue middleware chain
      */
     function imperioMiddleware(req, res, next) {
+      // Provide useragent properties to the imperio object
+      req.imperio.isDesktop = req.useragent.isDesktop;
+      req.imperio.isMobile = req.useragent.isMobile;
+
       if (req.method === 'GET') {
         // check for nonce in param and query and create session if not found
         that.connectionController.handleGet(req, res, that.activeConnectRequests);
@@ -84,23 +93,16 @@ function initializeImperio(server) {
     // console.log(`socket connected with id: ${socket.id}`);
     // imperio.openSockets[socket.id] = null;
 
-    socket.on('createRoom', room => {
-      // decrypt token here if using jwt's
-      // console.log(`client ${socket.id} joined room ${room}`);
-      // imperio.roomData[room] = imperio.roomData[room] || {
-      //   connections: 0,
-      //   clients: {},
-      // };
-      // const roomData = imperio.roomData[room];
-      // roomData.connections += 1;
-      // imperio.openSockets[socket.id] = room;
-      // console.log('the open sockets are:', imperio.openSockets);
-      socket.join(room);
+    socket.on('createRoom', clientData => {
+      handleCreateRoom(socket, clientData);
     });
     // Handles client disconnect
     socket.on('disconnect', () => {
-      // console.log(`${socket.id} disconnected`);
-      io.emit('user disconnected');
+      const room = imperio.clientRooms[socket.id] || false;
+      if (room) {
+        io.sockets.in(room).emit('updateRoomData', io.sockets.adapter.rooms[room]);
+        delete imperio.clientRooms[socket.id];
+      }
     });
 
     // client input socket listeners
@@ -118,14 +120,14 @@ function initializeImperio(server) {
       console.log('Swipe up from Mobile');
       io.sockets.in(room).emit('swipeup');
     });
-    
+
     socket.on('swipedown', room => {
       console.log('Swipe down from Mobile');
       io.sockets.in(room).emit('swipedown');
     });
 
     socket.on('tap', room => {
-      console.log('Tap from mobile!');
+      // console.log('Tap from mobile!');
       io.sockets.in(room).emit('tap');
     });
     socket.on('acceleration', (room, accObject) => {
@@ -143,7 +145,33 @@ function initializeImperio(server) {
     socket.on('gyroscopeTimer', (room, gyroObject, emitDate) => {
       io.sockets.in(room).emit('gyroscopeTimer', gyroObject, emitDate, Date.now());
     });
+    socket.on('updateNonceTimeouts', (room) => {
+      imperio.nonceController.handleNonceTimeout(
+        io, socket, room, imperio.activeConnectRequests, imperio.connectRequestTimeout
+      );
+    });
   });
+
+  function handleCreateRoom(socket, clientData) {
+    const room = clientData.room;
+    const clientRole = clientData.role;
+
+    let roomData = io.sockets.adapter.rooms[room];
+    // if no room exists, receiver will create it.
+    // OR if room exists and there's space in it, emitter will join
+    if (!roomData || roomData.length < imperio.globalRoomLimit) {
+      socket.join(room);
+      roomData = io.sockets.adapter.rooms[room];
+      roomData.sockets[socket.id] = clientRole; // TODO can I do this?
+      imperio.clientRooms[socket.id] = room;
+      io.sockets.in(room).emit('updateRoomData', roomData);
+    } else {
+      roomData.limit = imperio.globalRoomLimit;
+      io.sockets.in(room).emit('roomFull', roomData);
+    }
+  }
+
+  // Return imperio object
   return imperio;
 }
 
