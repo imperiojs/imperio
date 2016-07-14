@@ -109,6 +109,21 @@ function initializeImperio(server) {
       io.sockets.in(room).emit('swipeleft');
     });
 
+    socket.on('swiperight', room => {
+      console.log('Swipe right from Mobile');
+      io.sockets.in(room).emit('swiperight');
+    });
+
+    socket.on('swipeup', room => {
+      console.log('Swipe up from Mobile');
+      io.sockets.in(room).emit('swipeup');
+    });
+    
+    socket.on('swipedown', room => {
+      console.log('Swipe down from Mobile');
+      io.sockets.in(room).emit('swipedown');
+    });
+
     socket.on('tap', room => {
       console.log('Tap from mobile!');
       io.sockets.in(room).emit('tap');
