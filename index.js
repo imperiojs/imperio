@@ -3,6 +3,7 @@
 function initializeImperio(server) {
   const imperio = {};
   imperio.connectionController = require('./lib/server/connectionController.js');
+  imperio.nonceController = require('./lib/server/nonceController.js');
   imperio.activeConnectRequests = {};
   imperio.clientRooms = {};
   // set global imperio config variables. TODO have these set with config object
@@ -119,7 +120,7 @@ function initializeImperio(server) {
       console.log('Swipe up from Mobile');
       io.sockets.in(room).emit('swipeup');
     });
-    
+
     socket.on('swipedown', room => {
       console.log('Swipe down from Mobile');
       io.sockets.in(room).emit('swipedown');
