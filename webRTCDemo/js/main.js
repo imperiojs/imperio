@@ -156,48 +156,49 @@ const webRTCDataObject = {};
 function onDataChannelCreated(channel) {
   channel.onopen = () => {
     console.log('CHANNEL opened!!!');
-  };
 
-  window.ondevicemotion = event => {
-    const x = Math.round(event.accelerationIncludingGravity.x);
-    const y = Math.round(event.accelerationIncludingGravity.y);
-    const z = Math.round(event.accelerationIncludingGravity.z);
-    const accObject = {
-      x,
-      y,
-      z,
+    window.ondevicemotion = event => {
+      const x = Math.round(event.accelerationIncludingGravity.x);
+      const y = Math.round(event.accelerationIncludingGravity.y);
+      const z = Math.round(event.accelerationIncludingGravity.z);
+      const accObject = {
+        x,
+        y,
+        z,
+      };
+      webRTCDataObject.accObject = accObject;
+      channel.send(JSON.stringify(webRTCDataObject));
+      delete webRTCDataObject.accObject;
     };
-    webRTCDataObject.accObject = accObject;
-  };
-  window.ondeviceorientation = event => {
-    console.log(event);
-    const alpha = Math.round(event.alpha);
-    const beta = Math.round(event.beta);
-    const gamma = Math.round(event.gamma);
-    const gyroObject = {
-      alpha,
-      beta,
-      gamma,
+
+    window.ondeviceorientation = event => {
+      const alpha = Math.round(event.alpha);
+      const beta = Math.round(event.beta);
+      const gamma = Math.round(event.gamma);
+      const gyroObject = {
+        alpha,
+        beta,
+        gamma,
+      };
+      webRTCDataObject.gyroObject = gyroObject;
+      channel.send(JSON.stringify(webRTCDataObject));
+      delete webRTCDataObject.gyroObject;
     };
-    webRTCDataObject.gyroObject = gyroObject;
-    channel.send(JSON.stringify(webRTCDataObject));
+
+    navigator.geolocation.getCurrentPosition(position => {
+      webRTCDataObject.locationObject = position.coords;
+      channel.send(JSON.stringify(webRTCDataObject));
+      delete webRTCDataObject.locationObject;
+    });
+
+    testButton.addEventListener('click', () => {
+      webRTCDataObject.tapEvent = true;
+      channel.send(JSON.stringify(webRTCDataObject));
+      delete webRTCDataObject.tapEvent;
+    });
   };
-
-  navigator.geolocation.getCurrentPosition(position => {
-    webRTCDataObject.locationObject = position.coords;
-    channel.send(JSON.stringify(webRTCDataObject));
-    delete webRTCDataObject.locationObject;
-  });
-
-  testButton.addEventListener('click', () => {
-    webRTCDataObject.tapEvent = true;
-    channel.send(JSON.stringify(webRTCDataObject));
-    delete webRTCDataObject.tapEvent;
-  });
 
   channel.onmessage = event => {
     console.log(JSON.parse(event.data));
-    dataChannelReceive.innerHTML = `x:${JSON.parse(event.data).accObject.x}, y:${JSON.parse(event.data).accObject.y}, z:${JSON.parse(event.data).accObject.z},
-    a:${JSON.parse(event.data).gyroObject.alpha}, b:${JSON.parse(event.data).gyroObject.beta}, g:${JSON.parse(event.data).gyroObject.gamma}`;
   };
 }
