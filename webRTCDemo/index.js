@@ -26,7 +26,7 @@ io.sockets.on('connection', socket => {
     socket.broadcast.emit('message', message);
   });
 
-  socket.on('create or join', function(room) {
+  socket.on('create or join', room => {
     log(`Received request to create or join room ${room}`);
 
     const numClients = io.sockets.sockets.length;
@@ -48,18 +48,7 @@ io.sockets.on('connection', socket => {
     }
   });
 
-  socket.on('ipaddr', () => {
-    const ifaces = os.networkInterfaces();
-    for (var dev in ifaces) {
-      ifaces[dev].forEach(details => {
-        if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
-          socket.emit('ipaddr', details.address);
-        }
-      });
-    }
-  });
-
-  socket.on('bye', () => {
-    console.log('received bye');
-  });
+  // socket.on('bye', () => {
+  //   console.log('received bye');
+  // });
 });

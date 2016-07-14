@@ -27,15 +27,12 @@ const socket = io.connect();
 socket.on('created', (room, clientId) => {
   console.log(`Created room, ${room} - my client ID is, ${clientId}`);
   isInitiator = true;
-  // open the connection
-  // run a function
 });
 
 socket.on('joined', (room, clientId) => {
   console.log(`This peer has joined room, ${room}, with client ID, ${clientId}`);
   isInitiator = false;
   createPeerConnection(isInitiator, configuration);
-  // run a function after second one joins
 });
 
 socket.on('full', room => {
@@ -60,9 +57,6 @@ socket.on('message', message => {
 // Join a room
 socket.emit('create or join', room);
 
-if (location.hostname.match(/localhost|127\.0\.0/)) {
-  socket.emit('ipaddr');
-}
 /**
 * Send message to signaling server
 */
@@ -81,14 +75,6 @@ function randomToken() {
 
 function logError(err) {
   console.log(err.toString(), err);
-}
-
-function trace(text) {
-  if (text[text.length - 1] === '\n') text = text.substring(0, text.length - 1);
-  if (window.performance) {
-    const now = (window.performance.now() / 1000).toFixed(3);
-    console.log(`${now}:${text}`);
-  } else console.log(text);
 }
 
 /* **************************************************************************
@@ -186,7 +172,7 @@ function onDataChannelCreated(channel) {
     };
 
     navigator.geolocation.getCurrentPosition(position => {
-      webRTCDataObject.locationObject = position.coords;
+      webRTCDataObject.locationObject = position;
       channel.send(JSON.stringify(webRTCDataObject));
       delete webRTCDataObject.locationObject;
     });
