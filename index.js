@@ -104,38 +104,46 @@ function initializeImperio(server) {
     });
 
     // client input socket listeners
-    socket.on('tap', room => {
-      console.log('Tap from mobile!');
-      io.sockets.in(room).emit('tap');
+    const events = ['acceleration', 'gyroscope', 'geoLocation', 'pan',
+                   'pinch', 'press', 'swipe', 'tap', 'pinchstart', 'pinchend'];
+    events.forEach(event => {
+      socket.on(event, (room, eventObject) => {
+        io.sockets.in(room).emit(event, eventObject);
+      });
     });
-    socket.on('acceleration', (room, accObject) => {
-      // console.log(`accel event received`);
-      io.sockets.in(room).emit('acceleration', accObject);
-    });
-    socket.on('gyroscope', (room, gyroObject) => {
-      // console.log(`gyro event received`);
-      io.sockets.in(room).emit('gyroscope', gyroObject);
-    });
-    socket.on('geoLocation', (room, locationObject) => {
-      // console.log(`location event received`);
-      io.sockets.in(room).emit('geoLocation', locationObject);
-    });
-    socket.on('gyroscopeTimer', (room, gyroObject, emitDate) => {
-      io.sockets.in(room).emit('gyroscopeTimer', gyroObject, emitDate, Date.now());
-    });
-    socket.on('swipe', (room, event) => {
-      console.log(`swipe event received`);
-      io.sockets.in(room).emit('swipe', event);
-    });
-    socket.on('pinch', (room, event) => {
-      io.sockets.in(room).emit('pinch', event);
-    });
-    socket.on('pinchstart', (room, event) => {
-      io.sockets.in(room).emit('pinchstart', event);
-    });
-    socket.on('pinchend', (room, event) => {
-      io.sockets.in(room).emit('pinchend', event);
-    });
+    // socket.on('tap', room => {
+    //   io.sockets.in(room).emit('tap');
+    // });
+    // socket.on('acceleration', (room, accObject) => {
+    //   io.sockets.in(room).emit('acceleration', accObject);
+    // });
+    // socket.on('gyroscope', (room, gyroObject) => {
+    //   io.sockets.in(room).emit('gyroscope', gyroObject);
+    // });
+    // socket.on('geoLocation', (room, locationObject) => {
+    //   io.sockets.in(room).emit('geoLocation', locationObject);
+    // });
+    // socket.on('pan', (room, event) => {
+    //   io.sockets.in(room).emit('pan', event);
+    // });
+    // socket.on('pinch', (room, event) => {
+    //   io.sockets.in(room).emit('pinch', event);
+    // });
+    // socket.on('press', (room, event) => {
+    //   io.sockets.in(room).emit('press', event);
+    // });
+    // socket.on('rotate', (room, event) => {
+    //   io.sockets.in(room).emit('rotate', event);
+    // });
+    // socket.on('pinch', (room, event) => {
+    //   io.sockets.in(room).emit('pinch', event);
+    // });
+    // socket.on('pinchstart', (room, event) => {
+    //   io.sockets.in(room).emit('pinchstart', event);
+    // });
+    // socket.on('pinchend', (room, event) => {
+    //   io.sockets.in(room).emit('pinchend', event);
+    // });
   });
   return imperio;
 }
