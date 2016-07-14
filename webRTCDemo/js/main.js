@@ -8,6 +8,7 @@ const configuration = {
   iceServers: [{ url: 'stun:stun.l.google.com:19302' }],
 };
 const dataChannelReceive = document.querySelector('textarea#dataChannelReceive');
+const testButton = document.querySelector('button#test');
 
 // Create a random room if not already present in the URL.
 let isInitiator;
@@ -116,7 +117,7 @@ function createPeerConnection(isInitiator, config) {
   };
   if (isInitiator) {
     console.log('Creating Data Channel');
-    dataChannel = peerConn.createDataChannel('phone data');
+    dataChannel = peerConn.createDataChannel('phone data', { ordered: false, maxRetransmits: 0 });
     onDataChannelCreated(dataChannel);
     console.log('Creating an offer');
     peerConn.createOffer(onLocalSessionCreated, logError);
@@ -156,6 +157,7 @@ function onDataChannelCreated(channel) {
   channel.onopen = () => {
     console.log('CHANNEL opened!!!');
   };
+
   window.ondevicemotion = event => {
     const x = Math.round(event.accelerationIncludingGravity.x);
     const y = Math.round(event.accelerationIncludingGravity.y);
@@ -166,9 +168,7 @@ function onDataChannelCreated(channel) {
       z,
     };
     webRTCDataObject.accObject = accObject;
-    // channel.send(JSON.stringify(webRTCDataObject));
   };
-
   window.ondeviceorientation = event => {
     console.log(event);
     const alpha = Math.round(event.alpha);
@@ -182,6 +182,18 @@ function onDataChannelCreated(channel) {
     webRTCDataObject.gyroObject = gyroObject;
     channel.send(JSON.stringify(webRTCDataObject));
   };
+
+  navigator.geolocation.getCurrentPosition(position => {
+    webRTCDataObject.locationObject = position.coords;
+    channel.send(JSON.stringify(webRTCDataObject));
+    delete webRTCDataObject.locationObject;
+  });
+
+  testButton.addEventListener('click', () => {
+    webRTCDataObject.tapEvent = true;
+    channel.send(JSON.stringify(webRTCDataObject));
+    delete webRTCDataObject.tapEvent;
+  });
 
   channel.onmessage = event => {
     console.log(JSON.parse(event.data));
