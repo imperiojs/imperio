@@ -449,7 +449,7 @@
 	      };
 	      socket.emit('createRoom', clientData);
 	    }
-	    if (callback) callback();
+	    if (callback) callback(socket);
 	  });
 	};
 	
