@@ -91,23 +91,42 @@
 	// establishes connection to socket and shares room it should connnect to
 	imperio.desktopRoomSetup = __webpack_require__(5);
 	imperio.curse = function (action, element, callback) {
-	  console.log(element + ' was cursed');
 	  var hammertime = new _hammerMin2.default(element);
-	  console.log(hammertime);
 	  if (action === 'swipe') {
-	    console.log('in swipe');
 	    hammertime.on('swipe', function (event, callback) {
-	      console.log('swipe detected');
 	      imperio.socket.emit('swipe', imperio.room, event);
 	      if (callback) callback(event);
 	    });
 	  }
 	  if (action === 'pinch') {
-	    console.log('in pinch');
 	    hammertime.get('pinch').set({ enable: true });
 	    hammertime.on('pinch', function (event, callback) {
-	      console.log('pinch detected');
-	      imperio.socket.emit('pinch', imperio.room, event);
+	      var pinchInfo = {};
+	      pinchInfo.direction = event.additionalEvent;
+	      pinchInfo.scale = event.scale;
+	      pinchInfo.isFirst = event.isFirst;
+	      pinchInfo.isFinal = event.isFinal;
+	      imperio.socket.emit('pinch', imperio.room, pinchInfo);
+	      if (callback) callback(pinchInfo);
+	    });
+	  }
+	  if (action === 'pinchstart') {
+	    hammertime.get('pinch').set({ enable: true });
+	    hammertime.on('pinchstart', function (event, callback) {
+	      // let pinchInfo = {};
+	      // pinchInfo.direction = event.additionalEvent;
+	      // pinchInfo.scale = event.scale;
+	      imperio.socket.emit('pinchstart', imperio.room, event);
+	      if (callback) callback(event);
+	    });
+	  }
+	  if (action === 'pinchend') {
+	    hammertime.get('pinch').set({ enable: true });
+	    hammertime.on('pinchend', function (event, callback) {
+	      // let pinchInfo = {};
+	      // pinchInfo.direction = event.additionalEvent;
+	      // pinchInfo.scale = event.scale;
+	      imperio.socket.emit('pinchend', imperio.room, event);
 	      if (callback) callback(event);
 	    });
 	  }
@@ -121,6 +140,16 @@
 	
 	imperio.desktopPinchHandler = function (callback) {
 	  imperio.socket.on('pinch', function (event) {
+	    if (callback) callback(event);
+	  });
+	};
+	imperio.desktopPinchStartHandler = function (callback) {
+	  imperio.socket.on('pinchstart', function (event) {
+	    if (callback) callback(event);
+	  });
+	};
+	imperio.desktopPinchEndHandler = function (callback) {
+	  imperio.socket.on('pinchend', function (event) {
 	    if (callback) callback(event);
 	  });
 	};

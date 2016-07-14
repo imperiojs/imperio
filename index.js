@@ -128,8 +128,13 @@ function initializeImperio(server) {
       io.sockets.in(room).emit('swipe', event);
     });
     socket.on('pinch', (room, event) => {
-      console.log(`pinch`);
       io.sockets.in(room).emit('pinch', event);
+    });
+    socket.on('pinchstart', (room, event) => {
+      io.sockets.in(room).emit('pinchstart', event);
+    });
+    socket.on('pinchend', (room, event) => {
+      io.sockets.in(room).emit('pinchend', event);
     });
   });
   return imperio;
