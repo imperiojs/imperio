@@ -49,7 +49,7 @@
 	// import our getCookie function which we will use to pull
 	// out the roomID and nonce cookie for socket connection and display on client
 	
-	var _getCookie = __webpack_require__(12);
+	var _getCookie = __webpack_require__(16);
 	
 	var _getCookie2 = _interopRequireDefault(_getCookie);
 	
@@ -65,23 +65,34 @@
 	// store nonce to use to display and show mobile user how to connect
 	imperio.nonce = (0, _getCookie2.default)('nonce');
 	// take a tap event and emit the tap event
-	imperio.mobileTapShare = __webpack_require__(10);
+	imperio.mobileTapShare = __webpack_require__(14);
 	// sets up listener for motion data and emits object containing x,y,z coords
-	imperio.mobileAccelShare = __webpack_require__(6);
+	imperio.mobileAccelShare = __webpack_require__(8);
+	// sets up a listener for location data and emits object containing coordinates and time
+	imperio.mobileLocationShare = __webpack_require__(11);
+	// take a swipe event and emits that to  server/desktop: swiperight,swipeleft,swipeup,swipedown
+	// This is done with the help of HammerJS
+	imperio.mobileSwipeShare = __webpack_require__(13);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
-	imperio.mobileGyroShare = __webpack_require__(7);
-	imperio.mobileGyroTimer = __webpack_require__(8);
+	imperio.mobileGyroShare = __webpack_require__(9);
+	
+	imperio.mobileGyroTimer = __webpack_require__(10);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.mobileRoomSetup = __webpack_require__(9);
+	imperio.mobileRoomSetup = __webpack_require__(12);
 	// sets up listener for tap event on desktop
-	imperio.desktopTapHandler = __webpack_require__(5);
+	imperio.desktopTapHandler = __webpack_require__(7);
 	// sets up listener for accel event/data on desktop
+	imperio.desktopLocationHandler = __webpack_require__(4);
+	// sets up listener for location event/data on desktop
 	imperio.desktopAccelHandler = __webpack_require__(1);
 	// sets up listener for gyro event/data on desktop
 	imperio.desktopGyroHandler = __webpack_require__(2);
+	
 	imperio.desktopGyroTimer = __webpack_require__(3);
+	//
+	imperio.desktopSwipeHandler = __webpack_require__(6);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.desktopRoomSetup = __webpack_require__(4);
+	imperio.desktopRoomSetup = __webpack_require__(5);
 	// attaches our library object to the window so it is accessible when we use the script tag
 	window.imperio = imperio;
 
@@ -143,6 +154,27 @@
 
 	'use strict';
 	
+	// Sets up a listener for the location data and expects to receive an object
+	// with the location data in the form of {cords: {accuracy:21, altitude:null,
+	// altitudeAccuracy:null, heading:null, latitude:33.9794281, longitude:-118.42238250000001,
+	// speed:null}, timestamp:time data was pulled}.
+	// Accepts 2 arguments:
+	// 1. The socket you would like to connect to.
+	// 2. A callback function that will be run every time the location event is triggered.
+	var desktopLocationHandler = function desktopLocationHandler(socket, callback) {
+	  socket.on('geoLocation', function (locationObject) {
+	    if (callback) callback(locationObject);
+	  });
+	};
+	
+	module.exports = desktopLocationHandler;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
 	// Establishes a connection to the socket and shares the room it should connnect to.
 	// Accepts 3 arguments:
 	// 1. The socket you would like to connect to.
@@ -159,7 +191,41 @@
 	module.exports = desktopRoomSetup;
 
 /***/ },
-/* 5 */
+/* 6 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var desktopSwipeHandler = {};
+	
+	desktopSwipeHandler.left = function (socket, callback) {
+	  socket.on('swipeleft', function () {
+	    if (callback) callback();
+	  });
+	};
+	
+	desktopSwipeHandler.right = function (socket, callback) {
+	  socket.on('swiperight', function () {
+	    if (callback) callback();
+	  });
+	};
+	
+	desktopSwipeHandler.up = function (socket, callback) {
+	  socket.on('swipeup', function () {
+	    if (callback) callback();
+	  });
+	};
+	
+	desktopSwipeHandler.down = function (socket, callback) {
+	  socket.on('swipedown', function () {
+	    if (callback) callback();
+	  });
+	};
+	
+	module.exports = desktopSwipeHandler;
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -179,7 +245,7 @@
 	module.exports = desktopTapHandler;
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -189,9 +255,11 @@
 	// Accepts 3 arguments:
 	// 1. The socket you would like to connect to as the first parameter.
 	// 2. A room name that will inform the server which room to emit the acceleration event and data to.
-	// 3. A callback function that will be run every time the tap event is triggered, by default
+	// 4. A callback function that will be run every time the tap event is triggered, by default
 	// we will provide this function with the accelerometer data.
-	var mobileAccelShare = function mobileAccelShare(socket, room, callback) {
+	var mobileAccelShare = {};
+	
+	mobileAccelShare.gravity = function (socket, room, callback) {
 	  window.ondevicemotion = function (event) {
 	    var x = Math.round(event.accelerationIncludingGravity.x);
 	    var y = Math.round(event.accelerationIncludingGravity.y);
@@ -201,12 +269,21 @@
 	      y: y,
 	      z: z
 	    };
-	    // var rotation = event.rotationRate;
-	    // if (rotation != null) {
-	    //   var arAlpha = Math.round(rotation.alpha);
-	    //   var arBeta = Math.round(rotation.beta);
-	    //   var arGamma = Math.round(rotation.gamma);
-	    // }
+	    socket.emit('acceleration', room, accObject);
+	    if (callback) callback(accObject);
+	  };
+	};
+	
+	mobileAccelShare.noGravity = function (socket, room, callback) {
+	  window.ondevicemotion = function (event) {
+	    var x = Math.round(event.acceleration.x);
+	    var y = Math.round(event.acceleration.y);
+	    var z = Math.round(event.acceleration.z);
+	    var accObject = {
+	      x: x,
+	      y: y,
+	      z: z
+	    };
 	    socket.emit('acceleration', room, accObject);
 	    if (callback) callback(accObject);
 	  };
@@ -215,7 +292,7 @@
 	module.exports = mobileAccelShare;
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -245,7 +322,7 @@
 	module.exports = mobileGyroShare;
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -269,7 +346,33 @@
 	module.exports = mobileGyroTimer;
 
 /***/ },
-/* 9 */
+/* 11 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	* This emits to the specified room, the location of
+	* @param The getCurrentPosition.coords property has several properties eg:
+	*        accuracy,altitude, altitudeAccuracy, heading, latitude, longitude
+	*        & speed
+	*/
+	var mobileLocationShare = function mobileLocationShare(socket, room, callback) {
+	  if (!navigator.geolocation) {
+	    console.log('This browser does not support Geolocation');
+	    return;
+	  }
+	  var locationPosition = navigator.geolocation.getCurrentPosition(function (position) {
+	    return position;
+	  });
+	  socket.emit('geoLocation', room, locationPosition);
+	  if (callback) callback(locationPosition);
+	};
+	
+	module.exports = mobileLocationShare;
+
+/***/ },
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -290,7 +393,52 @@
 	module.exports = mobileRoomSetup;
 
 /***/ },
-/* 10 */
+/* 13 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var mobileSwipeShare = {};
+	
+	mobileSwipeShare.left = function (socket, room, swipeElement, callback) {
+	  // console.log("in mobileSwipe left");
+	  new Hammer(swipeElement).on('swipeleft', function () {
+	    swipeElement.innerHTML = "swiped-left has been emitted from Imperio";
+	    socket.emit('swipeleft', room);
+	    if (callback) callback();
+	  });
+	};
+	
+	mobileSwipeShare.right = function (socket, room, swipeElement, callback) {
+	  // console.log("in mobileSwipe left");
+	  new Hammer(swipeElement).on('swiperight', function () {
+	    swipeElement.innerHTML = "swiped-right has been emitted from Imperio";
+	    socket.emit('swiperight', room);
+	    if (callback) callback();
+	  });
+	};
+	
+	mobileSwipeShare.up = function (socket, room, swipeElement, callback) {
+	  // console.log("in mobileSwipe left");
+	  new Hammer(swipeElement).on('swipeup', function () {
+	    swipeElement.innerHTML = "swiped-up has been emitted from Imperio";
+	    socket.emit('swipeup', room);
+	    if (callback) callback();
+	  });
+	};
+	//
+	// mobileSwipeShare.down = (socket, room, swipeElement, callback) => {
+	//   // console.log("in mobileSwipe left");
+	//   new Hammer(swipeElement).on('swipedown', function(){
+	//     swipeElement.innerHTML = "swipedup has been emitted from Imperio";
+	//     socket.emit('swipedown', room);
+	//     if (callback) callback();
+	//   });
+	// };
+	module.exports = mobileSwipeShare;
+
+/***/ },
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -308,7 +456,7 @@
 	module.exports = mobileTapShare;
 
 /***/ },
-/* 11 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -361,12 +509,12 @@
 	})("undefined" === typeof window ? undefined : window);
 
 /***/ },
-/* 12 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _cookiesMin = __webpack_require__(11);
+	var _cookiesMin = __webpack_require__(15);
 	
 	var _cookiesMin2 = _interopRequireDefault(_cookiesMin);
 	
