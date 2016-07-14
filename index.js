@@ -123,6 +123,14 @@ function initializeImperio(server) {
     socket.on('gyroscopeTimer', (room, gyroObject, emitDate) => {
       io.sockets.in(room).emit('gyroscopeTimer', gyroObject, emitDate, Date.now());
     });
+    socket.on('swipe', (room, event) => {
+      console.log(`swipe event received`);
+      io.sockets.in(room).emit('swipe', event);
+    });
+    socket.on('pinch', (room, event) => {
+      console.log(`pinch`);
+      io.sockets.in(room).emit('pinch', event);
+    });
   });
   return imperio;
 }
