@@ -92,6 +92,16 @@ function initializeImperio(server) {
     // keep track of sockets connected
     // console.log(`socket connected with id: ${socket.id}`);
     // imperio.openSockets[socket.id] = null;
+    function log(...args) {
+      const array = ['Message from server:'];
+      array.push.apply(array, args);
+      socket.emit('log', array);
+    }
+
+    socket.on('message', (message, room) => {
+      log('Client said: ', message);
+      io.sockets.in(room).emit('message', message);
+    });
 
     socket.on('createRoom', clientData => {
       handleCreateRoom(socket, clientData);
@@ -155,14 +165,20 @@ function initializeImperio(server) {
   function handleCreateRoom(socket, clientData) {
     const room = clientData.room;
     const clientRole = clientData.role;
-
+    // roomData = {length: num, sockets: {[socketID]: emitter/receiver}}
     let roomData = io.sockets.adapter.rooms[room];
     // if no room exists, receiver will create it.
     // OR if room exists and there's space in it, emitter will join
     if (!roomData || roomData.length < imperio.globalRoomLimit) {
       socket.join(room);
+      if (clientRole === 'receiver') {
+        io.sockets.in(room).emit('created', room, socket.id);
+      } else if (clientRole === 'emitter') {
+        io.sockets.in(room).emit('joined', room, socket.id);
+      }
+      io.sockets.in(room).emit('ready', room);
       roomData = io.sockets.adapter.rooms[room];
-      roomData.sockets[socket.id] = clientRole; // TODO can I do this?
+      roomData.sockets[socket.id] = clientRole;
       imperio.clientRooms[socket.id] = room;
       io.sockets.in(room).emit('updateRoomData', roomData);
     } else {
