@@ -92,9 +92,9 @@ function initializeImperio(server) {
     // keep track of sockets connected
     // console.log(`socket connected with id: ${socket.id}`);
     // imperio.openSockets[socket.id] = null;
-    function log(...args) {
+    function log() {
       const array = ['Message from server:'];
-      array.push.apply(array, args);
+      array.push.apply(array, arguments);
       socket.emit('log', array);
     }
 
@@ -165,18 +165,18 @@ function initializeImperio(server) {
   function handleCreateRoom(socket, clientData) {
     const room = clientData.room;
     const clientRole = clientData.role;
-    // roomData = {length: num, sockets: {[socketID]: emitter/receiver}}
     let roomData = io.sockets.adapter.rooms[room];
     // if no room exists, receiver will create it.
     // OR if room exists and there's space in it, emitter will join
     if (!roomData || roomData.length < imperio.globalRoomLimit) {
-      socket.join(room);
       if (clientRole === 'receiver') {
+        socket.join(room);
         io.sockets.in(room).emit('created', room, socket.id);
       } else if (clientRole === 'emitter') {
-        io.sockets.in(room).emit('joined', room, socket.id);
+        socket.join(room);
+        socket.emit('joined', room, socket.id);
+        io.sockets.in(room).emit('ready', room);
       }
-      io.sockets.in(room).emit('ready', room);
       roomData = io.sockets.adapter.rooms[room];
       roomData.sockets[socket.id] = clientRole;
       imperio.clientRooms[socket.id] = room;
