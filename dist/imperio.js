@@ -49,7 +49,7 @@
 	// import our getCookie function which we will use to pull
 	// out the roomID and nonce cookie for socket connection and display on client
 	
-	var _getCookie = __webpack_require__(25);
+	var _getCookie = __webpack_require__(28);
 	
 	var _getCookie2 = _interopRequireDefault(_getCookie);
 	
@@ -65,16 +65,16 @@
 	// store nonce to use to display and show mobile user how to connect
 	imperio.nonce = (0, _getCookie2.default)('nonce');
 	// take a tap event and emit the tap event
-	imperio.mobileTapShare = __webpack_require__(23);
+	imperio.mobileTapShare = __webpack_require__(26);
 	// sets up listener for motion data and emits object containing x,y,z coords
-	imperio.mobileAccelShare = __webpack_require__(18);
+	imperio.mobileAccelShare = __webpack_require__(21);
 	// sets up a listener for location data and emits object containing coordinates and time
-	imperio.mobileLocationShare = __webpack_require__(19);
+	imperio.mobileLocationShare = __webpack_require__(22);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
-	imperio.mobileGyroShare = __webpack_require__(20);
-	imperio.mobileGyroTimer = __webpack_require__(21);
+	imperio.mobileGyroShare = __webpack_require__(23);
+	imperio.mobileGyroTimer = __webpack_require__(24);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.mobileRoomSetup = __webpack_require__(22);
+	imperio.mobileRoomSetup = __webpack_require__(25);
 	// sets up listener for tap event on desktop
 	imperio.desktopTapHandler = __webpack_require__(7);
 	// sets up listener for accel event/data on desktop
@@ -89,9 +89,7 @@
 	
 	imperio.curse = __webpack_require__(8);
 	
-	// const events = ['acceleration', 'gyroscope', 'geoLocation', 'pan',
-	//                'pinch', 'press', 'swipe', 'tap', 'pinchstart', 'pinchend'];
-	var events = ['pan', 'panStart', 'panEnd', 'pinch', 'press', 'swipe', 'tap', 'pinchStart', 'pinchEnd'];
+	var events = ['pan', 'panStart', 'panEnd', 'pinch', 'press', 'pressUp', 'rotate', 'rotateStart', 'rotateEnd', 'swipe', 'pinchStart', 'pinchEnd'];
 	events.forEach(function (event) {
 	  var eventHandler = 'desktop' + (event[0].toUpperCase() + event.substring(1)) + 'Handler';
 	  imperio[eventHandler] = function (callback) {
@@ -719,8 +717,11 @@
 	var pinchStartEmitter = __webpack_require__(14);
 	var pinchEndEmitter = __webpack_require__(13);
 	var pressEmitter = __webpack_require__(15);
-	var rotateEmitter = __webpack_require__(16);
-	var swipeEmitter = __webpack_require__(17);
+	var pressUpEmitter = __webpack_require__(16);
+	var rotateEmitter = __webpack_require__(17);
+	var rotateStartEmitter = __webpack_require__(19);
+	var rotateEndEmitter = __webpack_require__(18);
+	var swipeEmitter = __webpack_require__(20);
 	
 	function curse(action, element, callback) {
 	  var hammertime = new Hammer(element);
@@ -731,7 +732,10 @@
 	  if (action === 'pinchStart') pinchStartEmitter(element, callback);
 	  if (action === 'pinchEnd') pinchEndEmitter(element, callback);
 	  if (action === 'press') pressEmitter(element, callback);
+	  if (action === 'pressUp') pressUpEmitter(element, callback);
 	  if (action === 'rotate') rotateEmitter(element, callback);
+	  if (action === 'rotateEnd') rotateEndEmitter(element, callback);
+	  if (action === 'rotateStart') rotateStartEmitter(element, callback);
 	  if (action === 'swipe') swipeEmitter(element, callback);
 	}
 	
@@ -820,6 +824,7 @@
 	  hammertime.get('pinch').set({ enable: true });
 	  hammertime.on('pinch', function (event) {
 	    var pinchData = {};
+	    pinchData.type = 'pinch';
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
 	    imperio.socket.emit('pinch', imperio.room, pinchData);
@@ -915,6 +920,28 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	var pressUpEmitter = function pressUpEmitter(element, callback) {
+	  var hammertime = new _hammerMin2.default(element);
+	  hammertime.on('pressup', function (event) {
+	    imperio.socket.emit('pressUp', imperio.room, event);
+	    if (callback) callback(event);
+	  });
+	};
+	
+	module.exports = pressUpEmitter;
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _hammerMin = __webpack_require__(1);
+	
+	var _hammerMin2 = _interopRequireDefault(_hammerMin);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	var rotateEmitter = function rotateEmitter(element, callback) {
 	  var hammertime = new _hammerMin2.default(element);
 	  hammertime.get('rotate').set({ enable: true });
@@ -930,7 +957,59 @@
 	module.exports = rotateEmitter;
 
 /***/ },
-/* 17 */
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _hammerMin = __webpack_require__(1);
+	
+	var _hammerMin2 = _interopRequireDefault(_hammerMin);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var rotateEndEmitter = function rotateEndEmitter(element, callback) {
+	  var hammertime = new _hammerMin2.default(element);
+	  hammertime.get('rotate').set({ enable: true });
+	  hammertime.on('rotateend', function (event) {
+	    // const rotateData = {};
+	    // rotateData.direction = event.additionalEvent;
+	    // rotateData.scale = event.scale;
+	    imperio.socket.emit('rotateEnd', imperio.room, event);
+	    if (callback) callback(event);
+	  });
+	};
+	
+	module.exports = rotateEndEmitter;
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _hammerMin = __webpack_require__(1);
+	
+	var _hammerMin2 = _interopRequireDefault(_hammerMin);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var rotateStartEmitter = function rotateStartEmitter(element, callback) {
+	  var hammertime = new _hammerMin2.default(element);
+	  hammertime.get('rotate').set({ enable: true });
+	  hammertime.on('rotatestart', function (event) {
+	    // const rotateData = {};
+	    // rotateData.direction = event.additionalEvent;
+	    // rotateData.scale = event.scale;
+	    imperio.socket.emit('rotateStart', imperio.room, event);
+	    if (callback) callback(event);
+	  });
+	};
+	
+	module.exports = rotateStartEmitter;
+
+/***/ },
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -952,7 +1031,7 @@
 	module.exports = swipeEmitter;
 
 /***/ },
-/* 18 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -999,7 +1078,7 @@
 	module.exports = mobileAccelShare;
 
 /***/ },
-/* 19 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1025,7 +1104,7 @@
 	module.exports = mobileGeoLocationShare;
 
 /***/ },
-/* 20 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1055,7 +1134,7 @@
 	module.exports = mobileGyroShare;
 
 /***/ },
-/* 21 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1079,7 +1158,7 @@
 	module.exports = mobileGyroTimer;
 
 /***/ },
-/* 22 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1100,7 +1179,7 @@
 	module.exports = mobileRoomSetup;
 
 /***/ },
-/* 23 */
+/* 26 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1118,7 +1197,7 @@
 	module.exports = mobileTapShare;
 
 /***/ },
-/* 24 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -1171,12 +1250,12 @@
 	})("undefined" === typeof window ? undefined : window);
 
 /***/ },
-/* 25 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _cookiesMin = __webpack_require__(24);
+	var _cookiesMin = __webpack_require__(27);
 	
 	var _cookiesMin2 = _interopRequireDefault(_cookiesMin);
 	
