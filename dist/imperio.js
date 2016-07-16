@@ -49,7 +49,7 @@
 	// import our getCookie function which we will use to pull
 	// out the roomID and nonce cookie for socket connection and display on client
 	
-	var _getCookie = __webpack_require__(28);
+	var _getCookie = __webpack_require__(33);
 	
 	var _getCookie2 = _interopRequireDefault(_getCookie);
 	
@@ -65,29 +65,37 @@
 	// store nonce to use to display and show mobile user how to connect
 	imperio.nonce = (0, _getCookie2.default)('nonce');
 	// take a tap event and emit the tap event
-	imperio.mobileTapShare = __webpack_require__(26);
+	imperio.mobileTapShare = __webpack_require__(30);
 	// sets up listener for motion data and emits object containing x,y,z coords
-	imperio.mobileAccelShare = __webpack_require__(21);
+	imperio.mobileAccelShare = __webpack_require__(24);
 	// sets up a listener for location data and emits object containing coordinates and time
-	imperio.mobileLocationShare = __webpack_require__(22);
+	imperio.mobileLocationShare = __webpack_require__(25);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
-	imperio.mobileGyroShare = __webpack_require__(23);
-	imperio.mobileGyroTimer = __webpack_require__(24);
+	imperio.mobileGyroShare = __webpack_require__(26);
+	
+	imperio.mobileGyroTimer = __webpack_require__(27);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.mobileRoomSetup = __webpack_require__(25);
+	imperio.mobileRoomSetup = __webpack_require__(28);
+	// sets up listener for changes to client connections to the room
+	imperio.mobileRoomUpdate = __webpack_require__(29);
+	// emits socket event to request nonce timeout data
+	imperio.requestNonceTimeout = __webpack_require__(31);
 	// sets up listener for tap event on desktop
-	imperio.desktopTapHandler = __webpack_require__(7);
+	imperio.desktopTapHandler = __webpack_require__(9);
 	// sets up listener for accel event/data on desktop
 	imperio.desktopLocationHandler = __webpack_require__(3);
 	// sets up listener for location event/data on desktop
 	imperio.desktopAccelHandler = __webpack_require__(2);
 	// sets up listener for gyro event/data on desktop
 	imperio.desktopGyroHandler = __webpack_require__(4);
+	
 	imperio.desktopGyroTimer = __webpack_require__(5);
+	//
+	imperio.desktopSwipeHandler = __webpack_require__(8);
 	// establishes connection to socket and shares room it should connnect to
 	imperio.desktopRoomSetup = __webpack_require__(6);
 	
-	imperio.curse = __webpack_require__(8);
+	imperio.curse = __webpack_require__(11);
 	
 	var events = ['pan', 'panStart', 'panEnd', 'pinch', 'press', 'pressUp', 'rotate', 'rotateStart', 'rotateEnd', 'swipe', 'pinchStart', 'pinchEnd'];
 	events.forEach(function (event) {
@@ -98,7 +106,10 @@
 	    });
 	  };
 	});
-	
+	// sets up listener for changes to client connections to the room
+	imperio.desktopRoomUpdate = __webpack_require__(7);
+	// sends updates on nonce timeouts to the browser
+	imperio.nonceTimeoutUpdate = __webpack_require__(10);
 	// attaches our library object to the window so it is accessible when we use the script tag
 	window.imperio = imperio;
 
@@ -675,9 +686,19 @@
 	// 2. A room name that will inform the server which room to create/join.
 	// 3. A callback that is invoked when the connect event is received
 	// (happens once on first connect to socket).
+	// TODO Is this true? the callback is invoked after the msg is emitted, but
+	//   there's no guarantee that the server got it...
 	var desktopRoomSetup = function desktopRoomSetup(socket, room, callback) {
 	  socket.on('connect', function () {
-	    socket.emit('createRoom', room);
+	    // only attempt to join room if room is defined in cookie and passed here
+	    if (room) {
+	      var clientData = {
+	        room: room,
+	        id: socket.id,
+	        role: 'receiver'
+	      };
+	      socket.emit('createRoom', clientData);
+	    }
 	    if (callback) callback();
 	  });
 	};
@@ -686,6 +707,58 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Sets up a listener for updates to client connections to the room.
+	// Accepts 2 arguments:
+	// 1. The connection socket
+	// 2. A callback function to handle the roomData object passed with the event
+	var desktopRoomUpdate = function desktopRoomUpdate(socket, callback) {
+	  socket.on('updateRoomData', function (roomData) {
+	    if (callback) callback(roomData);
+	  });
+	};
+	
+	module.exports = desktopRoomUpdate;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var desktopSwipeHandler = {};
+	
+	desktopSwipeHandler.left = function (socket, callback) {
+	  socket.on('swipeleft', function () {
+	    if (callback) callback();
+	  });
+	};
+	
+	desktopSwipeHandler.right = function (socket, callback) {
+	  socket.on('swiperight', function () {
+	    if (callback) callback();
+	  });
+	};
+	
+	desktopSwipeHandler.up = function (socket, callback) {
+	  socket.on('swipeup', function () {
+	    if (callback) callback();
+	  });
+	};
+	
+	desktopSwipeHandler.down = function (socket, callback) {
+	  socket.on('swipedown', function () {
+	    if (callback) callback();
+	  });
+	};
+	
+	module.exports = desktopSwipeHandler;
+
+/***/ },
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -705,23 +778,42 @@
 	module.exports = desktopTapHandler;
 
 /***/ },
-/* 8 */
+/* 10 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Establishes a connection to the socket and shares the room it should connnect to.
+	// Accepts 3 arguments:
+	// 1. The socket you would like to connect to.
+	// 2. A room name that will inform the server which room to create/join.
+	// 3. A callback that is invoked when the connect event is received
+	var nonceTimeoutUpdate = function nonceTimeoutUpdate(socket, callback) {
+	  socket.on('updateNonceTimeouts', function (nonceTimeouts) {
+	    if (callback) callback(nonceTimeouts);
+	  });
+	};
+	
+	module.exports = nonceTimeoutUpdate;
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var panEmitter = __webpack_require__(9);
-	var panStartEmitter = __webpack_require__(11);
-	var panEndEmitter = __webpack_require__(10);
-	var pinchEmitter = __webpack_require__(12);
-	var pinchStartEmitter = __webpack_require__(14);
-	var pinchEndEmitter = __webpack_require__(13);
-	var pressEmitter = __webpack_require__(15);
-	var pressUpEmitter = __webpack_require__(16);
-	var rotateEmitter = __webpack_require__(17);
-	var rotateStartEmitter = __webpack_require__(19);
-	var rotateEndEmitter = __webpack_require__(18);
-	var swipeEmitter = __webpack_require__(20);
+	var panEmitter = __webpack_require__(12);
+	var panStartEmitter = __webpack_require__(14);
+	var panEndEmitter = __webpack_require__(13);
+	var pinchEmitter = __webpack_require__(15);
+	var pinchStartEmitter = __webpack_require__(17);
+	var pinchEndEmitter = __webpack_require__(16);
+	var pressEmitter = __webpack_require__(18);
+	var pressUpEmitter = __webpack_require__(19);
+	var rotateEmitter = __webpack_require__(20);
+	var rotateStartEmitter = __webpack_require__(22);
+	var rotateEndEmitter = __webpack_require__(21);
+	var swipeEmitter = __webpack_require__(23);
 	
 	function curse(action, element, callback) {
 	  var hammertime = new Hammer(element);
@@ -742,7 +834,7 @@
 	module.exports = curse;
 
 /***/ },
-/* 9 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -764,7 +856,7 @@
 	module.exports = panEmitter;
 
 /***/ },
-/* 10 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -786,7 +878,7 @@
 	module.exports = panEndEmitter;
 
 /***/ },
-/* 11 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -808,7 +900,7 @@
 	module.exports = panStartEmitter;
 
 /***/ },
-/* 12 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -835,7 +927,7 @@
 	module.exports = pinchEmitter;
 
 /***/ },
-/* 13 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -861,7 +953,7 @@
 	module.exports = pinchEndEmitter;
 
 /***/ },
-/* 14 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -887,7 +979,7 @@
 	module.exports = pinchStartEmitter;
 
 /***/ },
-/* 15 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -909,7 +1001,7 @@
 	module.exports = pressEmitter;
 
 /***/ },
-/* 16 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -931,7 +1023,7 @@
 	module.exports = pressUpEmitter;
 
 /***/ },
-/* 17 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -957,7 +1049,7 @@
 	module.exports = rotateEmitter;
 
 /***/ },
-/* 18 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -983,7 +1075,7 @@
 	module.exports = rotateEndEmitter;
 
 /***/ },
-/* 19 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1009,7 +1101,7 @@
 	module.exports = rotateStartEmitter;
 
 /***/ },
-/* 20 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1031,7 +1123,7 @@
 	module.exports = swipeEmitter;
 
 /***/ },
-/* 21 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1078,7 +1170,7 @@
 	module.exports = mobileAccelShare;
 
 /***/ },
-/* 22 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1104,7 +1196,7 @@
 	module.exports = mobileGeoLocationShare;
 
 /***/ },
-/* 23 */
+/* 26 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1134,7 +1226,7 @@
 	module.exports = mobileGyroShare;
 
 /***/ },
-/* 24 */
+/* 27 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1158,7 +1250,7 @@
 	module.exports = mobileGyroTimer;
 
 /***/ },
-/* 25 */
+/* 28 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1171,15 +1263,41 @@
 	// (happens once on first connect to socket).
 	var mobileRoomSetup = function mobileRoomSetup(socket, room, callback) {
 	  socket.on('connect', function () {
-	    socket.emit('createRoom', room);
-	    if (callback) callback();
+	    // only attempt to join room if room is defined in cookie and passed here
+	    if (room) {
+	      var clientData = {
+	        room: room,
+	        id: socket.id,
+	        role: 'emitter'
+	      };
+	      socket.emit('createRoom', clientData);
+	    }
+	    if (callback) callback(socket);
 	  });
 	};
 	
 	module.exports = mobileRoomSetup;
 
 /***/ },
-/* 26 */
+/* 29 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Sets up a listener for updates to client connections to the room.
+	// Accepts 2 arguments:
+	// 1. The connection socket
+	// 2. A callback function to handle the roomData object passed with the event
+	var mobileRoomUpdate = function mobileRoomUpdate(socket, callback) {
+	  socket.on('updateRoomData', function (roomData) {
+	    if (callback) callback(roomData);
+	  });
+	};
+	
+	module.exports = mobileRoomUpdate;
+
+/***/ },
+/* 30 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1197,7 +1315,20 @@
 	module.exports = mobileTapShare;
 
 /***/ },
-/* 27 */
+/* 31 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	function requestNonceTimeout(socket, room, callback) {
+	  imperio.socket.emit('updateNonceTimeouts', imperio.room);
+	  if (callback) callback();
+	}
+	
+	module.exports = requestNonceTimeout;
+
+/***/ },
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -1250,12 +1381,12 @@
 	})("undefined" === typeof window ? undefined : window);
 
 /***/ },
-/* 28 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _cookiesMin = __webpack_require__(27);
+	var _cookiesMin = __webpack_require__(32);
 	
 	var _cookiesMin2 = _interopRequireDefault(_cookiesMin);
 	
