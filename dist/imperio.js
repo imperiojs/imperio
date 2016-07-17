@@ -49,7 +49,7 @@
 	// import our getCookie function which we will use to pull
 	// out the roomID and nonce cookie for socket connection and display on client
 	
-	var _getCookie = __webpack_require__(33);
+	var _getCookie = __webpack_require__(27);
 	
 	var _getCookie2 = _interopRequireDefault(_getCookie);
 	
@@ -65,39 +65,35 @@
 	// store nonce to use to display and show mobile user how to connect
 	imperio.nonce = (0, _getCookie2.default)('nonce');
 	// take a tap event and emit the tap event
-	imperio.mobileTapShare = __webpack_require__(30);
+	imperio.mobileTapShare = __webpack_require__(24);
 	// sets up listener for motion data and emits object containing x,y,z coords
-	imperio.mobileAccelShare = __webpack_require__(24);
+	imperio.mobileAccelShare = __webpack_require__(18);
 	// sets up a listener for location data and emits object containing coordinates and time
-	imperio.mobileLocationShare = __webpack_require__(25);
+	imperio.mobileLocationShare = __webpack_require__(19);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
-	imperio.mobileGyroShare = __webpack_require__(26);
+	imperio.mobileGyroShare = __webpack_require__(20);
 	
-	imperio.mobileGyroTimer = __webpack_require__(27);
+	imperio.mobileGyroTimer = __webpack_require__(21);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.mobileRoomSetup = __webpack_require__(28);
+	imperio.mobileRoomSetup = __webpack_require__(22);
 	// sets up listener for changes to client connections to the room
-	imperio.mobileRoomUpdate = __webpack_require__(29);
+	imperio.mobileRoomUpdate = __webpack_require__(23);
 	// emits socket event to request nonce timeout data
-	imperio.requestNonceTimeout = __webpack_require__(31);
+	imperio.requestNonceTimeout = __webpack_require__(25);
 	// sets up listener for tap event on desktop
-	imperio.desktopTapHandler = __webpack_require__(9);
+	imperio.desktopTapHandler = __webpack_require__(7);
 	// sets up listener for accel event/data on desktop
 	imperio.desktopLocationHandler = __webpack_require__(3);
 	// sets up listener for location event/data on desktop
 	imperio.desktopAccelHandler = __webpack_require__(2);
 	// sets up listener for gyro event/data on desktop
 	imperio.desktopGyroHandler = __webpack_require__(4);
-	
-	imperio.desktopGyroTimer = __webpack_require__(5);
-	//
-	imperio.desktopSwipeHandler = __webpack_require__(8);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.desktopRoomSetup = __webpack_require__(6);
+	imperio.desktopRoomSetup = __webpack_require__(5);
 	
-	imperio.curse = __webpack_require__(11);
+	imperio.curse = __webpack_require__(9);
 	
-	var events = ['pan', 'panStart', 'panEnd', 'pinch', 'press', 'pressUp', 'rotate', 'rotateStart', 'rotateEnd', 'swipe', 'pinchStart', 'pinchEnd'];
+	var events = ['pan', 'pinch', 'press', 'pressUp', 'rotate', 'rotateStart', 'rotateEnd', 'swipe'];
 	events.forEach(function (event) {
 	  var eventHandler = 'desktop' + (event[0].toUpperCase() + event.substring(1)) + 'Handler';
 	  imperio[eventHandler] = function (callback) {
@@ -107,9 +103,9 @@
 	  };
 	});
 	// sets up listener for changes to client connections to the room
-	imperio.desktopRoomUpdate = __webpack_require__(7);
+	imperio.desktopRoomUpdate = __webpack_require__(6);
 	// sends updates on nonce timeouts to the browser
-	imperio.nonceTimeoutUpdate = __webpack_require__(10);
+	imperio.nonceTimeoutUpdate = __webpack_require__(8);
 	// attaches our library object to the window so it is accessible when we use the script tag
 	window.imperio = imperio;
 
@@ -666,20 +662,6 @@
 
 	'use strict';
 	
-	var desktopGyroTimer = function desktopGyroTimer(socket, callback) {
-	  socket.on('gyroscopeTimer', function (gyroObj, emitDate, serverDate) {
-	    if (callback) callback(gyroObj, emitDate, serverDate);
-	  });
-	};
-	
-	module.exports = desktopGyroTimer;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
 	// Establishes a connection to the socket and shares the room it should connnect to.
 	// Accepts 3 arguments:
 	// 1. The socket you would like to connect to.
@@ -706,7 +688,7 @@
 	module.exports = desktopRoomSetup;
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -724,41 +706,7 @@
 	module.exports = desktopRoomUpdate;
 
 /***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var desktopSwipeHandler = {};
-	
-	desktopSwipeHandler.left = function (socket, callback) {
-	  socket.on('swipeleft', function () {
-	    if (callback) callback();
-	  });
-	};
-	
-	desktopSwipeHandler.right = function (socket, callback) {
-	  socket.on('swiperight', function () {
-	    if (callback) callback();
-	  });
-	};
-	
-	desktopSwipeHandler.up = function (socket, callback) {
-	  socket.on('swipeup', function () {
-	    if (callback) callback();
-	  });
-	};
-	
-	desktopSwipeHandler.down = function (socket, callback) {
-	  socket.on('swipedown', function () {
-	    if (callback) callback();
-	  });
-	};
-	
-	module.exports = desktopSwipeHandler;
-
-/***/ },
-/* 9 */
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -778,7 +726,7 @@
 	module.exports = desktopTapHandler;
 
 /***/ },
-/* 10 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -797,32 +745,24 @@
 	module.exports = nonceTimeoutUpdate;
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var panEmitter = __webpack_require__(12);
-	var panStartEmitter = __webpack_require__(14);
-	var panEndEmitter = __webpack_require__(13);
-	var pinchEmitter = __webpack_require__(15);
-	var pinchStartEmitter = __webpack_require__(17);
-	var pinchEndEmitter = __webpack_require__(16);
-	var pressEmitter = __webpack_require__(18);
-	var pressUpEmitter = __webpack_require__(19);
-	var rotateEmitter = __webpack_require__(20);
-	var rotateStartEmitter = __webpack_require__(22);
-	var rotateEndEmitter = __webpack_require__(21);
-	var swipeEmitter = __webpack_require__(23);
+	var panEmitter = __webpack_require__(10);
+	var pinchEmitter = __webpack_require__(11);
+	var pressEmitter = __webpack_require__(12);
+	var pressUpEmitter = __webpack_require__(13);
+	var rotateEmitter = __webpack_require__(14);
+	var rotateStartEmitter = __webpack_require__(16);
+	var rotateEndEmitter = __webpack_require__(15);
+	var swipeEmitter = __webpack_require__(17);
 	
 	function curse(action, element, callback) {
 	  var hammertime = new Hammer(element);
 	  if (action === 'pan') panEmitter(element, callback);
-	  if (action === 'panStart') panStartEmitter(element, callback);
-	  if (action === 'panEnd') panEndEmitter(element, callback);
 	  if (action === 'pinch') pinchEmitter(element, callback);
-	  if (action === 'pinchStart') pinchStartEmitter(element, callback);
-	  if (action === 'pinchEnd') pinchEndEmitter(element, callback);
 	  if (action === 'press') pressEmitter(element, callback);
 	  if (action === 'pressUp') pressUpEmitter(element, callback);
 	  if (action === 'rotate') rotateEmitter(element, callback);
@@ -834,92 +774,95 @@
 	module.exports = curse;
 
 /***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/* 10 */
+/***/ function(module, exports) {
 
 	'use strict';
 	
-	var _hammerMin = __webpack_require__(1);
-	
-	var _hammerMin2 = _interopRequireDefault(_hammerMin);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function buildPanObject(panEventObject) {
+	  var panObject = {};
+	  panObject.center = panEventObject.center;
+	  panObject.deltaX = panEventObject.deltaX;
+	  panObject.deltaY = panEventObject.deltaY;
+	  panObject.velocityX = panEventObject.velocityX;
+	  panObject.velocityY = panEventObject.velocityY;
+	  panObject.direction = panEventObject.type;
+	  panObject.deltaTime = panEventObject.deltaTime;
+	  panObject.start = false;
+	  panObject.end = false;
+	  return panObject;
+	}
 	
 	var panEmitter = function panEmitter(element, callback) {
-	  var hammertime = new _hammerMin2.default(element);
+	  var hammertime = new Hammer(element);
 	  hammertime.on('pan', function (event) {
-	    imperio.socket.emit('pan', imperio.room, event);
-	    if (callback) callback(event);
+	    var panData = buildPanObject(event);
+	    imperio.socket.emit('pan', imperio.room, panData);
+	    if (callback) callback(panData);
+	  });
+	  hammertime.on('panstart', function (event) {
+	    var panData = buildPanObject(event);
+	    panData.start = true;
+	    imperio.socket.emit('pan', imperio.room, panData);
+	    if (callback) callback(panData);
+	  });
+	  hammertime.on('panend', function (event) {
+	    var panData = buildPanObject(event);
+	    panData.end = true;
+	    imperio.socket.emit('pan', imperio.room, panData);
+	    if (callback) callback(panData);
 	  });
 	};
 	
 	module.exports = panEmitter;
 
 /***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/* 11 */
+/***/ function(module, exports) {
 
 	'use strict';
 	
-	var _hammerMin = __webpack_require__(1);
-	
-	var _hammerMin2 = _interopRequireDefault(_hammerMin);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var panEndEmitter = function panEndEmitter(element, callback) {
-	  var hammertime = new _hammerMin2.default(element);
-	  hammertime.on('panend', function (event) {
-	    imperio.socket.emit('panEnd', imperio.room, event);
-	    if (callback) callback(event);
-	  });
-	};
-	
-	module.exports = panEndEmitter;
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _hammerMin = __webpack_require__(1);
-	
-	var _hammerMin2 = _interopRequireDefault(_hammerMin);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var panStartEmitter = function panStartEmitter(element, callback) {
-	  var hammertime = new _hammerMin2.default(element);
-	  hammertime.on('panstart', function (event) {
-	    imperio.socket.emit('panStart', imperio.room, event);
-	    if (callback) callback(event);
-	  });
-	};
-	
-	module.exports = panStartEmitter;
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _hammerMin = __webpack_require__(1);
-	
-	var _hammerMin2 = _interopRequireDefault(_hammerMin);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function buildPinchObject(panEventObject) {
+	  var pinchObject = {};
+	  pinchObject.center = panEventObject.center;
+	  pinchObject.deltaX = panEventObject.deltaX;
+	  pinchObject.deltaY = panEventObject.deltaY;
+	  pinchObject.velocityX = panEventObject.velocityX;
+	  pinchObject.velocityY = panEventObject.velocityY;
+	  pinchObject.direction = panEventObject.additionalEvent;
+	  pinchObject.deltaTime = panEventObject.deltaTime;
+	  pinchObject.start = false;
+	  pinchObject.end = false;
+	  return pinchObject;
+	}
 	
 	var pinchEmitter = function pinchEmitter(element, callback) {
-	  var hammertime = new _hammerMin2.default(element);
+	  var hammertime = new Hammer(element);
 	  hammertime.get('pinch').set({ enable: true });
 	  hammertime.on('pinch', function (event) {
 	    var pinchData = {};
 	    pinchData.type = 'pinch';
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
-	    imperio.socket.emit('pinch', imperio.room, pinchData);
+	    imperio.socket.emit('pinch', imperio.room, event);
+	    if (callback) callback(pinchData);
+	  });
+	  hammertime.on('pinchstart', function (event) {
+	    var pinchData = {};
+	    pinchData.type = 'pinch';
+	    pinchData.direction = event.additionalEvent;
+	    pinchData.scale = event.scale;
+	    pinchData.start = true;
+	    imperio.socket.emit('pinch', imperio.room, event);
+	    if (callback) callback(pinchData);
+	  });
+	  hammertime.on('pinchend', function (event) {
+	    var pinchData = {};
+	    pinchData.type = 'pinch';
+	    pinchData.direction = event.additionalEvent;
+	    pinchData.scale = event.scale;
+	    pinchData.end = true;
+	    imperio.socket.emit('pinch', imperio.room, event);
 	    if (callback) callback(pinchData);
 	  });
 	};
@@ -927,59 +870,7 @@
 	module.exports = pinchEmitter;
 
 /***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _hammerMin = __webpack_require__(1);
-	
-	var _hammerMin2 = _interopRequireDefault(_hammerMin);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var pinchEndEmitter = function pinchEndEmitter(element) {
-	  var hammertime = new _hammerMin2.default(element);
-	  hammertime.get('pinch').set({ enable: true });
-	  hammertime.on('pinchend', function (event, callback) {
-	    var pinchData = {};
-	    pinchData.direction = event.additionalEvent;
-	    pinchData.scale = event.scale;
-	    imperio.socket.emit('pinchEnd', imperio.room, pinchData);
-	    if (callback) callback(pinchData);
-	  });
-	};
-	
-	module.exports = pinchEndEmitter;
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _hammerMin = __webpack_require__(1);
-	
-	var _hammerMin2 = _interopRequireDefault(_hammerMin);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var pinchStartEmitter = function pinchStartEmitter(element, callback) {
-	  var hammertime = new _hammerMin2.default(element);
-	  hammertime.get('pinch').set({ enable: true });
-	  hammertime.on('pinchstart', function (event) {
-	    var pinchData = {};
-	    pinchData.direction = event.additionalEvent;
-	    pinchData.scale = event.scale;
-	    imperio.socket.emit('pinchStart', imperio.room, pinchData);
-	    if (callback) callback(pinchData);
-	  });
-	};
-	
-	module.exports = pinchStartEmitter;
-
-/***/ },
-/* 18 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1001,7 +892,7 @@
 	module.exports = pressEmitter;
 
 /***/ },
-/* 19 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1023,7 +914,7 @@
 	module.exports = pressUpEmitter;
 
 /***/ },
-/* 20 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1049,7 +940,7 @@
 	module.exports = rotateEmitter;
 
 /***/ },
-/* 21 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1075,7 +966,7 @@
 	module.exports = rotateEndEmitter;
 
 /***/ },
-/* 22 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1101,7 +992,7 @@
 	module.exports = rotateStartEmitter;
 
 /***/ },
-/* 23 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1123,7 +1014,7 @@
 	module.exports = swipeEmitter;
 
 /***/ },
-/* 24 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1170,7 +1061,7 @@
 	module.exports = mobileAccelShare;
 
 /***/ },
-/* 25 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1196,7 +1087,7 @@
 	module.exports = mobileGeoLocationShare;
 
 /***/ },
-/* 26 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1226,7 +1117,7 @@
 	module.exports = mobileGyroShare;
 
 /***/ },
-/* 27 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1250,7 +1141,7 @@
 	module.exports = mobileGyroTimer;
 
 /***/ },
-/* 28 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1279,7 +1170,7 @@
 	module.exports = mobileRoomSetup;
 
 /***/ },
-/* 29 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1297,7 +1188,7 @@
 	module.exports = mobileRoomUpdate;
 
 /***/ },
-/* 30 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1315,7 +1206,7 @@
 	module.exports = mobileTapShare;
 
 /***/ },
-/* 31 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1328,7 +1219,7 @@
 	module.exports = requestNonceTimeout;
 
 /***/ },
-/* 32 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -1381,12 +1272,12 @@
 	})("undefined" === typeof window ? undefined : window);
 
 /***/ },
-/* 33 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _cookiesMin = __webpack_require__(32);
+	var _cookiesMin = __webpack_require__(26);
 	
 	var _cookiesMin2 = _interopRequireDefault(_cookiesMin);
 	
