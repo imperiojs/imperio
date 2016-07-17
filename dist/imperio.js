@@ -168,18 +168,15 @@
 	// Accepts 1 argument:
 	// 1. A callback function that will be run every time the acceleration event is triggered.
 	var desktopAccelHandler = function desktopAccelHandler(callback) {
-	  if (imperio.webRTCSupport === true && imperio.dataChannel.readyState === 'open') {
-	    imperio.dataChannel.onmessage = function (event) {
-	      var eventObject = JSON.parse(event.data);
-	      if (eventObject.type === 'acceleration') {
-	        if (callback) callback(eventObject);
-	      }
-	    };
-	  } else {
-	    imperio.socket.on('acceleration', function (accObject) {
-	      if (callback) callback(accObject);
-	    });
-	  }
+	  imperio.socket.on('acceleration', function (accObject) {
+	    if (callback) callback(accObject);
+	  });
+	  imperio.dataChannel.onmessage = function (event) {
+	    var eventObject = JSON.parse(event.data);
+	    if (eventObject.type === 'acceleration') {
+	      if (callback) callback(eventObject);
+	    }
+	  };
 	};
 	
 	module.exports = desktopAccelHandler;
@@ -412,7 +409,7 @@
 	      y: y,
 	      z: z
 	    };
-	    if (imperio.webRTCSupport === true && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
 	      imperio.dataChannel.send(JSON.stringify(accObject));
 	    } else imperio.socket.emit('acceleration', imperio.room, accObject);
 	    if (callback) callback(accObject);
@@ -430,7 +427,7 @@
 	      y: y,
 	      z: z
 	    };
-	    if (imperio.webRTCSupport === true && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
 	      imperio.dataChannel.send(JSON.stringify(accObject));
 	    } else imperio.socket.emit('acceleration', imperio.room, accObject);
 	    if (callback) callback(accObject);
@@ -627,8 +624,10 @@
 	// 1. A callback function that will be run every time the tap event is triggered.
 	var mobileTapShare = function mobileTapShare(callback) {
 	  if (imperio.webRTCSupport === true && imperio.dataChannel.readyState === 'open') {
+	    console.log('webRTC tap event');
 	    imperio.dataChannel.send('tap');
 	  } else {
+	    console.log('socket tap event');
 	    imperio.socket.emit('tap', imperio.room);
 	  }
 	  if (callback) callback();
@@ -776,9 +775,17 @@
 	'use strict';
 	
 	var onDataChannelCreated = function onDataChannelCreated() {
-	  if (imperio.channel) {
-	    imperio.channel.onopen = function () {
+	  if (imperio.dataChannel) {
+	    imperio.dataChannel.onopen = function () {
 	      console.log('CHANNEL opened!!!');
+	      imperio.connectionType = 'webRTC';
+	      imperio.dataChannel.onmessage = function (event) {
+	        var eventObject = JSON.parse(event.data);
+	        if (eventObject.type === 'acceleration') {
+	          delete eventObject.type;
+	          if (imperio.callbacks.acceleration) imperio.callbacks.acceleration(eventObject);
+	        }
+	      };
 	    };
 	  }
 	};
@@ -824,19 +831,17 @@
 	var webRTCConnect = function webRTCConnect() {
 	  imperio.socket.on('created', function (room, clientId) {
 	    console.log('Created room, ' + room + ' - my client ID is, ' + clientId);
-	    var isInitiator = true;
+	  });
+	  imperio.socket.on('log', function (array) {
+	    console.log.apply(console, array);
 	  });
 	  imperio.socket.on('joined', function (room, clientId) {
 	    console.log('This peer has joined room, ' + room + ', with client ID, ' + clientId);
-	    var isInitiator = false;
-	    createPeerConnection(isInitiator, imperio.webRTCConfiguration);
+	    createPeerConnection(false, imperio.webRTCConfiguration);
 	  });
 	  imperio.socket.on('ready', function () {
 	    console.log('Socket is ready');
 	    createPeerConnection(true, imperio.webRTCConfiguration);
-	  });
-	  imperio.socket.on('log', function (array) {
-	    console.log.apply(console, array);
 	  });
 	  imperio.socket.on('message', function (message) {
 	    console.log('Client received message: ' + message);

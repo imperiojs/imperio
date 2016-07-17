@@ -51,7 +51,7 @@ socket.on('log', array => {
 });
 
 socket.on('message', message => {
-  console.log(`Client received message: ${message}`);
+  console.log('Client received message:', message);
   signalingMessageCallback(message);
 });
 // Join a room
@@ -61,7 +61,7 @@ socket.emit('create or join', room);
 * Send message to signaling server
 */
 function sendMessage(message) {
-  console.log(`Client sending message: ${message}`);
+  console.log('Client sending message:', message);
   socket.emit('message', message);
 }
 
@@ -142,34 +142,6 @@ const webRTCDataObject = {};
 function onDataChannelCreated(channel) {
   channel.onopen = () => {
     console.log('CHANNEL opened!!!');
-
-    window.ondevicemotion = event => {
-      const x = Math.round(event.accelerationIncludingGravity.x);
-      const y = Math.round(event.accelerationIncludingGravity.y);
-      const z = Math.round(event.accelerationIncludingGravity.z);
-      const accObject = {
-        x,
-        y,
-        z,
-      };
-      webRTCDataObject.accObject = accObject;
-      channel.send(JSON.stringify(webRTCDataObject));
-      delete webRTCDataObject.accObject;
-    };
-
-    window.ondeviceorientation = event => {
-      const alpha = Math.round(event.alpha);
-      const beta = Math.round(event.beta);
-      const gamma = Math.round(event.gamma);
-      const gyroObject = {
-        alpha,
-        beta,
-        gamma,
-      };
-      webRTCDataObject.gyroObject = gyroObject;
-      channel.send(JSON.stringify(webRTCDataObject));
-      delete webRTCDataObject.gyroObject;
-    };
 
     navigator.geolocation.getCurrentPosition(position => {
       webRTCDataObject.locationObject = position;
