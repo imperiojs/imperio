@@ -351,36 +351,21 @@
 	'use strict';
 	
 	var panEmitter = function panEmitter(element, localCallback, modifyDataCallback) {
-	  var hammertime = new Hammer(element);
-	  hammertime.on('pan', function (event) {
-	    event.start = false;
-	    event.end = false;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'pan';
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
-	    } else imperio.socket.emit('pan', imperio.room, event);
-	    if (localCallback) localCallback(event);
-	  });
-	  hammertime.on('panstart', function (event) {
-	    event.start = true;
-	    event.end = false;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'pan';
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
-	    } else imperio.socket.emit('pan', imperio.room, event);
-	    if (localCallback) localCallback(event);
-	  });
-	  hammertime.on('panend', function (event) {
-	    event.start = false;
-	    event.end = true;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'pan';
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
-	    } else imperio.socket.emit('pan', imperio.room, event);
-	    if (localCallback) localCallback(event);
+	  var imperioControl = new Hammer(element);
+	  var panEvents = ['pan', 'panstart', 'panend'];
+	  panEvents.forEach(function (panEvent) {
+	    imperioControl.on(panEvent, function (event) {
+	      event.start = panEvent.indexOf('start') > -1;
+	      event.end = panEvent.indexOf('end') > -1;
+	      if (modifyDataCallback) event = modifyDataCallback(event);
+	      if (imperio.connectionType === 'webRTC') {
+	        var webRTCData = {};
+	        webRTCData.data = event;
+	        webRTCData.type = 'pan';
+	        imperio.dataChannel.send(JSON.stringify(webRTCData));
+	      } else imperio.socket.emit('pan', imperio.room, event);
+	      if (localCallback) localCallback(event);
+	    });
 	  });
 	};
 	
@@ -393,37 +378,22 @@
 	'use strict';
 	
 	var pinchEmitter = function pinchEmitter(element, localCallback, modifyDataCallback) {
-	  var hammertime = new Hammer(element);
-	  hammertime.get('pinch').set({ enable: true });
-	  hammertime.on('pinch', function (event) {
-	    event.start = false;
-	    event.end = false;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'pinch';
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
-	    } else imperio.socket.emit('pinch', imperio.room, event);
-	    if (localCallback) localCallback(event);
-	  });
-	  hammertime.on('pinchstart', function (event) {
-	    event.start = true;
-	    event.end = false;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'pinch';
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
-	    } else imperio.socket.emit('pinch', imperio.room, event);
-	    if (localCallback) localCallback(event);
-	  });
-	  hammertime.on('pinchend', function (event) {
-	    event.start = false;
-	    event.end = true;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'pinch';
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
-	    } else imperio.socket.emit('pinch', imperio.room, event);
-	    if (localCallback) localCallback(event);
+	  var imperioControl = new Hammer(element);
+	  var pinchEvents = ['pinch', 'pinchstart', 'pinchend'];
+	  imperioControl.get('pinch').set({ enable: true });
+	  pinchEvents.forEach(function (pinchEvent) {
+	    imperioControl.on(pinchEvent, function (event) {
+	      event.start = pinchEvent.indexOf('start') > -1;
+	      event.end = pinchEvent.indexOf('end') > -1;
+	      if (modifyDataCallback) event = modifyDataCallback(event);
+	      if (imperio.connectionType === 'webRTC') {
+	        var webRTCData = {};
+	        webRTCData.data = event;
+	        webRTCData.type = 'pinch';
+	        imperio.dataChannel.send(JSON.stringify(webRTCData));
+	      } else imperio.socket.emit('pinch', imperio.room, event);
+	      if (localCallback) localCallback(event);
+	    });
 	  });
 	};
 	
@@ -436,12 +406,16 @@
 	'use strict';
 	
 	var pressEmitter = function pressEmitter(element, localCallback, modifyDataCallback) {
-	  var hammertime = new Hammer(element);
-	  hammertime.on('press', function (event) {
+	  var imperioControl = new Hammer(element);
+	  imperioControl.on('press', function (event) {
+	    event.start = true;
+	    event.end = false;
 	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'press';
 	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
+	      var webRTCData = {};
+	      webRTCData.data = event;
+	      webRTCData.type = 'press';
+	      imperio.dataChannel.send(JSON.stringify(webRTCData));
 	    } else imperio.socket.emit('press', imperio.room, event);
 	    if (localCallback) localCallback(event);
 	  });
@@ -458,10 +432,14 @@
 	var pressUpEmitter = function pressUpEmitter(element, localCallback, modifyDataCallback) {
 	  var hammertime = new Hammer(element);
 	  hammertime.on('pressup', function (event) {
+	    event.start = false;
+	    event.end = true;
 	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'pressUp';
 	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
+	      var webRTCData = {};
+	      webRTCData.data = event;
+	      webRTCData.type = 'pressUp';
+	      imperio.dataChannel.send(JSON.stringify(webRTCData));
 	    } else imperio.socket.emit('pressUp', imperio.room, event);
 	    if (localCallback) localCallback(event);
 	  });
@@ -476,37 +454,22 @@
 	'use strict';
 	
 	var rotateEmitter = function rotateEmitter(element, localCallback, modifyDataCallback) {
-	  var hammertime = new Hammer(element);
-	  hammertime.get('rotate').set({ enable: true });
-	  hammertime.on('rotate', function (event) {
-	    event.start = false;
-	    event.end = false;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'rotate';
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
-	    } else imperio.socket.emit('rotate', imperio.room, event);
-	    if (localCallback) localCallback(event);
-	  });
-	  hammertime.on('rotatestart', function (event) {
-	    event.start = true;
-	    event.end = false;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'rotate';
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
-	    } else imperio.socket.emit('rotate', imperio.room, event);
-	    if (localCallback) localCallback(event);
-	  });
-	  hammertime.on('rotateend', function (event) {
-	    event.start = false;
-	    event.end = true;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    event.type = 'rotate';
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
-	    } else imperio.socket.emit('rotate', imperio.room, event);
-	    if (localCallback) localCallback(event);
+	  var imperioControl = new Hammer(element);
+	  var rotateEvents = ['rotate', 'rotatestart', 'rotateend'];
+	  imperioControl.get('rotate').set({ enable: true });
+	  rotateEvents.forEach(function (rotateEvent) {
+	    imperioControl.on(rotateEvent, function (event) {
+	      event.start = rotateEvent.indexOf('start') > -1;
+	      event.end = rotateEvent.indexOf('end') > -1;
+	      if (modifyDataCallback) event = modifyDataCallback(event);
+	      if (imperio.connectionType === 'webRTC') {
+	        var webRTCData = {};
+	        webRTCData.data = event;
+	        webRTCData.type = 'rotate';
+	        imperio.dataChannel.send(JSON.stringify(webRTCData));
+	      } else imperio.socket.emit('rotate', imperio.room, event);
+	      if (localCallback) localCallback(event);
+	    });
 	  });
 	};
 	
@@ -519,14 +482,16 @@
 	'use strict';
 	
 	var swipeEmitter = function swipeEmitter(element, localCallback, modifyDataCallback) {
-	  var hammertime = new Hammer(element);
-	  hammertime.on('swipe', function (event) {
+	  var imperioControl = new Hammer(element);
+	  imperioControl.on('swipe', function (event) {
 	    event.start = true;
 	    event.end = true;
 	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    // event.type = 'swipe';
 	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(event));
+	      var webRTCData = {};
+	      webRTCData.data = event;
+	      webRTCData.type = 'swipe';
+	      imperio.dataChannel.send(JSON.stringify(webRTCData));
 	    } else imperio.socket.emit('swipe', imperio.room, event);
 	    if (localCallback) localCallback(event);
 	  });
