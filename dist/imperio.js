@@ -831,6 +831,8 @@
 	  pinchObject.velocityY = panEventObject.velocityY;
 	  pinchObject.direction = panEventObject.additionalEvent;
 	  pinchObject.deltaTime = panEventObject.deltaTime;
+	  pinchObject.rotation = panEventObject.rotation;
+	  pinchObject.angle = panEventObject.angle;
 	  pinchObject.start = false;
 	  pinchObject.end = false;
 	  return pinchObject;
@@ -844,7 +846,7 @@
 	    pinchData.type = 'pinch';
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
-	    imperio.socket.emit('pinch', imperio.room, event);
+	    imperio.socket.emit('pinch', imperio.room, pinchData);
 	    if (callback) callback(pinchData);
 	  });
 	  hammertime.on('pinchstart', function (event) {
@@ -853,7 +855,7 @@
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
 	    pinchData.start = true;
-	    imperio.socket.emit('pinch', imperio.room, event);
+	    imperio.socket.emit('pinch', imperio.room, pinchData);
 	    if (callback) callback(pinchData);
 	  });
 	  hammertime.on('pinchend', function (event) {
@@ -862,7 +864,7 @@
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
 	    pinchData.end = true;
-	    imperio.socket.emit('pinch', imperio.room, event);
+	    imperio.socket.emit('pinch', imperio.room, pinchData);
 	    if (callback) callback(pinchData);
 	  });
 	};
