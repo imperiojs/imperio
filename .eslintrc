@@ -4,6 +4,7 @@
     "no-use-before-define": 0
   },
   "globals": {
-    "imperio": true
+    "imperio": true,
+    "Hammer": true
   }
 }

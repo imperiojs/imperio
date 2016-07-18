@@ -77,7 +77,7 @@
 	imperio.dataChannel = null;
 	// peerConnection stored on imperio
 	imperio.peerConnection = null;
-	// distinguish if device is setting up or joining a webRTC
+	// storage place for pointers to callback functions passed into handler functions
 	imperio.callbacks = {};
 	// take a tap event and emit the tap event
 	imperio.mobileTapShare = __webpack_require__(26);
@@ -112,6 +112,7 @@
 	events.forEach(function (event) {
 	  var eventHandler = 'desktop' + (event[0].toUpperCase() + event.substring(1)) + 'Handler';
 	  imperio[eventHandler] = function (callback) {
+	    imperio.callbacks[event] = callback;
 	    imperio.socket.on(event, function (eventObject) {
 	      if (callback) callback(eventObject);
 	    });
@@ -842,6 +843,7 @@
 	
 	function buildPanObject(panEventObject) {
 	  var panObject = {};
+	  panObject.type = 'pan';
 	  panObject.center = panEventObject.center;
 	  panObject.deltaX = panEventObject.deltaX;
 	  panObject.deltaY = panEventObject.deltaY;
@@ -858,19 +860,25 @@
 	  var hammertime = new Hammer(element);
 	  hammertime.on('pan', function (event) {
 	    var panData = buildPanObject(event);
-	    imperio.socket.emit('pan', imperio.room, panData);
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(panData));
+	    } else imperio.socket.emit('pan', imperio.room, panData);
 	    if (callback) callback(panData);
 	  });
 	  hammertime.on('panstart', function (event) {
 	    var panData = buildPanObject(event);
 	    panData.start = true;
-	    imperio.socket.emit('pan', imperio.room, panData);
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(panData));
+	    } else imperio.socket.emit('pan', imperio.room, panData);
 	    if (callback) callback(panData);
 	  });
 	  hammertime.on('panend', function (event) {
 	    var panData = buildPanObject(event);
 	    panData.end = true;
-	    imperio.socket.emit('pan', imperio.room, panData);
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(panData));
+	    } else imperio.socket.emit('pan', imperio.room, panData);
 	    if (callback) callback(panData);
 	  });
 	};
@@ -1091,7 +1099,7 @@
 	*        & speed
 	*/
 	
-	var mobileGeoLocationShare = function mobileGeoLocationShare(callback) {
+	var mobileGeoLocationShare = function mobileGeoLocationShare(modifyDataCallback, localCallback) {
 	  if (!navigator.geolocation) {
 	    console.log('This browser does not support Geolocation');
 	    return;
@@ -1101,10 +1109,11 @@
 	      type: 'geoLocation',
 	      coordinates: position.coords
 	    };
+	    if (modifyDataCallback) geoLocationObject = modifyDataCallback(geoLocationObject);
 	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
 	      imperio.dataChannel.send(JSON.stringify(geoLocationObject));
 	    } else imperio.socket.emit('geoLocation', imperio.room, geoLocationObject);
-	    if (callback) callback(geoLocationObject);
+	    if (localCallback) localCallback(geoLocationObject);
 	  });
 	};
 	
@@ -1121,7 +1130,7 @@
 	// Accepts 1 argument:
 	// 1. A callback function that will be run every time the tap event is triggered, by default
 	// we will provide this function with the gyroscope data.
-	var mobileGyroShare = function mobileGyroShare(callback) {
+	var mobileGyroShare = function mobileGyroShare(modifyDataCallback, localCallback) {
 	  window.ondeviceorientation = function (event) {
 	    var alpha = Math.round(event.alpha);
 	    var beta = Math.round(event.beta);
@@ -1132,10 +1141,11 @@
 	      beta: beta,
 	      gamma: gamma
 	    };
+	    if (modifyDataCallback) gyroObject = modifyDataCallback(gyroObject);
 	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
 	      imperio.dataChannel.send(JSON.stringify(gyroObject));
 	    } else imperio.socket.emit('gyroscope', imperio.room, gyroObject);
-	    if (callback) callback(gyroObject);
+	    if (localCallback) localCallback(gyroObject);
 	  };
 	};
 	
@@ -1201,11 +1211,10 @@
 	'use strict';
 	
 	// Sets up a listener for updates to client connections to the room.
-	// Accepts 2 arguments:
-	// 1. The connection socket
-	// 2. A callback function to handle the roomData object passed with the event
-	var mobileRoomUpdate = function mobileRoomUpdate(socket, callback) {
-	  socket.on('updateRoomData', function (roomData) {
+	// Accepts 1 argument:
+	// 1. A callback function to handle the roomData object passed with the event
+	var mobileRoomUpdate = function mobileRoomUpdate(callback) {
+	  imperio.socket.on('updateRoomData', function (roomData) {
 	    if (callback) callback(roomData);
 	  });
 	};
