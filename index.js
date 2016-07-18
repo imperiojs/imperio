@@ -4,12 +4,16 @@ function initializeImperio(server, options) {
   const imperio = {};
   imperio.connectionController = require('./lib/server/connectionController.js');
   imperio.nonceController = require('./lib/server/nonceController.js');
+
+  // global object properties to cache active connect requests / connections
   imperio.activeConnectRequests = {};
   imperio.clientRooms = {};
-  // set global imperio config variables. TODO have these set with config object
-  // default values set
+
+  // set global imperio config variables.
+  // default values are set. They will be overridden if options object exists
   imperio.globalRoomLimit = 'unlimited';
   imperio.connectRequestTimeout = 1000 * 60 * 5; // 5 minutes
+  imperio.roomCookieTimeout = 1000 * 60 * 60; // 1 hour
   // override default values with options, if they exist
   if (options && typeof options === 'object') {
     if (options.hasOwnProperty('globalRoomLimit')) {
@@ -17,6 +21,9 @@ function initializeImperio(server, options) {
     }
     if (options.hasOwnProperty('connectRequestTimeout')) {
       imperio.connectRequestTimeout = options.connectRequestTimeout;
+    }
+    if (options.hasOwnProperty('roomCookieTimeout')) {
+      imperio.roomCookieTimeout = options.roomCookieTimeout;
     }
   }
 
@@ -71,6 +78,7 @@ function initializeImperio(server, options) {
       // Create an object on the req object that we can store stuff in
       req.imperio = {};
       req.imperio.connected = false;
+      req.imperio.roomCookieTimeout = that.roomCookieTimeout;
       // Bind our middleware dependencies, then finally our middleware function
       const boundImperioMiddleware = imperioMiddleware
             .bind(null, req, res, next);
@@ -122,8 +130,8 @@ function initializeImperio(server, options) {
         io.sockets.in(room).emit(event, eventObject);
       });
     });
-    socket.on('tap', room => {
-      io.sockets.in(room).emit('tap');
+    socket.on('tap', (room, data) => {
+      io.sockets.in(room).emit('tap', data);
     });
     socket.on('acceleration', (room, accObject) => {
       io.sockets.in(room).emit('acceleration', accObject);
