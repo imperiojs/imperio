@@ -860,7 +860,7 @@
 	  var hammertime = new Hammer(element);
 	  hammertime.on('pan', function (event) {
 	    var panData = buildPanObject(event);
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(panData));
 	    } else imperio.socket.emit('pan', imperio.room, panData);
 	    if (callback) callback(panData);
@@ -868,7 +868,7 @@
 	  hammertime.on('panstart', function (event) {
 	    var panData = buildPanObject(event);
 	    panData.start = true;
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(panData));
 	    } else imperio.socket.emit('pan', imperio.room, panData);
 	    if (callback) callback(panData);
@@ -876,7 +876,7 @@
 	  hammertime.on('panend', function (event) {
 	    var panData = buildPanObject(event);
 	    panData.end = true;
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(panData));
 	    } else imperio.socket.emit('pan', imperio.room, panData);
 	    if (callback) callback(panData);
@@ -916,7 +916,7 @@
 	    pinchData.type = 'pinch';
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(pinchData));
 	    } else imperio.socket.emit('pinch', imperio.room, pinchData);
 	    if (callback) callback(pinchData);
@@ -927,7 +927,7 @@
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
 	    pinchData.start = true;
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(pinchData));
 	    } else imperio.socket.emit('pinch', imperio.room, pinchData);
 	    if (callback) callback(pinchData);
@@ -938,7 +938,7 @@
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
 	    pinchData.end = true;
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(pinchData));
 	    } else imperio.socket.emit('pinch', imperio.room, pinchData);
 	    if (callback) callback(pinchData);
@@ -964,7 +964,7 @@
 	  hammertime.on('press', function (event) {
 	    event.type = 'press';
 	    imperio.callbacks.press = callback;
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(event));
 	    } else imperio.socket.emit('press', imperio.room, event);
 	    if (callback) callback(event);
@@ -990,7 +990,7 @@
 	  hammertime.on('pressup', function (event) {
 	    event.type = 'pressUp';
 	    imperio.callbacks.pressUp = callback;
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(event));
 	    } else imperio.socket.emit('pressUp', imperio.room, event);
 	    if (callback) callback(event);
@@ -1011,10 +1011,10 @@
 	  hammertime.on('rotate', function (event) {
 	    event.start = false;
 	    event.end = false;
-	    //TODO: see if this has rotate already
+	    // TODO: see if this has rotate already
 	    event.type = 'rotate';
 	    imperio.callbacks.rotate = callback;
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(event));
 	    } else imperio.socket.emit('rotate', imperio.room, event);
 	    if (callback) callback(event);
@@ -1022,10 +1022,10 @@
 	  hammertime.on('rotatestart', function (event) {
 	    event.start = true;
 	    event.end = false;
-	    //TODO: see if this has rotate already
+	    // TODO: see if this has rotate already
 	    event.type = 'rotateStart';
 	    imperio.callbacks.rotateStart = callback;
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(event));
 	    } else imperio.socket.emit('rotate', imperio.room, event);
 	    if (callback) callback(event);
@@ -1033,10 +1033,10 @@
 	  hammertime.on('rotateend', function (event) {
 	    event.start = false;
 	    event.end = true;
-	    //TODO: see if this has rotate already
+	    // TODO: see if this has rotate already
 	    event.type = 'rotateEnd';
 	    imperio.callbacks.rotateEnd = callback;
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(event));
 	    } else imperio.socket.emit('rotate', imperio.room, event);
 	    if (callback) callback(event);
@@ -1054,7 +1054,10 @@
 	var swipeEmitter = function swipeEmitter(element, callback) {
 	  var hammertime = new Hammer(element);
 	  hammertime.on('swipe', function (event) {
-	    imperio.socket.emit('swipe', imperio.room, event);
+	    imperio.callbacks.swipe = callback;
+	    if (imperio.connectionType === 'webRTC') {
+	      imperio.dataChannel.send(JSON.stringify(event));
+	    } else imperio.socket.emit('swipe', imperio.room, event);
 	    if (callback) callback(event);
 	  });
 	};
@@ -1088,7 +1091,7 @@
 	      z: z
 	    };
 	    if (modifyDataCallback) accObject = modifyDataCallback(accObject);
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(accObject));
 	    } else imperio.socket.emit('acceleration', imperio.room, accObject);
 	    if (localCallback) localCallback(accObject);
@@ -1107,7 +1110,7 @@
 	      z: z
 	    };
 	    if (modifyDataCallback) accObject = modifyDataCallback(accObject);
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(accObject));
 	    } else imperio.socket.emit('acceleration', imperio.room, accObject);
 	    if (localCallback) localCallback(accObject);
@@ -1140,7 +1143,7 @@
 	      coordinates: position.coords
 	    };
 	    if (modifyDataCallback) geoLocationObject = modifyDataCallback(geoLocationObject);
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(geoLocationObject));
 	    } else imperio.socket.emit('geoLocation', imperio.room, geoLocationObject);
 	    if (localCallback) localCallback(geoLocationObject);
@@ -1172,7 +1175,7 @@
 	      gamma: gamma
 	    };
 	    if (modifyDataCallback) gyroObject = modifyDataCallback(gyroObject);
-	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(gyroObject));
 	    } else imperio.socket.emit('gyroscope', imperio.room, gyroObject);
 	    if (localCallback) localCallback(gyroObject);
@@ -1261,7 +1264,7 @@
 	// Accepts 1 argument:
 	// 1. A callback function that will be run every time the tap event is triggered.
 	var mobileTapShare = function mobileTapShare(callback) {
-	  if (imperio.webRTCSupport === true && imperio.dataChannel.readyState === 'open') {
+	  if (imperio.connectionType === 'webRTC') {
 	    imperio.dataChannel.send('tap');
 	  } else {
 	    imperio.socket.emit('tap', imperio.room);
