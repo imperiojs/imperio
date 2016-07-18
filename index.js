@@ -8,12 +8,12 @@ function initializeImperio(server, options) {
   imperio.clientRooms = {};
   // set global imperio config variables. TODO have these set with config object
   // default values set
-  imperio.globalRoomLimit = 4;
+  imperio.globalRoomLimit = 'unlimited';
   imperio.connectRequestTimeout = 1000 * 60 * 5; // 5 minutes
   // override default values with options, if they exist
   if (options && typeof options === 'object') {
     if (options.hasOwnProperty('globalRoomLimit')) {
-      imperio.globalRoomLimit = options.roomLimit;
+      imperio.globalRoomLimit = options.globalRoomLimit;
     }
     if (options.hasOwnProperty('connectRequestTimeout')) {
       imperio.connectRequestTimeout = options.connectRequestTimeout;
@@ -149,10 +149,14 @@ function initializeImperio(server, options) {
     let roomData = io.sockets.adapter.rooms[room];
     // if no room exists, receiver will create it.
     // OR if room exists and there's space in it, emitter will join
-    if (!roomData || roomData.length < imperio.globalRoomLimit) {
+    if (
+        !roomData ||
+        imperio.globalRoomLimit === 'unlimited' ||
+        roomData.length < imperio.globalRoomLimit
+       ) {
       socket.join(room);
       roomData = io.sockets.adapter.rooms[room];
-      roomData.sockets[socket.id] = clientRole; // TODO can I do this?
+      roomData.sockets[socket.id] = clientRole; // TOD`O can I do this?
       imperio.clientRooms[socket.id] = room;
       io.sockets.in(room).emit('updateRoomData', roomData);
     } else {
