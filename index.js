@@ -116,45 +116,26 @@ function initializeImperio(server) {
     });
 
     // client input socket listeners
-    socket.on('swipeleft', room => {
-      console.log('Swipe Left from Mobile');
-      io.sockets.in(room).emit('swipeleft');
+    const events = ['pan', 'panStart', 'panEnd', 'pinch', 'press', 'pressUp', 'rotate',
+                  'rotateStart', 'rotateEnd', 'swipe', 'pinchStart', 'pinchEnd'];
+    events.forEach(event => {
+      socket.on(event, (room, eventObject) => {
+        io.sockets.in(room).emit(event, eventObject);
+      });
     });
-
-    socket.on('swiperight', room => {
-      console.log('Swipe right from Mobile');
-      io.sockets.in(room).emit('swiperight');
-    });
-
-    socket.on('swipeup', room => {
-      console.log('Swipe up from Mobile');
-      io.sockets.in(room).emit('swipeup');
-    });
-
-    socket.on('swipedown', room => {
-      console.log('Swipe down from Mobile');
-      io.sockets.in(room).emit('swipedown');
-    });
-
     socket.on('tap', room => {
-      // console.log('Tap from mobile!');
       io.sockets.in(room).emit('tap');
     });
     socket.on('acceleration', (room, accObject) => {
-      // console.log(`accel event received`);
       io.sockets.in(room).emit('acceleration', accObject);
     });
     socket.on('gyroscope', (room, gyroObject) => {
-      // console.log(`gyro event received`);
       io.sockets.in(room).emit('gyroscope', gyroObject);
     });
     socket.on('geoLocation', (room, locationObject) => {
-      // console.log(`location event received`);
       io.sockets.in(room).emit('geoLocation', locationObject);
     });
-    socket.on('gyroscopeTimer', (room, gyroObject, emitDate) => {
-      io.sockets.in(room).emit('gyroscopeTimer', gyroObject, emitDate, Date.now());
-    });
+
     socket.on('updateNonceTimeouts', (room) => {
       imperio.nonceController.handleNonceTimeout(
         io, socket, room, imperio.activeConnectRequests, imperio.connectRequestTimeout
