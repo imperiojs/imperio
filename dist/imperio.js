@@ -293,8 +293,8 @@
 	 */
 	var desktopTapHandler = function desktopTapHandler(callback) {
 	  imperio.callbacks.tap = callback;
-	  imperio.socket.on('tap', function () {
-	    if (callback) callback();
+	  imperio.socket.on('tap', function (data) {
+	    if (callback) callback(data);
 	  });
 	};
 	
@@ -693,13 +693,13 @@
 	// Attach to a tappable element and it will emit the tap event.
 	// Accepts 1 argument:
 	// 1. A callback function that will be run every time the tap event is triggered.
-	var mobileTapShare = function mobileTapShare(callback) {
+	var mobileTapShare = function mobileTapShare(callback, data) {
 	  if (imperio.connectionType === 'webRTC') {
 	    imperio.dataChannel.send('tap');
 	  } else {
-	    imperio.socket.emit('tap', imperio.room);
+	    imperio.socket.emit('tap', imperio.room, data);
 	  }
-	  if (callback) callback();
+	  if (callback) callback(data);
 	};
 	
 	module.exports = mobileTapShare;
