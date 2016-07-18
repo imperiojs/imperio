@@ -116,8 +116,7 @@ function initializeImperio(server) {
     });
 
     // client input socket listeners
-    const events = ['pan', 'panStart', 'panEnd', 'pinch', 'press', 'pressUp', 'rotate',
-                  'rotateStart', 'rotateEnd', 'swipe', 'pinchStart', 'pinchEnd'];
+    const events = ['pan', 'pinch', 'press', 'pressUp', 'rotate', 'swipe'];
     events.forEach(event => {
       socket.on(event, (room, eventObject) => {
         io.sockets.in(room).emit(event, eventObject);
