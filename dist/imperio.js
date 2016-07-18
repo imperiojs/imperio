@@ -915,7 +915,9 @@
 	    pinchData.type = 'pinch';
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
-	    imperio.socket.emit('pinch', imperio.room, pinchData);
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(pinchData));
+	    } else imperio.socket.emit('pinch', imperio.room, pinchData);
 	    if (callback) callback(pinchData);
 	  });
 	  hammertime.on('pinchstart', function (event) {
@@ -924,7 +926,9 @@
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
 	    pinchData.start = true;
-	    imperio.socket.emit('pinch', imperio.room, pinchData);
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(pinchData));
+	    } else imperio.socket.emit('pinch', imperio.room, pinchData);
 	    if (callback) callback(pinchData);
 	  });
 	  hammertime.on('pinchend', function (event) {
@@ -933,7 +937,9 @@
 	    pinchData.direction = event.additionalEvent;
 	    pinchData.scale = event.scale;
 	    pinchData.end = true;
-	    imperio.socket.emit('pinch', imperio.room, pinchData);
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(pinchData));
+	    } else imperio.socket.emit('pinch', imperio.room, pinchData);
 	    if (callback) callback(pinchData);
 	  });
 	};
