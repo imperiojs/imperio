@@ -49,7 +49,7 @@
 	// import our getCookie function which we will use to pull
 	// out the roomID and nonce cookie for socket connection and display on client
 	
-	var _getCookie = __webpack_require__(27);
+	var _getCookie = __webpack_require__(29);
 	
 	var _getCookie2 = _interopRequireDefault(_getCookie);
 	
@@ -65,33 +65,33 @@
 	// store nonce to use to display and show mobile user how to connect
 	imperio.nonce = (0, _getCookie2.default)('nonce');
 	// take a tap event and emit the tap event
-	imperio.mobileTapShare = __webpack_require__(24);
+	imperio.mobileTapShare = __webpack_require__(25);
 	// sets up listener for motion data and emits object containing x,y,z coords
-	imperio.mobileAccelShare = __webpack_require__(18);
+	imperio.mobileAccelShare = __webpack_require__(20);
 	// sets up a listener for location data and emits object containing coordinates and time
-	imperio.mobileLocationShare = __webpack_require__(19);
+	imperio.mobileLocationShare = __webpack_require__(35);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
-	imperio.mobileGyroShare = __webpack_require__(20);
+	imperio.mobileGyroShare = __webpack_require__(21);
 	
-	imperio.mobileGyroTimer = __webpack_require__(21);
+	imperio.mobileGyroTimer = __webpack_require__(22);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.mobileRoomSetup = __webpack_require__(22);
+	imperio.mobileRoomSetup = __webpack_require__(23);
 	// sets up listener for changes to client connections to the room
-	imperio.mobileRoomUpdate = __webpack_require__(23);
+	imperio.mobileRoomUpdate = __webpack_require__(24);
 	// emits socket event to request nonce timeout data
-	imperio.requestNonceTimeout = __webpack_require__(25);
+	imperio.requestNonceTimeout = __webpack_require__(26);
 	// sets up listener for tap event on desktop
-	imperio.desktopTapHandler = __webpack_require__(7);
+	imperio.desktopTapHandler = __webpack_require__(9);
 	// sets up listener for accel event/data on desktop
-	imperio.desktopLocationHandler = __webpack_require__(3);
+	imperio.desktopLocationHandler = __webpack_require__(34);
 	// sets up listener for location event/data on desktop
-	imperio.desktopAccelHandler = __webpack_require__(2);
+	imperio.desktopAccelHandler = __webpack_require__(5);
 	// sets up listener for gyro event/data on desktop
-	imperio.desktopGyroHandler = __webpack_require__(4);
+	imperio.desktopGyroHandler = __webpack_require__(6);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.desktopRoomSetup = __webpack_require__(5);
+	imperio.desktopRoomSetup = __webpack_require__(7);
 	
-	imperio.curse = __webpack_require__(9);
+	imperio.curse = __webpack_require__(11);
 	
 	var events = ['pan', 'pinch', 'press', 'pressUp', 'rotate', 'rotateStart', 'rotateEnd', 'swipe'];
 	events.forEach(function (event) {
@@ -103,9 +103,9 @@
 	  };
 	});
 	// sets up listener for changes to client connections to the room
-	imperio.desktopRoomUpdate = __webpack_require__(6);
+	imperio.desktopRoomUpdate = __webpack_require__(8);
 	// sends updates on nonce timeouts to the browser
-	imperio.nonceTimeoutUpdate = __webpack_require__(8);
+	imperio.nonceTimeoutUpdate = __webpack_require__(10);
 	// attaches our library object to the window so it is accessible when we use the script tag
 	window.imperio = imperio;
 
@@ -598,7 +598,10 @@
 	//# sourceMappingURL=hammer.min.js.map
 
 /***/ },
-/* 2 */
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -617,28 +620,7 @@
 	module.exports = desktopAccelHandler;
 
 /***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	// Sets up a listener for the location data and expects to receive an object
-	// with the location data in the form of {cords: {accuracy:21, altitude:null,
-	// altitudeAccuracy:null, heading:null, latitude:33.9794281, longitude:-118.42238250000001,
-	// speed:null}, timestamp:time data was pulled}.
-	// Accepts 2 arguments:
-	// 1. The socket you would like to connect to.
-	// 2. A callback function that will be run every time the location event is triggered.
-	var desktopGeoLocationHandler = function desktopGeoLocationHandler(socket, callback) {
-	  socket.on('geoLocation', function (locationObject) {
-	    if (callback) callback(locationObject);
-	  });
-	};
-	
-	module.exports = desktopGeoLocationHandler;
-
-/***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -657,7 +639,7 @@
 	module.exports = desktopGyroHandler;
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -688,7 +670,7 @@
 	module.exports = desktopRoomSetup;
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -706,7 +688,7 @@
 	module.exports = desktopRoomUpdate;
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -726,7 +708,7 @@
 	module.exports = desktopTapHandler;
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -745,19 +727,19 @@
 	module.exports = nonceTimeoutUpdate;
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var panEmitter = __webpack_require__(10);
-	var pinchEmitter = __webpack_require__(11);
-	var pressEmitter = __webpack_require__(12);
-	var pressUpEmitter = __webpack_require__(13);
-	var rotateEmitter = __webpack_require__(14);
-	var rotateStartEmitter = __webpack_require__(16);
-	var rotateEndEmitter = __webpack_require__(15);
-	var swipeEmitter = __webpack_require__(17);
+	var panEmitter = __webpack_require__(12);
+	var pinchEmitter = __webpack_require__(13);
+	var pressEmitter = __webpack_require__(14);
+	var pressUpEmitter = __webpack_require__(15);
+	var rotateEmitter = __webpack_require__(16);
+	var rotateStartEmitter = __webpack_require__(18);
+	var rotateEndEmitter = __webpack_require__(17);
+	var swipeEmitter = __webpack_require__(19);
 	
 	function curse(action, element, callback) {
 	  var hammertime = new Hammer(element);
@@ -774,7 +756,7 @@
 	module.exports = curse;
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -817,7 +799,7 @@
 	module.exports = panEmitter;
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -831,6 +813,8 @@
 	  pinchObject.velocityY = panEventObject.velocityY;
 	  pinchObject.direction = panEventObject.additionalEvent;
 	  pinchObject.deltaTime = panEventObject.deltaTime;
+	  pinchObject.rotation = panEventObject.rotation;
+	  pinchObject.angle = panEventObject.angle;
 	  pinchObject.start = false;
 	  pinchObject.end = false;
 	  return pinchObject;
@@ -870,7 +854,7 @@
 	module.exports = pinchEmitter;
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -892,7 +876,7 @@
 	module.exports = pressEmitter;
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -914,7 +898,7 @@
 	module.exports = pressUpEmitter;
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -940,7 +924,7 @@
 	module.exports = rotateEmitter;
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -966,7 +950,7 @@
 	module.exports = rotateEndEmitter;
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -992,7 +976,7 @@
 	module.exports = rotateStartEmitter;
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1014,7 +998,7 @@
 	module.exports = swipeEmitter;
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1061,33 +1045,7 @@
 	module.exports = mobileAccelShare;
 
 /***/ },
-/* 19 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	/**
-	* This emits to the specified room, the location of
-	* @param The getCurrentPosition.coords property has several properties eg:
-	*        accuracy,altitude, altitudeAccuracy, heading, latitude, longitude
-	*        & speed
-	*/
-	var mobileGeoLocationShare = function mobileGeoLocationShare(socket, room, callback) {
-	  if (!navigator.geolocation) {
-	    console.log('This browser does not support Geolocation');
-	    return;
-	  }
-	  var locationPosition = navigator.geolocation.getCurrentPosition(function (position) {
-	    return position;
-	  });
-	  socket.emit('geoLocation', room, locationPosition);
-	  if (callback) callback(locationPosition);
-	};
-	
-	module.exports = mobileGeoLocationShare;
-
-/***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1117,7 +1075,7 @@
 	module.exports = mobileGyroShare;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1141,7 +1099,7 @@
 	module.exports = mobileGyroTimer;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1170,7 +1128,7 @@
 	module.exports = mobileRoomSetup;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1188,7 +1146,7 @@
 	module.exports = mobileRoomUpdate;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1206,7 +1164,7 @@
 	module.exports = mobileTapShare;
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1219,7 +1177,7 @@
 	module.exports = requestNonceTimeout;
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -1272,12 +1230,13 @@
 	})("undefined" === typeof window ? undefined : window);
 
 /***/ },
-/* 27 */
+/* 28 */,
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _cookiesMin = __webpack_require__(26);
+	var _cookiesMin = __webpack_require__(27);
 	
 	var _cookiesMin2 = _interopRequireDefault(_cookiesMin);
 	
@@ -1291,6 +1250,57 @@
 	}
 	
 	module.exports = getCookie;
+
+/***/ },
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Sets up a listener for the location data and expects to receive an object
+	// with the location data in the form of {cords: {accuracy:21, altitude:null,
+	// altitudeAccuracy:null, heading:null, latitude:33.9794281, longitude:-118.42238250000001,
+	// speed:null}, timestamp:time data was pulled}.
+	// Accepts 2 arguments:
+	// 1. The socket you would like to connect to.
+	// 2. A callback function that will be run every time the location event is triggered.
+	var desktopGeoLocationHandler = function desktopGeoLocationHandler(socket, callback) {
+	  socket.on('geoLocation', function (locationObject) {
+	    if (callback) callback(locationObject);
+	  });
+	};
+	
+	module.exports = desktopGeoLocationHandler;
+
+/***/ },
+/* 35 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	* This emits to the specified room, the location of
+	* @param The getCurrentPosition.coords property has several properties eg:
+	*        accuracy,altitude, altitudeAccuracy, heading, latitude, longitude
+	*        & speed
+	*/
+	var mobileGeoLocationShare = function mobileGeoLocationShare(socket, room, callback) {
+	  if (!navigator.geolocation) {
+	    console.log('This browser does not support Geolocation');
+	    return;
+	  }
+	  var locationPosition = navigator.geolocation.getCurrentPosition(function (position) {
+	    return position;
+	  });
+	  socket.emit('geoLocation', room, locationPosition);
+	  if (callback) callback(locationPosition);
+	};
+	
+	module.exports = mobileGeoLocationShare;
 
 /***/ }
 /******/ ]);
