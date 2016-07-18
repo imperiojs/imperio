@@ -1079,7 +1079,7 @@
 	// we will provide this function with the accelerometer data.
 	var mobileAccelShare = {};
 	
-	mobileAccelShare.gravity = function (modifyDataCallback, localCallback) {
+	mobileAccelShare.gravity = function (localCallback, modifyDataCallback) {
 	  window.ondevicemotion = function (event) {
 	    var x = Math.round(event.accelerationIncludingGravity.x);
 	    var y = Math.round(event.accelerationIncludingGravity.y);
@@ -1098,7 +1098,7 @@
 	  };
 	};
 	
-	mobileAccelShare.noGravity = function (modifyDataCallback, localCallback) {
+	mobileAccelShare.noGravity = function (localCallback, modifyDataCallback) {
 	  window.ondevicemotion = function (event) {
 	    var x = Math.round(event.acceleration.x);
 	    var y = Math.round(event.acceleration.y);
@@ -1132,7 +1132,7 @@
 	*        & speed
 	*/
 	
-	var mobileGeoLocationShare = function mobileGeoLocationShare(modifyDataCallback, localCallback) {
+	var mobileGeoLocationShare = function mobileGeoLocationShare(callback) {
 	  if (!navigator.geolocation) {
 	    console.log('This browser does not support Geolocation');
 	    return;
@@ -1142,11 +1142,10 @@
 	      type: 'geoLocation',
 	      coordinates: position.coords
 	    };
-	    if (modifyDataCallback) geoLocationObject = modifyDataCallback(geoLocationObject);
 	    if (imperio.connectionType === 'webRTC') {
 	      imperio.dataChannel.send(JSON.stringify(geoLocationObject));
 	    } else imperio.socket.emit('geoLocation', imperio.room, geoLocationObject);
-	    if (localCallback) localCallback(geoLocationObject);
+	    if (callback) callback(geoLocationObject);
 	  });
 	};
 	
@@ -1163,7 +1162,7 @@
 	// Accepts 1 argument:
 	// 1. A callback function that will be run every time the tap event is triggered, by default
 	// we will provide this function with the gyroscope data.
-	var mobileGyroShare = function mobileGyroShare(modifyDataCallback, localCallback) {
+	var mobileGyroShare = function mobileGyroShare(localCallback, modifyDataCallback) {
 	  window.ondeviceorientation = function (event) {
 	    var alpha = Math.round(event.alpha);
 	    var beta = Math.round(event.beta);
