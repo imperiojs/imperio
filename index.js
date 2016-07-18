@@ -1,14 +1,31 @@
 "use strict"; // eslint-disable-line
 /* eslint-disable no-console, global-require, no-param-reassign */
-function initializeImperio(server) {
+function initializeImperio(server, options) {
   const imperio = {};
   imperio.connectionController = require('./lib/server/connectionController.js');
   imperio.nonceController = require('./lib/server/nonceController.js');
+
+  // global object properties to cache active connect requests / connections
   imperio.activeConnectRequests = {};
   imperio.clientRooms = {};
-  // set global imperio config variables. TODO have these set with config object
-  imperio.globalRoomLimit = 4;
+
+  // set global imperio config variables.
+  // default values are set. They will be overridden if options object exists
+  imperio.globalRoomLimit = 'unlimited';
   imperio.connectRequestTimeout = 1000 * 60 * 5; // 5 minutes
+  imperio.roomCookieTimeout = 1000 * 60 * 60; // 1 hour
+  // override default values with options, if they exist
+  if (options && typeof options === 'object') {
+    if (options.hasOwnProperty('globalRoomLimit')) {
+      imperio.globalRoomLimit = options.globalRoomLimit;
+    }
+    if (options.hasOwnProperty('connectRequestTimeout')) {
+      imperio.connectRequestTimeout = options.connectRequestTimeout;
+    }
+    if (options.hasOwnProperty('roomCookieTimeout')) {
+      imperio.roomCookieTimeout = options.roomCookieTimeout;
+    }
+  }
 
   /**
    * Returns a function to be used as express middleware. Dependency middleware
@@ -61,6 +78,7 @@ function initializeImperio(server) {
       // Create an object on the req object that we can store stuff in
       req.imperio = {};
       req.imperio.connected = false;
+      req.imperio.roomCookieTimeout = that.roomCookieTimeout;
       // Bind our middleware dependencies, then finally our middleware function
       const boundImperioMiddleware = imperioMiddleware
             .bind(null, req, res, next);
@@ -122,8 +140,8 @@ function initializeImperio(server) {
         io.sockets.in(room).emit(event, eventObject);
       });
     });
-    socket.on('tap', room => {
-      io.sockets.in(room).emit('tap');
+    socket.on('tap', (room, data) => {
+      io.sockets.in(room).emit('tap', data);
     });
     socket.on('acceleration', (room, accObject) => {
       io.sockets.in(room).emit('acceleration', accObject);
@@ -149,7 +167,9 @@ function initializeImperio(server) {
     console.log('numClients', io.engine.clientsCount);
     // if no room exists, receiver will create it.
     // OR if room exists and there's space in it, emitter will join
-    if (!roomData || roomData.length < imperio.globalRoomLimit) {
+    if (!roomData ||
+        imperio.globalRoomLimit === 'unlimited' ||
+        roomData.length < imperio.globalRoomLimit) {
       if (clientRole === 'receiver') {
         socket.join(room);
         io.sockets.in(socket.id).emit('created', room, socket.id);
