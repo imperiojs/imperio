@@ -1,14 +1,24 @@
 "use strict"; // eslint-disable-line
 /* eslint-disable no-console, global-require, no-param-reassign */
-function initializeImperio(server) {
+function initializeImperio(server, options) {
   const imperio = {};
   imperio.connectionController = require('./lib/server/connectionController.js');
   imperio.nonceController = require('./lib/server/nonceController.js');
   imperio.activeConnectRequests = {};
   imperio.clientRooms = {};
   // set global imperio config variables. TODO have these set with config object
+  // default values set
   imperio.globalRoomLimit = 4;
   imperio.connectRequestTimeout = 1000 * 60 * 5; // 5 minutes
+  // override default values with options, if they exist
+  if (options && typeof options === 'object') {
+    if (options.hasOwnProperty('globalRoomLimit')) {
+      imperio.globalRoomLimit = options.roomLimit;
+    }
+    if (options.hasOwnProperty('connectRequestTimeout')) {
+      imperio.connectRequestTimeout = options.connectRequestTimeout;
+    }
+  }
 
   /**
    * Returns a function to be used as express middleware. Dependency middleware
