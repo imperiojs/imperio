@@ -69,6 +69,8 @@
 	// ICE server config, will remove
 	// TODO: set this to ENV variables
 	imperio.webRTCConfiguration = { iceServers: [{ url: 'stun:stun.l.google.com:19302' }] };
+	// determines if current connection is socket or rtc
+	imperio.connectionType = null;
 	// initiate webRTC connection
 	imperio.webRTCConnect = __webpack_require__(32);
 	// will store the dataChannel where webRTC data will be passed
@@ -118,7 +120,7 @@
 	// sets up listener for changes to client connections to the room
 	imperio.desktopRoomUpdate = __webpack_require__(8);
 	// sends updates on nonce timeouts to the browser
-	imperio.nonceTimeoutUpdate = __webpack_require__(10);
+	imperio.nonceTimeoutUpdate = __webpack_require__(36);
 	// attaches our library object to the window so it is accessible when we use the script tag
 	window.imperio = imperio;
 
@@ -661,19 +663,10 @@
 	// Accepts 1 argument:
 	// 1. A callback function that will be run every time the acceleration event is triggered.
 	var desktopAccelHandler = function desktopAccelHandler(callback) {
-	  if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
-	    imperio.dataChannel.onmessage = function (event) {
-	      var eventObject = JSON.parse(event.data);
-	      if (eventObject.type === 'acceleration') {
-	        delete eventObject.type;
-	        if (callback) callback(eventObject);
-	      }
-	    };
-	  } else {
-	    imperio.socket.on('acceleration', function (accObject) {
-	      if (callback) callback(accObject);
-	    });
-	  }
+	  imperio.callbacks.acceleration = callback;
+	  imperio.socket.on('acceleration', function (accObject) {
+	    if (callback) callback(accObject);
+	  });
 	};
 	
 	module.exports = desktopAccelHandler;
@@ -704,23 +697,20 @@
 	'use strict';
 	
 	// Establishes a connection to the socket and shares the room it should connnect to.
-	// Accepts 3 arguments:
-	// 1. The socket you would like to connect to.
-	// 2. A room name that will inform the server which room to create/join.
-	// 3. A callback that is invoked when the connect event is received
+	// Accepts 1 argument:
+	// 1. A callback that is invoked when the connect event is received
 	// (happens once on first connect to socket).
-	// TODO Is this true? the callback is invoked after the msg is emitted, but
-	//   there's no guarantee that the server got it...
-	var desktopRoomSetup = function desktopRoomSetup(socket, room, callback) {
-	  socket.on('connect', function () {
+	var desktopRoomSetup = function desktopRoomSetup(callback) {
+	  imperio.socket.on('connect', function () {
 	    // only attempt to join room if room is defined in cookie and passed here
-	    if (room) {
+	    imperio.connectionType = 'sockets';
+	    if (imperio.room) {
 	      var clientData = {
-	        room: room,
-	        id: socket.id,
+	        room: imperio.room,
+	        id: imperio.socket.id,
 	        role: 'receiver'
 	      };
-	      socket.emit('createRoom', clientData);
+	      imperio.socket.emit('createRoom', clientData);
 	    }
 	    if (callback) callback();
 	  });
@@ -738,8 +728,8 @@
 	// Accepts 2 arguments:
 	// 1. The connection socket
 	// 2. A callback function to handle the roomData object passed with the event
-	var desktopRoomUpdate = function desktopRoomUpdate(socket, callback) {
-	  socket.on('updateRoomData', function (roomData) {
+	var desktopRoomUpdate = function desktopRoomUpdate(callback) {
+	  imperio.socket.on('updateRoomData', function (roomData) {
 	    if (callback) callback(roomData);
 	  });
 	};
@@ -758,44 +748,17 @@
 	 * @param {function} callback - A callback function
 	 *        that will be run every time the tap event is triggered
 	 */
-	var desktopTapHandler = function desktopTapHandler(socket, callback) {
-	  if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
-	    console.log('inside WebRTC part of tap handler');
-	    imperio.dataChannel.onmessage = function (event) {
-	      if (event.data === 'tap') {
-	        if (callback) callback();
-	      }
-	    };
-	  } else {
-	    console.log('inside socket part of tap handler');
-	    socket.on('tap', function () {
-	      if (callback) callback();
-	    });
-	  }
+	var desktopTapHandler = function desktopTapHandler(callback) {
+	  imperio.callbacks.tap = callback;
+	  imperio.socket.on('tap', function () {
+	    if (callback) callback();
+	  });
 	};
 	
 	module.exports = desktopTapHandler;
 
 /***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	// Establishes a connection to the socket and shares the room it should connnect to.
-	// Accepts 3 arguments:
-	// 1. The socket you would like to connect to.
-	// 2. A room name that will inform the server which room to create/join.
-	// 3. A callback that is invoked when the connect event is received
-	var nonceTimeoutUpdate = function nonceTimeoutUpdate(socket, callback) {
-	  socket.on('updateNonceTimeouts', function (nonceTimeouts) {
-	    if (callback) callback(nonceTimeouts);
-	  });
-	};
-	
-	module.exports = nonceTimeoutUpdate;
-
-/***/ },
+/* 10 */,
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1081,7 +1044,7 @@
 	// we will provide this function with the accelerometer data.
 	var mobileAccelShare = {};
 	
-	mobileAccelShare.gravity = function (callback) {
+	mobileAccelShare.gravity = function (modifyDataCallback, localCallback) {
 	  window.ondevicemotion = function (event) {
 	    var x = Math.round(event.accelerationIncludingGravity.x);
 	    var y = Math.round(event.accelerationIncludingGravity.y);
@@ -1092,14 +1055,15 @@
 	      y: y,
 	      z: z
 	    };
+	    if (modifyDataCallback) accObject = modifyDataCallback(accObject);
 	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
 	      imperio.dataChannel.send(JSON.stringify(accObject));
 	    } else imperio.socket.emit('acceleration', imperio.room, accObject);
-	    if (callback) callback(accObject);
+	    if (localCallback) localCallback(accObject);
 	  };
 	};
 	
-	mobileAccelShare.noGravity = function (socket, room, callback) {
+	mobileAccelShare.noGravity = function (modifyDataCallback, localCallback) {
 	  window.ondevicemotion = function (event) {
 	    var x = Math.round(event.acceleration.x);
 	    var y = Math.round(event.acceleration.y);
@@ -1110,10 +1074,11 @@
 	      y: y,
 	      z: z
 	    };
+	    if (modifyDataCallback) accObject = modifyDataCallback(accObject);
 	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
 	      imperio.dataChannel.send(JSON.stringify(accObject));
 	    } else imperio.socket.emit('acceleration', imperio.room, accObject);
-	    if (callback) callback(accObject);
+	    if (localCallback) localCallback(accObject);
 	  };
 	};
 	
@@ -1188,6 +1153,7 @@
 	var mobileRoomSetup = function mobileRoomSetup(callback) {
 	  imperio.socket.on('connect', function () {
 	    // only attempt to join room if room is defined in cookie and passed here
+	    imperio.connectionType = 'sockets';
 	    if (imperio.room) {
 	      var clientData = {
 	        room: imperio.room,
@@ -1231,10 +1197,8 @@
 	// 1. A callback function that will be run every time the tap event is triggered.
 	var mobileTapShare = function mobileTapShare(callback) {
 	  if (imperio.webRTCSupport === true && imperio.dataChannel.readyState === 'open') {
-	    console.log('webRTC tap event');
 	    imperio.dataChannel.send('tap');
 	  } else {
-	    console.log('socket tap event');
 	    imperio.socket.emit('tap', imperio.room);
 	  }
 	  if (callback) callback();
@@ -1248,10 +1212,10 @@
 
 	'use strict';
 	
-	function requestNonceTimeout(socket, room, callback) {
+	var requestNonceTimeout = function requestNonceTimeout(callback) {
 	  imperio.socket.emit('updateNonceTimeouts', imperio.room);
 	  if (callback) callback();
-	}
+	};
 	
 	module.exports = requestNonceTimeout;
 
@@ -1400,7 +1364,42 @@
 	          delete eventObject.type;
 	          if (imperio.callbacks.geoLocation) imperio.callbacks.geoLocation(eventObject);
 	        }
-	        // TODO: Add all of the other event listeners
+	        if (eventObject === 'tap') {
+	          if (imperio.callbacks.tap) imperio.callbacks.tap();
+	        }
+	        if (eventObject.type === 'pan') {
+	          delete eventObject.type;
+	          if (imperio.callbacks.pan) imperio.callbacks.pan(eventObject);
+	        }
+	        if (eventObject.type === 'pinch') {
+	          delete eventObject.type;
+	          if (imperio.callbacks.pinch) imperio.callbacks.pinch(eventObject);
+	        }
+	        if (eventObject.type === 'press') {
+	          delete eventObject.type;
+	          if (imperio.callbacks.press) imperio.callbacks.press(eventObject);
+	        }
+	        if (eventObject.type === 'pressUp') {
+	          delete eventObject.type;
+	          if (imperio.callbacks.pressUp) imperio.callbacks.pressUp(eventObject);
+	        }
+	        if (eventObject.type === 'rotate') {
+	          delete eventObject.type;
+	          if (imperio.callbacks.rotate) imperio.callbacks.rotate(eventObject);
+	        }
+	        if (eventObject.type === 'rotateStart') {
+	          delete eventObject.type;
+	          if (imperio.callbacks.rotateStart) imperio.callbacks.rotateStart(eventObject);
+	        }
+	        if (eventObject.type === 'rotateEnd') {
+	          delete eventObject.type;
+	          if (imperio.callbacks.rotateEnd) imperio.callbacks.rotateEnd(eventObject);
+	        }
+	        if (eventObject.type === 'swipe') {
+	          delete eventObject.type;
+	          if (imperio.callbacks.swipe) imperio.callbacks.swipe(eventObject);
+	        }
+	
 	        // TODO: Add callbacks to imperio object
 	        // TODO: modify all the handlers to remove webRTC and save the callbacks
 	        // TODO: Modifly all sharing functions to have to callbacks, dataFunction and localFunction
@@ -1447,26 +1446,29 @@
 	
 	var createPeerConnection = __webpack_require__(28);
 	var signalingMessageCallback = __webpack_require__(31);
+	var webRTCSupport = __webpack_require__(33);
 	
 	var webRTCConnect = function webRTCConnect() {
-	  imperio.socket.on('created', function (room, clientId) {
-	    console.log('Created room, ' + room + ' - my client ID is, ' + clientId);
-	  });
-	  imperio.socket.on('log', function (array) {
-	    console.log.apply(console, array);
-	  });
-	  imperio.socket.on('joined', function (room, clientId) {
-	    console.log('This peer has joined room, ' + room + ', with client ID, ' + clientId);
-	    createPeerConnection(false, imperio.webRTCConfiguration);
-	  });
-	  imperio.socket.on('ready', function () {
-	    console.log('Socket is ready');
-	    createPeerConnection(true, imperio.webRTCConfiguration);
-	  });
-	  imperio.socket.on('message', function (message) {
-	    console.log('Client received message: ' + message);
-	    signalingMessageCallback(message);
-	  });
+	  if (webRTCSupport) {
+	    imperio.socket.on('created', function (room, clientId) {
+	      console.log('Created room, ' + room + ' - my client ID is, ' + clientId);
+	    });
+	    imperio.socket.on('log', function (array) {
+	      console.log.apply(console, array);
+	    });
+	    imperio.socket.on('joined', function (room, clientId) {
+	      console.log('This peer has joined room, ' + room + ', with client ID, ' + clientId);
+	      createPeerConnection(false, imperio.webRTCConfiguration);
+	    });
+	    imperio.socket.on('ready', function () {
+	      console.log('Socket is ready');
+	      createPeerConnection(true, imperio.webRTCConfiguration);
+	    });
+	    imperio.socket.on('message', function (message) {
+	      console.log('Client received message: ' + message);
+	      signalingMessageCallback(message);
+	    });
+	  } else console.log('WebRTC is not supported, will continue using Sockets.');
 	};
 	
 	module.exports = webRTCConnect;
@@ -1517,7 +1519,7 @@
 	*        & speed
 	*/
 	
-	var mobileGeoLocationShare = function mobileGeoLocationShare(socket, room, callback) {
+	var mobileGeoLocationShare = function mobileGeoLocationShare(callback) {
 	  if (!navigator.geolocation) {
 	    console.log('This browser does not support Geolocation');
 	    return;
@@ -1535,6 +1537,25 @@
 	};
 	
 	module.exports = mobileGeoLocationShare;
+
+/***/ },
+/* 36 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Establishes a connection to the socket and shares the room it should connnect to.
+	// Accepts 3 arguments:
+	// 1. The socket you would like to connect to.
+	// 2. A room name that will inform the server which room to create/join.
+	// 3. A callback that is invoked when the connect event is received
+	var nonceTimeoutUpdate = function nonceTimeoutUpdate(callback) {
+	  imperio.socket.on('updateNonceTimeouts', function (nonceTimeouts) {
+	    if (callback) callback(nonceTimeouts);
+	  });
+	};
+	
+	module.exports = nonceTimeoutUpdate;
 
 /***/ }
 /******/ ]);
