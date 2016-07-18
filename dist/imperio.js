@@ -909,6 +909,7 @@
 	
 	var pinchEmitter = function pinchEmitter(element, callback) {
 	  var hammertime = new Hammer(element);
+	  imperio.callbacks.pinch = callback;
 	  hammertime.get('pinch').set({ enable: true });
 	  hammertime.on('pinch', function (event) {
 	    var pinchData = {};
@@ -961,7 +962,11 @@
 	var pressEmitter = function pressEmitter(element, callback) {
 	  var hammertime = new _hammerMin2.default(element);
 	  hammertime.on('press', function (event) {
-	    imperio.socket.emit('press', imperio.room, event);
+	    event.type = 'press';
+	    imperio.callbacks.press = callback;
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(event));
+	    } else imperio.socket.emit('press', imperio.room, event);
 	    if (callback) callback(event);
 	  });
 	};
@@ -983,7 +988,11 @@
 	var pressUpEmitter = function pressUpEmitter(element, callback) {
 	  var hammertime = new _hammerMin2.default(element);
 	  hammertime.on('pressup', function (event) {
-	    imperio.socket.emit('pressUp', imperio.room, event);
+	    event.type = 'pressUp';
+	    imperio.callbacks.pressUp = callback;
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(event));
+	    } else imperio.socket.emit('pressUp', imperio.room, event);
 	    if (callback) callback(event);
 	  });
 	};
@@ -1002,19 +1011,34 @@
 	  hammertime.on('rotate', function (event) {
 	    event.start = false;
 	    event.end = false;
-	    imperio.socket.emit('rotate', imperio.room, event);
+	    //TODO: see if this has rotate already
+	    event.type = 'rotate';
+	    imperio.callbacks.rotate = callback;
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(event));
+	    } else imperio.socket.emit('rotate', imperio.room, event);
 	    if (callback) callback(event);
 	  });
 	  hammertime.on('rotatestart', function (event) {
 	    event.start = true;
 	    event.end = false;
-	    imperio.socket.emit('rotate', imperio.room, event);
+	    //TODO: see if this has rotate already
+	    event.type = 'rotateStart';
+	    imperio.callbacks.rotateStart = callback;
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(event));
+	    } else imperio.socket.emit('rotate', imperio.room, event);
 	    if (callback) callback(event);
 	  });
 	  hammertime.on('rotateend', function (event) {
 	    event.start = false;
 	    event.end = true;
-	    imperio.socket.emit('rotate', imperio.room, event);
+	    //TODO: see if this has rotate already
+	    event.type = 'rotateEnd';
+	    imperio.callbacks.rotateEnd = callback;
+	    if (imperio.webRTCSupport === true && imperio.dataChannel && imperio.dataChannel.readyState === 'open') {
+	      imperio.dataChannel.send(JSON.stringify(event));
+	    } else imperio.socket.emit('rotate', imperio.room, event);
 	    if (callback) callback(event);
 	  });
 	};
