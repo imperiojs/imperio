@@ -134,23 +134,12 @@ function initializeImperio(server, options) {
     });
 
     // client input socket listeners
-    const events = ['pan', 'pinch', 'press', 'pressUp', 'rotate', 'swipe'];
+    const events = ['pan', 'pinch', 'press', 'pressUp', 'rotate', 'swipe', 'tap',
+                    'acceleration', 'gyroscope', 'geoLocation', 'data'];
     events.forEach(event => {
       socket.on(event, (room, eventObject) => {
         io.sockets.in(room).emit(event, eventObject);
       });
-    });
-    socket.on('tap', (room, data) => {
-      io.sockets.in(room).emit('tap', data);
-    });
-    socket.on('acceleration', (room, accObject) => {
-      io.sockets.in(room).emit('acceleration', accObject);
-    });
-    socket.on('gyroscope', (room, gyroObject) => {
-      io.sockets.in(room).emit('gyroscope', gyroObject);
-    });
-    socket.on('geoLocation', (room, locationObject) => {
-      io.sockets.in(room).emit('geoLocation', locationObject);
     });
 
     socket.on('updateNonceTimeouts', (room) => {
@@ -170,7 +159,7 @@ function initializeImperio(server, options) {
     if (!roomData ||
         imperio.globalRoomLimit === 'unlimited' ||
         roomData.length < imperio.globalRoomLimit) {
-      if (clientRole === 'receiver') {
+      if (clientRole === 'listener') {
         socket.join(room);
         io.sockets.in(socket.id).emit('created', room, socket.id);
       } else if (clientRole === 'emitter') {
