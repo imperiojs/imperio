@@ -46,22 +46,24 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict'; // eslint-disable-line
+	// initialize library storage object
+	
+	var imperio = {};
+	var Hammer = __webpack_require__(49);
 	// import our getCookie function which we will use to pull
 	// out the roomID and nonce cookie for socket connection and display on client
-	
-	var Hammer = __webpack_require__(53);
-	var getCookie = __webpack_require__(52);
+	var getCookie = __webpack_require__(48);
 	// import io from 'socket.io';
-	// initialize library storage object
-	var imperio = {};
-	__webpack_require__(81);
-	var io = __webpack_require__(74);
+	__webpack_require__(79);
+	var io = __webpack_require__(72);
 	// instantiate our shared socket
 	imperio.socket = io(); // eslint-disable-line
 	// store roomID to pass to server for room creation and correctly routing the emissions
 	imperio.room = getCookie('roomId');
-	// store nonce to use to display and show mobile user how to connect
+	// store nonce to use to display and show emit user how to connect
 	imperio.nonce = getCookie('nonce');
+	imperio.myID = null;
+	imperio.otherIDs = null;
 	// check if webRTC is supported by client imperio.webRTCSupport will be true or false
 	imperio.webRTCSupport = __webpack_require__(14);
 	// ICE server config, will remove
@@ -70,7 +72,7 @@
 	// determines if current connection is socket or rtc
 	imperio.connectionType = null;
 	// initiate webRTC connection
-	imperio.webRTCConnect = __webpack_require__(56);
+	imperio.webRTCConnect = __webpack_require__(54);
 	// will store the dataChannel where webRTC data will be passed
 	imperio.dataChannel = null;
 	// peerConnection stored on imperio
@@ -78,34 +80,36 @@
 	// storage place for pointers to callback functions passed into handler functions
 	imperio.callbacks = {};
 	// take a tap event and emit the tap event
-	imperio.mobileTapShare = __webpack_require__(48);
+	imperio.emitTap = __webpack_require__(88);
 	// sets up listener for motion data and emits object containing x,y,z coords
-	imperio.mobileAccelShare = __webpack_require__(43);
+	imperio.emitAcceleration = __webpack_require__(29);
 	// sets up a listener for location data and emits object containing coordinates and time
-	imperio.mobileGeoLocationShare = __webpack_require__(44);
+	imperio.emitGeoLocation = __webpack_require__(30);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
-	imperio.mobileGyroShare = __webpack_require__(45);
+	imperio.emitGyroscope = __webpack_require__(31);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.mobileRoomSetup = __webpack_require__(46);
-	// sets up listener for changes to client connections to the room
-	imperio.mobileRoomUpdate = __webpack_require__(47);
+	imperio.emitRoomSetup = __webpack_require__(32);
+	// emit any data you want
+	imperio.emitData = __webpack_require__(89);
 	// emits socket event to request nonce timeout data
-	imperio.requestNonceTimeout = __webpack_require__(49);
-	// sets up listener for tap event on desktop
-	imperio.desktopTapHandler = __webpack_require__(34);
-	// sets up listener for accel event/data on desktop
-	imperio.desktopGeoLocationHandler = __webpack_require__(30);
-	// sets up listener for location event/data on desktop
-	imperio.desktopAccelHandler = __webpack_require__(29);
-	// sets up listener for gyro event/data on desktop
-	imperio.desktopGyroHandler = __webpack_require__(31);
+	imperio.requestNonceTimeout = __webpack_require__(40);
+	// sets up listener for tap event on listener
+	imperio.tapListener = __webpack_require__(46);
+	// sets up listener for accel event/data on listener
+	imperio.geoLocationListener = __webpack_require__(42);
+	// sets up listener for location event/data on listener
+	imperio.accelerationListener = __webpack_require__(41);
+	// sets up listener for gyro event/data on listener
+	imperio.gyroscopeListener = __webpack_require__(43);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.desktopRoomSetup = __webpack_require__(32);
+	imperio.listenerRoomSetup = __webpack_require__(44);
+	// listen for data event
+	imperio.dataListener = __webpack_require__(90);
 	
-	imperio.curse = __webpack_require__(36);
+	imperio.gesture = __webpack_require__(33);
 	var events = ['pan', 'pinch', 'press', 'pressUp', 'rotate', 'swipe'];
 	events.forEach(function (event) {
-	  var eventHandler = 'desktop' + (event[0].toUpperCase() + event.substring(1)) + 'Handler';
+	  var eventHandler = event + 'Listener';
 	  imperio[eventHandler] = function (callback) {
 	    imperio.callbacks[event] = callback;
 	    imperio.socket.on(event, function (eventObject) {
@@ -114,9 +118,9 @@
 	  };
 	});
 	// sets up listener for changes to client connections to the room
-	imperio.desktopRoomUpdate = __webpack_require__(33);
+	imperio.roomUpdate = __webpack_require__(50);
 	// sends updates on nonce timeouts to the browser
-	imperio.nonceTimeoutUpdate = __webpack_require__(35);
+	imperio.nonceTimeoutUpdate = __webpack_require__(45);
 	// attaches our library object to the window so it is accessible when we use the script tag
 	window.imperio = imperio;
 
@@ -280,7 +284,7 @@
 	 * Expose `debug()` as the module.
 	 */
 	
-	exports = module.exports = __webpack_require__(60);
+	exports = module.exports = __webpack_require__(58);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -451,12 +455,12 @@
 	 * Module dependencies.
 	 */
 	
-	var keys = __webpack_require__(67);
-	var hasBinary = __webpack_require__(68);
+	var keys = __webpack_require__(65);
+	var hasBinary = __webpack_require__(66);
 	var sliceBuffer = __webpack_require__(28);
-	var base64encoder = __webpack_require__(58);
+	var base64encoder = __webpack_require__(56);
 	var after = __webpack_require__(27);
-	var utf8 = __webpack_require__(79);
+	var utf8 = __webpack_require__(77);
 	
 	/**
 	 * Check if we are running an android browser. That requires us to use
@@ -513,7 +517,7 @@
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 	
-	var Blob = __webpack_require__(59);
+	var Blob = __webpack_require__(57);
 	
 	/**
 	 * Encodes a packet.
@@ -1411,7 +1415,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// browser shim for xmlhttprequest module
-	var hasCORS = __webpack_require__(70);
+	var hasCORS = __webpack_require__(68);
 	
 	module.exports = function(opts) {
 	  var xdomain = opts.xdomain;
@@ -1501,10 +1505,10 @@
 	 */
 	
 	var debug = __webpack_require__(2)('socket.io-parser');
-	var json = __webpack_require__(77);
+	var json = __webpack_require__(75);
 	var isArray = __webpack_require__(6);
 	var Emitter = __webpack_require__(4);
-	var binary = __webpack_require__(76);
+	var binary = __webpack_require__(74);
 	var isBuf = __webpack_require__(24);
 	
 	/**
@@ -1977,9 +1981,9 @@
 	 */
 	
 	var XMLHttpRequest = __webpack_require__(9);
-	var XHR = __webpack_require__(65);
-	var JSONP = __webpack_require__(64);
-	var websocket = __webpack_require__(66);
+	var XHR = __webpack_require__(63);
+	var JSONP = __webpack_require__(62);
+	var websocket = __webpack_require__(64);
 	
 	/**
 	 * Export transports.
@@ -2350,7 +2354,7 @@
 	 * Module dependencies.
 	 */
 	
-	var eio = __webpack_require__(61);
+	var eio = __webpack_require__(59);
 	var Socket = __webpack_require__(22);
 	var Emitter = __webpack_require__(23);
 	var parser = __webpack_require__(11);
@@ -2358,7 +2362,7 @@
 	var bind = __webpack_require__(15);
 	var debug = __webpack_require__(2)('socket.io-client:manager');
 	var indexOf = __webpack_require__(18);
-	var Backoff = __webpack_require__(57);
+	var Backoff = __webpack_require__(55);
 	
 	/**
 	 * IE6+ hasOwnProperty
@@ -2945,11 +2949,11 @@
 	
 	var parser = __webpack_require__(11);
 	var Emitter = __webpack_require__(23);
-	var toArray = __webpack_require__(78);
+	var toArray = __webpack_require__(76);
 	var on = __webpack_require__(21);
 	var bind = __webpack_require__(15);
 	var debug = __webpack_require__(2)('socket.io-client:socket');
-	var hasBin = __webpack_require__(69);
+	var hasBin = __webpack_require__(67);
 	
 	/**
 	 * Module exports.
@@ -3704,330 +3708,6 @@
 
 	'use strict';
 	
-	// Sets up a listener for the acceleration event and expects to receive an object
-	// with the acceleration data in the form of {x: x, y:y, z:z}.
-	// Accepts 1 argument:
-	// 1. A callback function that will be run every time the acceleration event is triggered.
-	var desktopAccelHandler = function desktopAccelHandler(callback) {
-	  imperio.callbacks.acceleration = callback;
-	  imperio.socket.on('acceleration', function (accObject) {
-	    if (callback) callback(accObject);
-	  });
-	};
-	
-	module.exports = desktopAccelHandler;
-
-/***/ },
-/* 30 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	// Sets up a listener for the location data and expects to receive an object
-	// with the location data in the form of {cords: {accuracy:21, altitude:null,
-	// altitudeAccuracy:null, heading:null, latitude:33.9794281, longitude:-118.42238250000001,
-	// speed:null}, }.
-	// Accepts 1 argument:
-	// 1. A callback function that will be run every time the location event is triggered.
-	var desktopGeoLocationHandler = function desktopGeoLocationHandler(callback) {
-	  imperio.callbacks.geoLocation = callback;
-	  imperio.socket.on('geoLocation', function (locationObj) {
-	    if (callback) callback(locationObj);
-	  });
-	};
-	
-	module.exports = desktopGeoLocationHandler;
-
-/***/ },
-/* 31 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	// Sets up a listener for the orientation data and expects to receive an object
-	// with the gyroscope data in the form of {alpha: alpha, beta:beta, gamma:gamma}.
-	// Accepts 1 argument:
-	// 1. A callback function that will be run every time the gyroscope event is triggered.
-	var desktopGyroHandler = function desktopGyroHandler(callback) {
-	  imperio.callbacks.gyroscope = callback;
-	  imperio.socket.on('gyroscope', function (gyroObject) {
-	    if (callback) callback(gyroObject);
-	  });
-	};
-	
-	module.exports = desktopGyroHandler;
-
-/***/ },
-/* 32 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	// Establishes a connection to the socket and shares the room it should connnect to.
-	// Accepts 1 argument:
-	// 1. A callback that is invoked when the connect event is received
-	// (happens once on first connect to socket).
-	var desktopRoomSetup = function desktopRoomSetup(callback) {
-	  imperio.socket.on('connect', function () {
-	    // only attempt to join room if room is defined in cookie and passed here
-	    imperio.connectionType = 'sockets';
-	    if (imperio.room) {
-	      var clientData = {
-	        room: imperio.room,
-	        id: imperio.socket.id,
-	        role: 'receiver'
-	      };
-	      imperio.socket.emit('createRoom', clientData);
-	    }
-	    if (callback) callback();
-	  });
-	};
-	
-	module.exports = desktopRoomSetup;
-
-/***/ },
-/* 33 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	// Sets up a listener for updates to client connections to the room.
-	// Accepts 2 arguments:
-	// 1. The connection socket
-	// 2. A callback function to handle the roomData object passed with the event
-	var desktopRoomUpdate = function desktopRoomUpdate(callback) {
-	  imperio.socket.on('updateRoomData', function (roomData) {
-	    if (callback) callback(roomData);
-	  });
-	};
-	
-	module.exports = desktopRoomUpdate;
-
-/***/ },
-/* 34 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * Sets up a listener for a tap event on the desktop.
-	 * @param {Object} socket - The socket you would like to connect to
-	 * @param {function} callback - A callback function
-	 *        that will be run every time the tap event is triggered
-	 */
-	var desktopTapHandler = function desktopTapHandler(callback) {
-	  imperio.callbacks.tap = callback;
-	  imperio.socket.on('tap', function (data) {
-	    if (callback) callback(data);
-	  });
-	};
-	
-	module.exports = desktopTapHandler;
-
-/***/ },
-/* 35 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	// Establishes a connection to the socket and shares the room it should connnect to.
-	// Accepts 3 arguments:
-	// 1. The socket you would like to connect to.
-	// 2. A room name that will inform the server which room to create/join.
-	// 3. A callback that is invoked when the connect event is received
-	var nonceTimeoutUpdate = function nonceTimeoutUpdate(callback) {
-	  imperio.socket.on('updateNonceTimeouts', function (nonceTimeouts) {
-	    if (callback) callback(nonceTimeouts);
-	  });
-	};
-	
-	module.exports = nonceTimeoutUpdate;
-
-/***/ },
-/* 36 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var panEmitter = __webpack_require__(37);
-	var pinchEmitter = __webpack_require__(38);
-	var pressEmitter = __webpack_require__(39);
-	var pressUpEmitter = __webpack_require__(40);
-	var rotateEmitter = __webpack_require__(41);
-	var swipeEmitter = __webpack_require__(42);
-	
-	function curse(action, element, localCallback, modifyDataCallback) {
-	  if (action === 'pan') panEmitter(element, localCallback, modifyDataCallback);
-	  if (action === 'pinch') pinchEmitter(element, localCallback, modifyDataCallback);
-	  if (action === 'press') pressEmitter(element, localCallback, modifyDataCallback);
-	  if (action === 'pressUp') pressUpEmitter(element, localCallback, modifyDataCallback);
-	  if (action === 'rotate') rotateEmitter(element, localCallback, modifyDataCallback);
-	  if (action === 'swipe') swipeEmitter(element, localCallback, modifyDataCallback);
-	}
-	
-	module.exports = curse;
-
-/***/ },
-/* 37 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var panEmitter = function panEmitter(element, localCallback, modifyDataCallback) {
-	  var imperioControl = new Hammer(element);
-	  var panEvents = ['pan', 'panstart', 'panend'];
-	  panEvents.forEach(function (panEvent) {
-	    imperioControl.on(panEvent, function (event) {
-	      event.start = panEvent.indexOf('start') > -1;
-	      event.end = panEvent.indexOf('end') > -1;
-	      if (modifyDataCallback) event = modifyDataCallback(event);
-	      if (imperio.connectionType === 'webRTC') {
-	        var webRTCData = {};
-	        webRTCData.data = event;
-	        webRTCData.type = 'pan';
-	        imperio.dataChannel.send(JSON.stringify(webRTCData));
-	      } else imperio.socket.emit('pan', imperio.room, event);
-	      if (localCallback) localCallback(event);
-	    });
-	  });
-	};
-	
-	module.exports = panEmitter;
-
-/***/ },
-/* 38 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var pinchEmitter = function pinchEmitter(element, localCallback, modifyDataCallback) {
-	  var imperioControl = new Hammer(element);
-	  var pinchEvents = ['pinch', 'pinchstart', 'pinchend'];
-	  imperioControl.get('pinch').set({ enable: true });
-	  pinchEvents.forEach(function (pinchEvent) {
-	    imperioControl.on(pinchEvent, function (event) {
-	      event.start = pinchEvent.indexOf('start') > -1;
-	      event.end = pinchEvent.indexOf('end') > -1;
-	      if (modifyDataCallback) event = modifyDataCallback(event);
-	      if (imperio.connectionType === 'webRTC') {
-	        var webRTCData = {};
-	        webRTCData.data = event;
-	        webRTCData.type = 'pinch';
-	        imperio.dataChannel.send(JSON.stringify(webRTCData));
-	      } else imperio.socket.emit('pinch', imperio.room, event);
-	      if (localCallback) localCallback(event);
-	    });
-	  });
-	};
-	
-	module.exports = pinchEmitter;
-
-/***/ },
-/* 39 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var pressEmitter = function pressEmitter(element, localCallback, modifyDataCallback) {
-	  var imperioControl = new Hammer(element);
-	  imperioControl.on('press', function (event) {
-	    event.start = true;
-	    event.end = false;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    if (imperio.connectionType === 'webRTC') {
-	      var webRTCData = {};
-	      webRTCData.data = event;
-	      webRTCData.type = 'press';
-	      imperio.dataChannel.send(JSON.stringify(webRTCData));
-	    } else imperio.socket.emit('press', imperio.room, event);
-	    if (localCallback) localCallback(event);
-	  });
-	};
-	
-	module.exports = pressEmitter;
-
-/***/ },
-/* 40 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var pressUpEmitter = function pressUpEmitter(element, localCallback, modifyDataCallback) {
-	  var hammertime = new Hammer(element);
-	  hammertime.on('pressup', function (event) {
-	    event.start = false;
-	    event.end = true;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    if (imperio.connectionType === 'webRTC') {
-	      var webRTCData = {};
-	      webRTCData.data = event;
-	      webRTCData.type = 'pressUp';
-	      imperio.dataChannel.send(JSON.stringify(webRTCData));
-	    } else imperio.socket.emit('pressUp', imperio.room, event);
-	    if (localCallback) localCallback(event);
-	  });
-	};
-	
-	module.exports = pressUpEmitter;
-
-/***/ },
-/* 41 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var rotateEmitter = function rotateEmitter(element, localCallback, modifyDataCallback) {
-	  var imperioControl = new Hammer(element);
-	  var rotateEvents = ['rotate', 'rotatestart', 'rotateend'];
-	  imperioControl.get('rotate').set({ enable: true });
-	  rotateEvents.forEach(function (rotateEvent) {
-	    imperioControl.on(rotateEvent, function (event) {
-	      event.start = rotateEvent.indexOf('start') > -1;
-	      event.end = rotateEvent.indexOf('end') > -1;
-	      if (modifyDataCallback) event = modifyDataCallback(event);
-	      if (imperio.connectionType === 'webRTC') {
-	        var webRTCData = {};
-	        webRTCData.data = event;
-	        webRTCData.type = 'rotate';
-	        imperio.dataChannel.send(JSON.stringify(webRTCData));
-	      } else imperio.socket.emit('rotate', imperio.room, event);
-	      if (localCallback) localCallback(event);
-	    });
-	  });
-	};
-	
-	module.exports = rotateEmitter;
-
-/***/ },
-/* 42 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var swipeEmitter = function swipeEmitter(element, localCallback, modifyDataCallback) {
-	  var imperioControl = new Hammer(element);
-	  imperioControl.on('swipe', function (event) {
-	    event.start = true;
-	    event.end = true;
-	    if (modifyDataCallback) event = modifyDataCallback(event);
-	    if (imperio.connectionType === 'webRTC') {
-	      var webRTCData = {};
-	      webRTCData.data = event;
-	      webRTCData.type = 'swipe';
-	      imperio.dataChannel.send(JSON.stringify(webRTCData));
-	    } else imperio.socket.emit('swipe', imperio.room, event);
-	    if (localCallback) localCallback(event);
-	  });
-	};
-	
-	module.exports = swipeEmitter;
-
-/***/ },
-/* 43 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
 	// Adds a listener to the window on the mobile device in order to read the accelerometer data.
 	// Will send accelerometer data to the socket in the form of {x: x, y:y, z:z}.
 	// Accepts 3 arguments:
@@ -4084,7 +3764,7 @@
 	module.exports = mobileAccelShare;
 
 /***/ },
-/* 44 */
+/* 30 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4096,7 +3776,7 @@
 	*        & speed
 	*/
 	
-	var mobileGeoLocationShare = function mobileGeoLocationShare(localCallback, modifyDataCallback) {
+	var emitGeoLocation = function emitGeoLocation(localCallback, modifyDataCallback) {
 	  if (!navigator.geolocation) {
 	    console.log('This browser does not support Geolocation');
 	    return;
@@ -4115,10 +3795,10 @@
 	  });
 	};
 	
-	module.exports = mobileGeoLocationShare;
+	module.exports = emitGeoLocation;
 
 /***/ },
-/* 45 */
+/* 31 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4153,7 +3833,7 @@
 	module.exports = mobileGyroShare;
 
 /***/ },
-/* 46 */
+/* 32 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4182,46 +3862,186 @@
 	module.exports = mobileRoomSetup;
 
 /***/ },
-/* 47 */
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var emitPan = __webpack_require__(34);
+	var emitPinch = __webpack_require__(35);
+	var emitPress = __webpack_require__(36);
+	var emitPressUp = __webpack_require__(37);
+	var emitRotate = __webpack_require__(38);
+	var emitSwipe = __webpack_require__(39);
+	
+	function curse(action, element, localCallback, modifyDataCallback) {
+	  if (action === 'pan') emitPan(element, localCallback, modifyDataCallback);
+	  if (action === 'pinch') emitPinch(element, localCallback, modifyDataCallback);
+	  if (action === 'press') emitPress(element, localCallback, modifyDataCallback);
+	  if (action === 'pressUp') emitPressUp(element, localCallback, modifyDataCallback);
+	  if (action === 'rotate') emitRotate(element, localCallback, modifyDataCallback);
+	  if (action === 'swipe') emitSwipe(element, localCallback, modifyDataCallback);
+	}
+	
+	module.exports = curse;
+
+/***/ },
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
 	
-	// Sets up a listener for updates to client connections to the room.
-	// Accepts 1 argument:
-	// 1. A callback function to handle the roomData object passed with the event
-	var mobileRoomUpdate = function mobileRoomUpdate(callback) {
-	  imperio.socket.on('updateRoomData', function (roomData) {
-	    if (callback) callback(roomData);
+	var emitPan = function emitPan(element, localCallback, modifyDataCallback) {
+	  var imperioControl = new Hammer(element);
+	  var panEvents = ['pan', 'panstart', 'panend'];
+	  panEvents.forEach(function (panEvent) {
+	    imperioControl.on(panEvent, function (event) {
+	      event.start = panEvent.indexOf('start') > -1;
+	      event.end = panEvent.indexOf('end') > -1;
+	      if (modifyDataCallback) event = modifyDataCallback(event);
+	      if (imperio.connectionType === 'webRTC') {
+	        var webRTCData = {};
+	        webRTCData.data = event;
+	        webRTCData.type = 'pan';
+	        imperio.dataChannel.send(JSON.stringify(webRTCData));
+	      } else imperio.socket.emit('pan', imperio.room, event);
+	      if (localCallback) localCallback(event);
+	    });
 	  });
 	};
 	
-	module.exports = mobileRoomUpdate;
+	module.exports = emitPan;
 
 /***/ },
-/* 48 */
+/* 35 */
 /***/ function(module, exports) {
 
 	'use strict';
 	
-	// Attach to a tappable element and it will emit the tap event.
-	// Accepts 1 argument:
-	// 1. A callback function that will be run every time the tap event is triggered.
-	var mobileTapShare = function mobileTapShare(callback, data) {
-	  if (imperio.connectionType === 'webRTC') {
-	    var webRTCData = {
-	      data: data,
-	      type: 'tap'
-	    };
-	    imperio.dataChannel.send(webRTCData);
-	  } else imperio.socket.emit('tap', imperio.room, data);
-	  if (callback) callback(data);
+	var emitPinch = function emitPinch(element, localCallback, modifyDataCallback) {
+	  var imperioControl = new Hammer(element);
+	  var pinchEvents = ['pinch', 'pinchstart', 'pinchend'];
+	  imperioControl.get('pinch').set({ enable: true });
+	  pinchEvents.forEach(function (pinchEvent) {
+	    imperioControl.on(pinchEvent, function (event) {
+	      event.start = pinchEvent.indexOf('start') > -1;
+	      event.end = pinchEvent.indexOf('end') > -1;
+	      if (modifyDataCallback) event = modifyDataCallback(event);
+	      if (imperio.connectionType === 'webRTC') {
+	        var webRTCData = {};
+	        webRTCData.data = event;
+	        webRTCData.type = 'pinch';
+	        imperio.dataChannel.send(JSON.stringify(webRTCData));
+	      } else imperio.socket.emit('pinch', imperio.room, event);
+	      if (localCallback) localCallback(event);
+	    });
+	  });
 	};
 	
-	module.exports = mobileTapShare;
+	module.exports = emitPinch;
 
 /***/ },
-/* 49 */
+/* 36 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var emitPress = function emitPress(element, localCallback, modifyDataCallback) {
+	  var imperioControl = new Hammer(element);
+	  imperioControl.on('press', function (event) {
+	    event.start = true;
+	    event.end = false;
+	    if (modifyDataCallback) event = modifyDataCallback(event);
+	    if (imperio.connectionType === 'webRTC') {
+	      var webRTCData = {};
+	      webRTCData.data = event;
+	      webRTCData.type = 'press';
+	      imperio.dataChannel.send(JSON.stringify(webRTCData));
+	    } else imperio.socket.emit('press', imperio.room, event);
+	    if (localCallback) localCallback(event);
+	  });
+	};
+	
+	module.exports = emitPress;
+
+/***/ },
+/* 37 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var emitPressUp = function emitPressUp(element, localCallback, modifyDataCallback) {
+	  var hammertime = new Hammer(element);
+	  hammertime.on('pressup', function (event) {
+	    event.start = false;
+	    event.end = true;
+	    if (modifyDataCallback) event = modifyDataCallback(event);
+	    if (imperio.connectionType === 'webRTC') {
+	      var webRTCData = {};
+	      webRTCData.data = event;
+	      webRTCData.type = 'pressUp';
+	      imperio.dataChannel.send(JSON.stringify(webRTCData));
+	    } else imperio.socket.emit('pressUp', imperio.room, event);
+	    if (localCallback) localCallback(event);
+	  });
+	};
+	
+	module.exports = emitPressUp;
+
+/***/ },
+/* 38 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var emitRotate = function emitRotate(element, localCallback, modifyDataCallback) {
+	  var imperioControl = new Hammer(element);
+	  var rotateEvents = ['rotate', 'rotatestart', 'rotateend'];
+	  imperioControl.get('rotate').set({ enable: true });
+	  rotateEvents.forEach(function (rotateEvent) {
+	    imperioControl.on(rotateEvent, function (event) {
+	      event.start = rotateEvent.indexOf('start') > -1;
+	      event.end = rotateEvent.indexOf('end') > -1;
+	      if (modifyDataCallback) event = modifyDataCallback(event);
+	      if (imperio.connectionType === 'webRTC') {
+	        var webRTCData = {};
+	        webRTCData.data = event;
+	        webRTCData.type = 'rotate';
+	        imperio.dataChannel.send(JSON.stringify(webRTCData));
+	      } else imperio.socket.emit('rotate', imperio.room, event);
+	      if (localCallback) localCallback(event);
+	    });
+	  });
+	};
+	
+	module.exports = emitRotate;
+
+/***/ },
+/* 39 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var emitSwipe = function emitSwipe(element, localCallback, modifyDataCallback) {
+	  var imperioControl = new Hammer(element);
+	  imperioControl.on('swipe', function (event) {
+	    event.start = true;
+	    event.end = true;
+	    if (modifyDataCallback) event = modifyDataCallback(event);
+	    if (imperio.connectionType === 'webRTC') {
+	      var webRTCData = {};
+	      webRTCData.data = event;
+	      webRTCData.type = 'swipe';
+	      imperio.dataChannel.send(JSON.stringify(webRTCData));
+	    } else imperio.socket.emit('swipe', imperio.room, event);
+	    if (localCallback) localCallback(event);
+	  });
+	};
+	
+	module.exports = emitSwipe;
+
+/***/ },
+/* 40 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4234,7 +4054,134 @@
 	module.exports = requestNonceTimeout;
 
 /***/ },
-/* 50 */
+/* 41 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Sets up a listener for the acceleration event and expects to receive an object
+	// with the acceleration data in the form of {x: x, y:y, z:z}.
+	// Accepts 1 argument:
+	// 1. A callback function that will be run every time the acceleration event is triggered.
+	var accelerationListener = function accelerationListener(callback) {
+	  imperio.callbacks.acceleration = callback;
+	  imperio.socket.on('acceleration', function (accObject) {
+	    if (callback) callback(accObject);
+	  });
+	};
+	
+	module.exports = accelerationListener;
+
+/***/ },
+/* 42 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Sets up a listener for the location data and expects to receive an object
+	// with the location data in the form of {cords: {accuracy:21, altitude:null,
+	// altitudeAccuracy:null, heading:null, latitude:33.9794281, longitude:-118.42238250000001,
+	// speed:null}, }.
+	// Accepts 1 argument:
+	// 1. A callback function that will be run every time the location event is triggered.
+	var geoLocationListener = function geoLocationListener(callback) {
+	  imperio.callbacks.geoLocation = callback;
+	  imperio.socket.on('geoLocation', function (locationObj) {
+	    if (callback) callback(locationObj);
+	  });
+	};
+	
+	module.exports = geoLocationListener;
+
+/***/ },
+/* 43 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Sets up a listener for the orientation data and expects to receive an object
+	// with the gyroscope data in the form of {alpha: alpha, beta:beta, gamma:gamma}.
+	// Accepts 1 argument:
+	// 1. A callback function that will be run every time the gyroscope event is triggered.
+	var gyroscopeListener = function gyroscopeListener(callback) {
+	  imperio.callbacks.gyroscope = callback;
+	  imperio.socket.on('gyroscope', function (gyroObject) {
+	    if (callback) callback(gyroObject);
+	  });
+	};
+	
+	module.exports = gyroscopeListener;
+
+/***/ },
+/* 44 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Establishes a connection to the socket and shares the room it should connnect to.
+	// Accepts 1 argument:
+	// 1. A callback that is invoked when the connect event is received
+	// (happens once on first connect to socket).
+	var listenerRoomSetup = function listenerRoomSetup(callback) {
+	  imperio.socket.on('connect', function () {
+	    // only attempt to join room if room is defined in cookie and passed here
+	    imperio.connectionType = 'sockets';
+	    if (imperio.room) {
+	      var clientData = {
+	        room: imperio.room,
+	        id: imperio.socket.id,
+	        role: 'listener'
+	      };
+	      imperio.socket.emit('createRoom', clientData);
+	    }
+	    if (callback) callback();
+	  });
+	};
+	
+	module.exports = listenerRoomSetup;
+
+/***/ },
+/* 45 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Establishes a connection to the socket and shares the room it should connnect to.
+	// Accepts 3 arguments:
+	// 1. The socket you would like to connect to.
+	// 2. A room name that will inform the server which room to create/join.
+	// 3. A callback that is invoked when the connect event is received
+	var nonceTimeoutUpdate = function nonceTimeoutUpdate(callback) {
+	  imperio.socket.on('updateNonceTimeouts', function (nonceTimeouts) {
+	    if (callback) callback(nonceTimeouts);
+	  });
+	};
+	
+	module.exports = nonceTimeoutUpdate;
+
+/***/ },
+/* 46 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * Sets up a listener for a tap event on the desktop.
+	 * @param {Object} socket - The socket you would like to connect to
+	 * @param {function} callback - A callback function
+	 *        that will be run every time the tap event is triggered
+	 */
+	var tapListener = function tapListener(callback) {
+	  imperio.callbacks.tap = callback;
+	  imperio.socket.on('tap', function (data) {
+	    if (callback) callback(data);
+	  });
+	};
+	
+	module.exports = tapListener;
+
+/***/ },
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -4287,58 +4234,12 @@
 	})("undefined" === typeof window ? undefined : window);
 
 /***/ },
-/* 51 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var sendMessage = __webpack_require__(13);
-	var logError = __webpack_require__(7);
-	var onDataChannelCreated = __webpack_require__(54);
-	var onLocalSessionCreated = __webpack_require__(12);
-	
-	// const createPeerConnection
-	module.exports = function (isInitiator, config) {
-	  console.log('Creating Peer connection as initiator?', isInitiator, 'config:', config);
-	  imperio.peerConnection = new RTCPeerConnection(config);
-	  // send any ice candidates to the other peer
-	  imperio.peerConnection.onicecandidate = function (event) {
-	    console.log('icecandidate event:', event);
-	    if (event.candidate) {
-	      sendMessage({
-	        type: 'candidate',
-	        label: event.candidate.sdpMLineIndex,
-	        id: event.candidate.sdpMid,
-	        candidate: event.candidate.candidate
-	      });
-	    } else {
-	      console.log('End of candidates.');
-	    }
-	  };
-	  if (isInitiator) {
-	    console.log('Creating Data Channel');
-	    imperio.dataChannel = imperio.peerConnection.createDataChannel('phone data', { ordered: false, maxRetransmits: 0 });
-	    onDataChannelCreated();
-	    console.log('Creating an offer');
-	    imperio.peerConnection.createOffer(onLocalSessionCreated, logError);
-	  } else {
-	    imperio.peerConnection.ondatachannel = function (event) {
-	      console.log('ondatachannel:', event.channel);
-	      imperio.dataChannel = event.channel;
-	      onDataChannelCreated();
-	    };
-	  }
-	};
-	
-	// module.export = createPeerConnection;
-
-/***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _cookiesMin = __webpack_require__(50);
+	var _cookiesMin = __webpack_require__(47);
 	
 	var _cookiesMin2 = _interopRequireDefault(_cookiesMin);
 	
@@ -4354,7 +4255,7 @@
 	module.exports = getCookie;
 
 /***/ },
-/* 53 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -4842,7 +4743,76 @@
 	//# sourceMappingURL=hammer.min.js.map
 
 /***/ },
-/* 54 */
+/* 50 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Sets up a listener for updates to client connections to the room.
+	// Accepts 1 argument:
+	// 1. A callback function to handle the roomData object passed with the event
+	var roomUpdate = function roomUpdate(callback) {
+	  imperio.socket.on('updateRoomData', function (roomData) {
+	    imperio.myID = imperio.socket.id;
+	    imperio.otherIDs = Object.keys(roomData.sockets).map(function (socketID) {
+	      return socketID.substring(2);
+	    }).filter(function (socketID) {
+	      return socketID !== imperio.myID;
+	    });
+	    if (callback) callback(roomData);
+	  });
+	};
+	
+	module.exports = roomUpdate;
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var sendMessage = __webpack_require__(13);
+	var logError = __webpack_require__(7);
+	var onDataChannelCreated = __webpack_require__(52);
+	var onLocalSessionCreated = __webpack_require__(12);
+	
+	// const createPeerConnection
+	module.exports = function (isInitiator, config) {
+	  console.log('Creating Peer connection as initiator?', isInitiator, 'config:', config);
+	  imperio.peerConnection = new RTCPeerConnection(config);
+	  // send any ice candidates to the other peer
+	  imperio.peerConnection.onicecandidate = function (event) {
+	    console.log('icecandidate event:', event);
+	    if (event.candidate) {
+	      sendMessage({
+	        type: 'candidate',
+	        label: event.candidate.sdpMLineIndex,
+	        id: event.candidate.sdpMid,
+	        candidate: event.candidate.candidate
+	      });
+	    } else {
+	      console.log('End of candidates.');
+	    }
+	  };
+	  if (isInitiator) {
+	    console.log('Creating Data Channel');
+	    imperio.dataChannel = imperio.peerConnection.createDataChannel('phone data', { ordered: false, maxRetransmits: 0 });
+	    onDataChannelCreated();
+	    console.log('Creating an offer');
+	    imperio.peerConnection.createOffer(onLocalSessionCreated, logError);
+	  } else {
+	    imperio.peerConnection.ondatachannel = function (event) {
+	      console.log('ondatachannel:', event.channel);
+	      imperio.dataChannel = event.channel;
+	      onDataChannelCreated();
+	    };
+	  }
+	};
+	
+	// module.export = createPeerConnection;
+
+/***/ },
+/* 52 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4854,7 +4824,7 @@
 	      imperio.connectionType = 'webRTC';
 	      imperio.dataChannel.onmessage = function (event) {
 	        var eventObject = JSON.parse(event.data);
-	        var handlerOptions = ['acceleration', 'gyroscope', 'geoLocation', 'tap', 'pan', 'pinch', 'press', 'presUp', 'rotate', 'swipe'];
+	        var handlerOptions = ['acceleration', 'gyroscope', 'geoLocation', 'tap', 'pan', 'pinch', 'press', 'presUp', 'rotate', 'swipe', 'data'];
 	        handlerOptions.forEach(function (handler) {
 	          if (eventObject.type === handler) {
 	            if (imperio.callbacks[handler]) imperio.callbacks[handler](eventObject.data);
@@ -4868,7 +4838,7 @@
 	module.exports = onDataChannelCreated;
 
 /***/ },
-/* 55 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4895,13 +4865,13 @@
 	module.exports = signalingMessageCallback;
 
 /***/ },
-/* 56 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var createPeerConnection = __webpack_require__(51);
-	var signalingMessageCallback = __webpack_require__(55);
+	var signalingMessageCallback = __webpack_require__(53);
 	var webRTCSupport = __webpack_require__(14);
 	
 	var webRTCConnect = function webRTCConnect() {
@@ -4930,7 +4900,7 @@
 	module.exports = webRTCConnect;
 
 /***/ },
-/* 57 */
+/* 55 */
 /***/ function(module, exports) {
 
 	
@@ -5021,7 +4991,7 @@
 
 
 /***/ },
-/* 58 */
+/* 56 */
 /***/ function(module, exports) {
 
 	/*
@@ -5086,7 +5056,7 @@
 
 
 /***/ },
-/* 59 */
+/* 57 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -5189,7 +5159,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 60 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5205,7 +5175,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(71);
+	exports.humanize = __webpack_require__(69);
 	
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -5392,19 +5362,19 @@
 
 
 /***/ },
-/* 61 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports =  __webpack_require__(62);
+	module.exports =  __webpack_require__(60);
 
 
 /***/ },
-/* 62 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(63);
+	module.exports = __webpack_require__(61);
 	
 	/**
 	 * Exports parser
@@ -5416,7 +5386,7 @@
 
 
 /***/ },
-/* 63 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -5429,7 +5399,7 @@
 	var index = __webpack_require__(18);
 	var parser = __webpack_require__(3);
 	var parseuri = __webpack_require__(19);
-	var parsejson = __webpack_require__(72);
+	var parsejson = __webpack_require__(70);
 	var parseqs = __webpack_require__(10);
 	
 	/**
@@ -6151,7 +6121,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 64 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -6396,7 +6366,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 65 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -6815,7 +6785,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 66 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -6839,7 +6809,7 @@
 	var WebSocket = BrowserWebSocket;
 	if (!WebSocket && typeof window === 'undefined') {
 	  try {
-	    WebSocket = __webpack_require__(89);
+	    WebSocket = __webpack_require__(87);
 	  } catch (e) { }
 	}
 	
@@ -7110,7 +7080,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 67 */
+/* 65 */
 /***/ function(module, exports) {
 
 	
@@ -7135,7 +7105,7 @@
 
 
 /***/ },
-/* 68 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -7200,7 +7170,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 69 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -7266,7 +7236,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 70 */
+/* 68 */
 /***/ function(module, exports) {
 
 	
@@ -7289,7 +7259,7 @@
 
 
 /***/ },
-/* 71 */
+/* 69 */
 /***/ function(module, exports) {
 
 	/**
@@ -7420,7 +7390,7 @@
 
 
 /***/ },
-/* 72 */
+/* 70 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -7458,7 +7428,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 73 */
+/* 71 */
 /***/ function(module, exports) {
 
 	 /* eslint-env node */
@@ -7955,7 +7925,7 @@
 
 
 /***/ },
-/* 74 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -7963,7 +7933,7 @@
 	 * Module dependencies.
 	 */
 	
-	var url = __webpack_require__(75);
+	var url = __webpack_require__(73);
 	var parser = __webpack_require__(11);
 	var Manager = __webpack_require__(20);
 	var debug = __webpack_require__(2)('socket.io-client');
@@ -8053,7 +8023,7 @@
 
 
 /***/ },
-/* 75 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -8136,7 +8106,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 76 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -8284,14 +8254,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 77 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! JSON v3.3.2 | http://bestiejs.github.io/json3 | Copyright 2012-2014, Kit Cambridge | http://kit.mit-license.org */
 	;(function () {
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(80);
+	  var isLoader = "function" === "function" && __webpack_require__(78);
 	
 	  // A set of types used to distinguish objects from primitives.
 	  var objectTypes = {
@@ -9193,7 +9163,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)(module), (function() { return this; }())))
 
 /***/ },
-/* 78 */
+/* 76 */
 /***/ function(module, exports) {
 
 	module.exports = toArray
@@ -9212,7 +9182,7 @@
 
 
 /***/ },
-/* 79 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/utf8js v2.0.0 by @mathias */
@@ -9461,7 +9431,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)(module), (function() { return this; }())))
 
 /***/ },
-/* 80 */
+/* 78 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -9469,7 +9439,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 81 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -9500,10 +9470,10 @@
 	  // require('./utils').disableLog(false);
 	
 	  // Browser shims.
-	  var chromeShim = __webpack_require__(82) || null;
-	  var edgeShim = __webpack_require__(84) || null;
-	  var firefoxShim = __webpack_require__(86) || null;
-	  var safariShim = __webpack_require__(88) || null;
+	  var chromeShim = __webpack_require__(80) || null;
+	  var edgeShim = __webpack_require__(82) || null;
+	  var firefoxShim = __webpack_require__(84) || null;
+	  var safariShim = __webpack_require__(86) || null;
 	
 	  // Shim browser if found.
 	  switch (browserDetails.browser) {
@@ -9567,7 +9537,7 @@
 
 
 /***/ },
-/* 82 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -9849,14 +9819,14 @@
 	  shimOnTrack: chromeShim.shimOnTrack,
 	  shimSourceObject: chromeShim.shimSourceObject,
 	  shimPeerConnection: chromeShim.shimPeerConnection,
-	  shimGetUserMedia: __webpack_require__(83),
+	  shimGetUserMedia: __webpack_require__(81),
 	  attachMediaStream: chromeShim.attachMediaStream,
 	  reattachMediaStream: chromeShim.reattachMediaStream
 	};
 
 
 /***/ },
-/* 83 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -10051,7 +10021,7 @@
 
 
 /***/ },
-/* 84 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -10064,7 +10034,7 @@
 	 /* eslint-env node */
 	'use strict';
 	
-	var SDPUtils = __webpack_require__(73);
+	var SDPUtils = __webpack_require__(71);
 	var logging = __webpack_require__(1).log;
 	
 	var edgeShim = {
@@ -11099,14 +11069,14 @@
 	// Expose public methods.
 	module.exports = {
 	  shimPeerConnection: edgeShim.shimPeerConnection,
-	  shimGetUserMedia: __webpack_require__(85),
+	  shimGetUserMedia: __webpack_require__(83),
 	  attachMediaStream: edgeShim.attachMediaStream,
 	  reattachMediaStream: edgeShim.reattachMediaStream
 	};
 
 
 /***/ },
-/* 85 */
+/* 83 */
 /***/ function(module, exports) {
 
 	/*
@@ -11144,7 +11114,7 @@
 
 
 /***/ },
-/* 86 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -11312,14 +11282,14 @@
 	  shimOnTrack: firefoxShim.shimOnTrack,
 	  shimSourceObject: firefoxShim.shimSourceObject,
 	  shimPeerConnection: firefoxShim.shimPeerConnection,
-	  shimGetUserMedia: __webpack_require__(87),
+	  shimGetUserMedia: __webpack_require__(85),
 	  attachMediaStream: firefoxShim.attachMediaStream,
 	  reattachMediaStream: firefoxShim.reattachMediaStream
 	};
 
 
 /***/ },
-/* 87 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -11475,7 +11445,7 @@
 
 
 /***/ },
-/* 88 */
+/* 86 */
 /***/ function(module, exports) {
 
 	/*
@@ -11515,10 +11485,72 @@
 
 
 /***/ },
-/* 89 */
+/* 87 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
+
+/***/ },
+/* 88 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Attach to a tappable element and it will emit the tap event.
+	// Accepts 1 argument:
+	// 1. A callback function that will be run every time the tap event is triggered.
+	var emitTap = function emitTap(callback, data) {
+	  if (imperio.connectionType === 'webRTC') {
+	    var webRTCData = {
+	      data: data,
+	      type: 'tap'
+	    };
+	    imperio.dataChannel.send(webRTCData);
+	  } else imperio.socket.emit('tap', imperio.room, data);
+	  if (callback) callback(data);
+	};
+	
+	module.exports = emitTap;
+
+/***/ },
+/* 89 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var emitData = function emitData(callback, data) {
+	  if (imperio.connectionType === 'webRTC') {
+	    var webRTCData = {
+	      data: data,
+	      type: 'data'
+	    };
+	    imperio.dataChannel.send(webRTCData);
+	  } else imperio.socket.emit('data', imperio.room, data);
+	  if (callback) callback(data);
+	};
+	
+	module.exports = emitData;
+
+/***/ },
+/* 90 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * Sets up a listener for a data event.
+	 * @param {Object} socket - The socket you would like to connect to
+	 * @param {function} callback - A callback function
+	 *        that will be run every time the tap event is triggered
+	 */
+	var dataListener = function dataListener(callback) {
+	  imperio.callbacks.data = callback;
+	  imperio.socket.on('data', function (data) {
+	    if (callback) callback(data);
+	  });
+	};
+	
+	module.exports = dataListener;
 
 /***/ }
 /******/ ]);
