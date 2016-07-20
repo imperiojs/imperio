@@ -1,10 +1,6 @@
 {
   "name": "imperio",
-<<<<<<< HEAD
   "version": "0.2.2",
-=======
-  "version": "0.0.3",
->>>>>>> 6e65e35414824e0bb33970f2adca5e229c5d8362
   "description": "Control your desktop experience from a mobile device.",
   "main": "index.js",
   "scripts": {
@@ -50,7 +46,6 @@
     "eslint-plugin-import": "1.9.2",
     "eslint-plugin-jsx-a11y": "1.5.3",
     "eslint-plugin-react": "5.2.2",
-<<<<<<< HEAD
     "expect": "1.20.2",
     "mocha": "2.5.3",
     "nodemon": "1.9.2",
@@ -58,9 +53,7 @@
     "socket.io-client": "1.4.6",
     "supertest": "1.2.0",
     "twilio": "2.9.1",
-    "webpack": "1.13.1"
-=======
+    "webpack": "1.13.1",
     "socket.io-client": "1.4.6"
->>>>>>> 6e65e35414824e0bb33970f2adca5e229c5d8362
   }
 }
