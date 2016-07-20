@@ -3860,7 +3860,7 @@
 	// 1. A callback that is invoked when the connect event is received
 	// (happens once on first connect to socket).
 	
-	var mobileRoomSetup = function mobileRoomSetup(callback) {
+	var emitRoomSetup = function emitRoomSetup(callback) {
 	  imperio.socket.on('connect', function () {
 	    // only attempt to join room if room is defined in cookie and passed here
 	    imperio.connectionType = 'sockets';
@@ -3876,7 +3876,7 @@
 	  });
 	};
 	
-	module.exports = mobileRoomSetup;
+	module.exports = emitRoomSetup;
 
 /***/ },
 /* 34 */
