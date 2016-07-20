@@ -49,13 +49,13 @@
 	// initialize library storage object
 	
 	var imperio = {};
-	var Hammer = __webpack_require__(49);
+	var Hammer = __webpack_require__(52);
 	// import our getCookie function which we will use to pull
 	// out the roomID and nonce cookie for socket connection and display on client
-	var getCookie = __webpack_require__(48);
+	var getCookie = __webpack_require__(51);
 	// import io from 'socket.io';
-	__webpack_require__(79);
-	var io = __webpack_require__(72);
+	__webpack_require__(82);
+	var io = __webpack_require__(75);
 	// instantiate our shared socket
 	imperio.socket = io(); // eslint-disable-line
 	// store roomID to pass to server for room creation and correctly routing the emissions
@@ -72,7 +72,7 @@
 	// determines if current connection is socket or rtc
 	imperio.connectionType = null;
 	// initiate webRTC connection
-	imperio.webRTCConnect = __webpack_require__(54);
+	imperio.webRTCConnect = __webpack_require__(57);
 	// will store the dataChannel where webRTC data will be passed
 	imperio.dataChannel = null;
 	// peerConnection stored on imperio
@@ -80,33 +80,33 @@
 	// storage place for pointers to callback functions passed into handler functions
 	imperio.callbacks = {};
 	// take a tap event and emit the tap event
-	imperio.emitTap = __webpack_require__(88);
+	imperio.emitTap = __webpack_require__(41);
 	// sets up listener for motion data and emits object containing x,y,z coords
 	imperio.emitAcceleration = __webpack_require__(29);
 	// sets up a listener for location data and emits object containing coordinates and time
-	imperio.emitGeoLocation = __webpack_require__(30);
+	imperio.emitGeoLocation = __webpack_require__(31);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
-	imperio.emitGyroscope = __webpack_require__(31);
+	imperio.emitGyroscope = __webpack_require__(32);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.emitRoomSetup = __webpack_require__(32);
+	imperio.emitRoomSetup = __webpack_require__(33);
 	// emit any data you want
-	imperio.emitData = __webpack_require__(89);
+	imperio.emitData = __webpack_require__(30);
 	// emits socket event to request nonce timeout data
-	imperio.requestNonceTimeout = __webpack_require__(40);
+	imperio.requestNonceTimeout = __webpack_require__(42);
 	// sets up listener for tap event on listener
-	imperio.tapListener = __webpack_require__(46);
+	imperio.tapListener = __webpack_require__(49);
 	// sets up listener for accel event/data on listener
-	imperio.geoLocationListener = __webpack_require__(42);
+	imperio.geoLocationListener = __webpack_require__(45);
 	// sets up listener for location event/data on listener
-	imperio.accelerationListener = __webpack_require__(41);
+	imperio.accelerationListener = __webpack_require__(43);
 	// sets up listener for gyro event/data on listener
-	imperio.gyroscopeListener = __webpack_require__(43);
+	imperio.gyroscopeListener = __webpack_require__(46);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.listenerRoomSetup = __webpack_require__(44);
+	imperio.listenerRoomSetup = __webpack_require__(47);
 	// listen for data event
-	imperio.dataListener = __webpack_require__(90);
+	imperio.dataListener = __webpack_require__(44);
 	
-	imperio.gesture = __webpack_require__(33);
+	imperio.gesture = __webpack_require__(34);
 	var events = ['pan', 'pinch', 'press', 'pressUp', 'rotate', 'swipe'];
 	events.forEach(function (event) {
 	  var eventHandler = event + 'Listener';
@@ -118,9 +118,9 @@
 	  };
 	});
 	// sets up listener for changes to client connections to the room
-	imperio.roomUpdate = __webpack_require__(50);
+	imperio.roomUpdate = __webpack_require__(53);
 	// sends updates on nonce timeouts to the browser
-	imperio.nonceTimeoutUpdate = __webpack_require__(45);
+	imperio.nonceTimeoutUpdate = __webpack_require__(48);
 	// attaches our library object to the window so it is accessible when we use the script tag
 	window.imperio = imperio;
 
@@ -284,7 +284,7 @@
 	 * Expose `debug()` as the module.
 	 */
 	
-	exports = module.exports = __webpack_require__(58);
+	exports = module.exports = __webpack_require__(61);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -455,12 +455,12 @@
 	 * Module dependencies.
 	 */
 	
-	var keys = __webpack_require__(65);
-	var hasBinary = __webpack_require__(66);
+	var keys = __webpack_require__(68);
+	var hasBinary = __webpack_require__(69);
 	var sliceBuffer = __webpack_require__(28);
-	var base64encoder = __webpack_require__(56);
+	var base64encoder = __webpack_require__(59);
 	var after = __webpack_require__(27);
-	var utf8 = __webpack_require__(77);
+	var utf8 = __webpack_require__(80);
 	
 	/**
 	 * Check if we are running an android browser. That requires us to use
@@ -517,7 +517,7 @@
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 	
-	var Blob = __webpack_require__(57);
+	var Blob = __webpack_require__(60);
 	
 	/**
 	 * Encodes a packet.
@@ -1415,7 +1415,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// browser shim for xmlhttprequest module
-	var hasCORS = __webpack_require__(68);
+	var hasCORS = __webpack_require__(71);
 	
 	module.exports = function(opts) {
 	  var xdomain = opts.xdomain;
@@ -1505,10 +1505,10 @@
 	 */
 	
 	var debug = __webpack_require__(2)('socket.io-parser');
-	var json = __webpack_require__(75);
+	var json = __webpack_require__(78);
 	var isArray = __webpack_require__(6);
 	var Emitter = __webpack_require__(4);
-	var binary = __webpack_require__(74);
+	var binary = __webpack_require__(77);
 	var isBuf = __webpack_require__(24);
 	
 	/**
@@ -1981,9 +1981,9 @@
 	 */
 	
 	var XMLHttpRequest = __webpack_require__(9);
-	var XHR = __webpack_require__(63);
-	var JSONP = __webpack_require__(62);
-	var websocket = __webpack_require__(64);
+	var XHR = __webpack_require__(66);
+	var JSONP = __webpack_require__(65);
+	var websocket = __webpack_require__(67);
 	
 	/**
 	 * Export transports.
@@ -2354,7 +2354,7 @@
 	 * Module dependencies.
 	 */
 	
-	var eio = __webpack_require__(59);
+	var eio = __webpack_require__(62);
 	var Socket = __webpack_require__(22);
 	var Emitter = __webpack_require__(23);
 	var parser = __webpack_require__(11);
@@ -2362,7 +2362,7 @@
 	var bind = __webpack_require__(15);
 	var debug = __webpack_require__(2)('socket.io-client:manager');
 	var indexOf = __webpack_require__(18);
-	var Backoff = __webpack_require__(55);
+	var Backoff = __webpack_require__(58);
 	
 	/**
 	 * IE6+ hasOwnProperty
@@ -2949,11 +2949,11 @@
 	
 	var parser = __webpack_require__(11);
 	var Emitter = __webpack_require__(23);
-	var toArray = __webpack_require__(76);
+	var toArray = __webpack_require__(79);
 	var on = __webpack_require__(21);
 	var bind = __webpack_require__(15);
 	var debug = __webpack_require__(2)('socket.io-client:socket');
-	var hasBin = __webpack_require__(67);
+	var hasBin = __webpack_require__(70);
 	
 	/**
 	 * Module exports.
@@ -3769,6 +3769,25 @@
 
 	'use strict';
 	
+	var emitData = function emitData(callback, data) {
+	  if (imperio.connectionType === 'webRTC') {
+	    var webRTCData = {
+	      data: data,
+	      type: 'data'
+	    };
+	    imperio.dataChannel.send(webRTCData);
+	  } else imperio.socket.emit('data', imperio.room, data);
+	  if (callback) callback(data);
+	};
+	
+	module.exports = emitData;
+
+/***/ },
+/* 31 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
 	/**
 	* This emits to the specified room, the location of
 	* @param The getCurrentPosition.coords property has several properties eg:
@@ -3798,7 +3817,7 @@
 	module.exports = emitGeoLocation;
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3833,7 +3852,7 @@
 	module.exports = mobileGyroShare;
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3862,17 +3881,17 @@
 	module.exports = mobileRoomSetup;
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var emitPan = __webpack_require__(34);
-	var emitPinch = __webpack_require__(35);
-	var emitPress = __webpack_require__(36);
-	var emitPressUp = __webpack_require__(37);
-	var emitRotate = __webpack_require__(38);
-	var emitSwipe = __webpack_require__(39);
+	var emitPan = __webpack_require__(35);
+	var emitPinch = __webpack_require__(36);
+	var emitPress = __webpack_require__(37);
+	var emitPressUp = __webpack_require__(38);
+	var emitRotate = __webpack_require__(39);
+	var emitSwipe = __webpack_require__(40);
 	
 	function curse(action, element, localCallback, modifyDataCallback) {
 	  if (action === 'pan') emitPan(element, localCallback, modifyDataCallback);
@@ -3886,7 +3905,7 @@
 	module.exports = curse;
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3913,7 +3932,7 @@
 	module.exports = emitPan;
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3941,7 +3960,7 @@
 	module.exports = emitPinch;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3965,7 +3984,7 @@
 	module.exports = emitPress;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3989,7 +4008,7 @@
 	module.exports = emitPressUp;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4017,7 +4036,7 @@
 	module.exports = emitRotate;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4041,7 +4060,29 @@
 	module.exports = emitSwipe;
 
 /***/ },
-/* 40 */
+/* 41 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Attach to a tappable element and it will emit the tap event.
+	// Accepts 1 argument:
+	// 1. A callback function that will be run every time the tap event is triggered.
+	var emitTap = function emitTap(callback, data) {
+	  if (imperio.connectionType === 'webRTC') {
+	    var webRTCData = {
+	      data: data,
+	      type: 'tap'
+	    };
+	    imperio.dataChannel.send(webRTCData);
+	  } else imperio.socket.emit('tap', imperio.room, data);
+	  if (callback) callback(data);
+	};
+	
+	module.exports = emitTap;
+
+/***/ },
+/* 42 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4054,7 +4095,7 @@
 	module.exports = requestNonceTimeout;
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4073,7 +4114,28 @@
 	module.exports = accelerationListener;
 
 /***/ },
-/* 42 */
+/* 44 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * Sets up a listener for a data event.
+	 * @param {Object} socket - The socket you would like to connect to
+	 * @param {function} callback - A callback function
+	 *        that will be run every time the tap event is triggered
+	 */
+	var dataListener = function dataListener(callback) {
+	  imperio.callbacks.data = callback;
+	  imperio.socket.on('data', function (data) {
+	    if (callback) callback(data);
+	  });
+	};
+	
+	module.exports = dataListener;
+
+/***/ },
+/* 45 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4094,7 +4156,7 @@
 	module.exports = geoLocationListener;
 
 /***/ },
-/* 43 */
+/* 46 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4113,7 +4175,7 @@
 	module.exports = gyroscopeListener;
 
 /***/ },
-/* 44 */
+/* 47 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4141,7 +4203,7 @@
 	module.exports = listenerRoomSetup;
 
 /***/ },
-/* 45 */
+/* 48 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4160,7 +4222,7 @@
 	module.exports = nonceTimeoutUpdate;
 
 /***/ },
-/* 46 */
+/* 49 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4181,7 +4243,7 @@
 	module.exports = tapListener;
 
 /***/ },
-/* 47 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -4234,12 +4296,12 @@
 	})("undefined" === typeof window ? undefined : window);
 
 /***/ },
-/* 48 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _cookiesMin = __webpack_require__(47);
+	var _cookiesMin = __webpack_require__(50);
 	
 	var _cookiesMin2 = _interopRequireDefault(_cookiesMin);
 	
@@ -4255,7 +4317,7 @@
 	module.exports = getCookie;
 
 /***/ },
-/* 49 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -4743,7 +4805,7 @@
 	//# sourceMappingURL=hammer.min.js.map
 
 /***/ },
-/* 50 */
+/* 53 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4766,14 +4828,14 @@
 	module.exports = roomUpdate;
 
 /***/ },
-/* 51 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var sendMessage = __webpack_require__(13);
 	var logError = __webpack_require__(7);
-	var onDataChannelCreated = __webpack_require__(52);
+	var onDataChannelCreated = __webpack_require__(55);
 	var onLocalSessionCreated = __webpack_require__(12);
 	
 	// const createPeerConnection
@@ -4812,7 +4874,7 @@
 	// module.export = createPeerConnection;
 
 /***/ },
-/* 52 */
+/* 55 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4838,7 +4900,7 @@
 	module.exports = onDataChannelCreated;
 
 /***/ },
-/* 53 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4865,13 +4927,13 @@
 	module.exports = signalingMessageCallback;
 
 /***/ },
-/* 54 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createPeerConnection = __webpack_require__(51);
-	var signalingMessageCallback = __webpack_require__(53);
+	var createPeerConnection = __webpack_require__(54);
+	var signalingMessageCallback = __webpack_require__(56);
 	var webRTCSupport = __webpack_require__(14);
 	
 	var webRTCConnect = function webRTCConnect() {
@@ -4900,7 +4962,7 @@
 	module.exports = webRTCConnect;
 
 /***/ },
-/* 55 */
+/* 58 */
 /***/ function(module, exports) {
 
 	
@@ -4991,7 +5053,7 @@
 
 
 /***/ },
-/* 56 */
+/* 59 */
 /***/ function(module, exports) {
 
 	/*
@@ -5056,7 +5118,7 @@
 
 
 /***/ },
-/* 57 */
+/* 60 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -5159,7 +5221,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 58 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5175,7 +5237,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(69);
+	exports.humanize = __webpack_require__(72);
 	
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -5362,19 +5424,19 @@
 
 
 /***/ },
-/* 59 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports =  __webpack_require__(60);
+	module.exports =  __webpack_require__(63);
 
 
 /***/ },
-/* 60 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(61);
+	module.exports = __webpack_require__(64);
 	
 	/**
 	 * Exports parser
@@ -5386,7 +5448,7 @@
 
 
 /***/ },
-/* 61 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -5399,7 +5461,7 @@
 	var index = __webpack_require__(18);
 	var parser = __webpack_require__(3);
 	var parseuri = __webpack_require__(19);
-	var parsejson = __webpack_require__(70);
+	var parsejson = __webpack_require__(73);
 	var parseqs = __webpack_require__(10);
 	
 	/**
@@ -6121,7 +6183,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 62 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -6366,7 +6428,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 63 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -6785,7 +6847,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 64 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -6809,7 +6871,7 @@
 	var WebSocket = BrowserWebSocket;
 	if (!WebSocket && typeof window === 'undefined') {
 	  try {
-	    WebSocket = __webpack_require__(87);
+	    WebSocket = __webpack_require__(90);
 	  } catch (e) { }
 	}
 	
@@ -7080,7 +7142,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 65 */
+/* 68 */
 /***/ function(module, exports) {
 
 	
@@ -7105,7 +7167,7 @@
 
 
 /***/ },
-/* 66 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -7170,7 +7232,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 67 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -7236,7 +7298,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 68 */
+/* 71 */
 /***/ function(module, exports) {
 
 	
@@ -7259,7 +7321,7 @@
 
 
 /***/ },
-/* 69 */
+/* 72 */
 /***/ function(module, exports) {
 
 	/**
@@ -7390,7 +7452,7 @@
 
 
 /***/ },
-/* 70 */
+/* 73 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -7428,7 +7490,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 71 */
+/* 74 */
 /***/ function(module, exports) {
 
 	 /* eslint-env node */
@@ -7925,7 +7987,7 @@
 
 
 /***/ },
-/* 72 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -7933,7 +7995,7 @@
 	 * Module dependencies.
 	 */
 	
-	var url = __webpack_require__(73);
+	var url = __webpack_require__(76);
 	var parser = __webpack_require__(11);
 	var Manager = __webpack_require__(20);
 	var debug = __webpack_require__(2)('socket.io-client');
@@ -8023,7 +8085,7 @@
 
 
 /***/ },
-/* 73 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -8106,7 +8168,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 74 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -8254,14 +8316,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 75 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! JSON v3.3.2 | http://bestiejs.github.io/json3 | Copyright 2012-2014, Kit Cambridge | http://kit.mit-license.org */
 	;(function () {
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(78);
+	  var isLoader = "function" === "function" && __webpack_require__(81);
 	
 	  // A set of types used to distinguish objects from primitives.
 	  var objectTypes = {
@@ -9163,7 +9225,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)(module), (function() { return this; }())))
 
 /***/ },
-/* 76 */
+/* 79 */
 /***/ function(module, exports) {
 
 	module.exports = toArray
@@ -9182,7 +9244,7 @@
 
 
 /***/ },
-/* 77 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/utf8js v2.0.0 by @mathias */
@@ -9431,7 +9493,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)(module), (function() { return this; }())))
 
 /***/ },
-/* 78 */
+/* 81 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -9439,7 +9501,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 79 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -9470,10 +9532,10 @@
 	  // require('./utils').disableLog(false);
 	
 	  // Browser shims.
-	  var chromeShim = __webpack_require__(80) || null;
-	  var edgeShim = __webpack_require__(82) || null;
-	  var firefoxShim = __webpack_require__(84) || null;
-	  var safariShim = __webpack_require__(86) || null;
+	  var chromeShim = __webpack_require__(83) || null;
+	  var edgeShim = __webpack_require__(85) || null;
+	  var firefoxShim = __webpack_require__(87) || null;
+	  var safariShim = __webpack_require__(89) || null;
 	
 	  // Shim browser if found.
 	  switch (browserDetails.browser) {
@@ -9537,7 +9599,7 @@
 
 
 /***/ },
-/* 80 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -9819,14 +9881,14 @@
 	  shimOnTrack: chromeShim.shimOnTrack,
 	  shimSourceObject: chromeShim.shimSourceObject,
 	  shimPeerConnection: chromeShim.shimPeerConnection,
-	  shimGetUserMedia: __webpack_require__(81),
+	  shimGetUserMedia: __webpack_require__(84),
 	  attachMediaStream: chromeShim.attachMediaStream,
 	  reattachMediaStream: chromeShim.reattachMediaStream
 	};
 
 
 /***/ },
-/* 81 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -10021,7 +10083,7 @@
 
 
 /***/ },
-/* 82 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -10034,7 +10096,7 @@
 	 /* eslint-env node */
 	'use strict';
 	
-	var SDPUtils = __webpack_require__(71);
+	var SDPUtils = __webpack_require__(74);
 	var logging = __webpack_require__(1).log;
 	
 	var edgeShim = {
@@ -11069,14 +11131,14 @@
 	// Expose public methods.
 	module.exports = {
 	  shimPeerConnection: edgeShim.shimPeerConnection,
-	  shimGetUserMedia: __webpack_require__(83),
+	  shimGetUserMedia: __webpack_require__(86),
 	  attachMediaStream: edgeShim.attachMediaStream,
 	  reattachMediaStream: edgeShim.reattachMediaStream
 	};
 
 
 /***/ },
-/* 83 */
+/* 86 */
 /***/ function(module, exports) {
 
 	/*
@@ -11114,7 +11176,7 @@
 
 
 /***/ },
-/* 84 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -11282,14 +11344,14 @@
 	  shimOnTrack: firefoxShim.shimOnTrack,
 	  shimSourceObject: firefoxShim.shimSourceObject,
 	  shimPeerConnection: firefoxShim.shimPeerConnection,
-	  shimGetUserMedia: __webpack_require__(85),
+	  shimGetUserMedia: __webpack_require__(88),
 	  attachMediaStream: firefoxShim.attachMediaStream,
 	  reattachMediaStream: firefoxShim.reattachMediaStream
 	};
 
 
 /***/ },
-/* 85 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -11445,7 +11507,7 @@
 
 
 /***/ },
-/* 86 */
+/* 89 */
 /***/ function(module, exports) {
 
 	/*
@@ -11485,72 +11547,10 @@
 
 
 /***/ },
-/* 87 */
-/***/ function(module, exports) {
-
-	/* (ignored) */
-
-/***/ },
-/* 88 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	// Attach to a tappable element and it will emit the tap event.
-	// Accepts 1 argument:
-	// 1. A callback function that will be run every time the tap event is triggered.
-	var emitTap = function emitTap(callback, data) {
-	  if (imperio.connectionType === 'webRTC') {
-	    var webRTCData = {
-	      data: data,
-	      type: 'tap'
-	    };
-	    imperio.dataChannel.send(webRTCData);
-	  } else imperio.socket.emit('tap', imperio.room, data);
-	  if (callback) callback(data);
-	};
-	
-	module.exports = emitTap;
-
-/***/ },
-/* 89 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var emitData = function emitData(callback, data) {
-	  if (imperio.connectionType === 'webRTC') {
-	    var webRTCData = {
-	      data: data,
-	      type: 'data'
-	    };
-	    imperio.dataChannel.send(webRTCData);
-	  } else imperio.socket.emit('data', imperio.room, data);
-	  if (callback) callback(data);
-	};
-	
-	module.exports = emitData;
-
-/***/ },
 /* 90 */
 /***/ function(module, exports) {
 
-	'use strict';
-	
-	/**
-	 * Sets up a listener for a data event.
-	 * @param {Object} socket - The socket you would like to connect to
-	 * @param {function} callback - A callback function
-	 *        that will be run every time the tap event is triggered
-	 */
-	var dataListener = function dataListener(callback) {
-	  imperio.callbacks.data = callback;
-	  imperio.socket.on('data', function (data) {
-	    if (callback) callback(data);
-	  });
-	};
-	
-	module.exports = dataListener;
+	/* (ignored) */
 
 /***/ }
 /******/ ]);
