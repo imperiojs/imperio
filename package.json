@@ -1,6 +1,6 @@
 {
   "name": "imperio",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Control your desktop experience from a mobile device.",
   "main": "index.js",
   "scripts": {
