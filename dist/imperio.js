@@ -49,13 +49,13 @@
 	// initialize library storage object
 	
 	var imperio = {};
-	var Hammer = __webpack_require__(49);
+	var Hammer = __webpack_require__(50);
 	// import our getCookie function which we will use to pull
 	// out the roomID and nonce cookie for socket connection and display on client
-	var getCookie = __webpack_require__(48);
+	var getCookie = __webpack_require__(49);
 	// import io from 'socket.io';
-	__webpack_require__(79);
-	var io = __webpack_require__(72);
+	__webpack_require__(85);
+	var io = __webpack_require__(56);
 	// instantiate our shared socket
 	imperio.socket = io(); // eslint-disable-line
 	// store roomID to pass to server for room creation and correctly routing the emissions
@@ -65,14 +65,14 @@
 	imperio.myID = null;
 	imperio.otherIDs = null;
 	// check if webRTC is supported by client imperio.webRTCSupport will be true or false
-	imperio.webRTCSupport = __webpack_require__(14);
+	imperio.webRTCSupport = __webpack_require__(13);
 	// ICE server config, will remove
 	// TODO: set this to ENV variables
 	imperio.webRTCConfiguration = { iceServers: [{ url: 'stun:stun.l.google.com:19302' }] };
 	// determines if current connection is socket or rtc
 	imperio.connectionType = null;
 	// initiate webRTC connection
-	imperio.webRTCConnect = __webpack_require__(54);
+	imperio.webRTCConnect = __webpack_require__(55);
 	// will store the dataChannel where webRTC data will be passed
 	imperio.dataChannel = null;
 	// peerConnection stored on imperio
@@ -80,33 +80,33 @@
 	// storage place for pointers to callback functions passed into handler functions
 	imperio.callbacks = {};
 	// take a tap event and emit the tap event
-	imperio.emitTap = __webpack_require__(88);
+	imperio.emitTap = __webpack_require__(39);
 	// sets up listener for motion data and emits object containing x,y,z coords
-	imperio.emitAcceleration = __webpack_require__(29);
+	imperio.emitAcceleration = __webpack_require__(27);
 	// sets up a listener for location data and emits object containing coordinates and time
-	imperio.emitGeoLocation = __webpack_require__(30);
+	imperio.emitGeoLocation = __webpack_require__(29);
 	// sets up a listener for orientation data and emits object containing alpha, beta, and gamma data
-	imperio.emitGyroscope = __webpack_require__(31);
+	imperio.emitGyroscope = __webpack_require__(30);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.emitRoomSetup = __webpack_require__(32);
+	imperio.emitRoomSetup = __webpack_require__(31);
 	// emit any data you want
-	imperio.emitData = __webpack_require__(89);
+	imperio.emitData = __webpack_require__(28);
 	// emits socket event to request nonce timeout data
 	imperio.requestNonceTimeout = __webpack_require__(40);
 	// sets up listener for tap event on listener
-	imperio.tapListener = __webpack_require__(46);
+	imperio.tapListener = __webpack_require__(47);
 	// sets up listener for accel event/data on listener
-	imperio.geoLocationListener = __webpack_require__(42);
+	imperio.geoLocationListener = __webpack_require__(43);
 	// sets up listener for location event/data on listener
 	imperio.accelerationListener = __webpack_require__(41);
 	// sets up listener for gyro event/data on listener
-	imperio.gyroscopeListener = __webpack_require__(43);
+	imperio.gyroscopeListener = __webpack_require__(44);
 	// establishes connection to socket and shares room it should connnect to
-	imperio.listenerRoomSetup = __webpack_require__(44);
+	imperio.listenerRoomSetup = __webpack_require__(45);
 	// listen for data event
-	imperio.dataListener = __webpack_require__(90);
+	imperio.dataListener = __webpack_require__(42);
 	
-	imperio.gesture = __webpack_require__(33);
+	imperio.gesture = __webpack_require__(32);
 	var events = ['pan', 'pinch', 'press', 'pressUp', 'rotate', 'swipe'];
 	events.forEach(function (event) {
 	  var eventHandler = event + 'Listener';
@@ -118,9 +118,9 @@
 	  };
 	});
 	// sets up listener for changes to client connections to the room
-	imperio.roomUpdate = __webpack_require__(50);
+	imperio.roomUpdate = __webpack_require__(51);
 	// sends updates on nonce timeouts to the browser
-	imperio.nonceTimeoutUpdate = __webpack_require__(45);
+	imperio.nonceTimeoutUpdate = __webpack_require__(46);
 	// attaches our library object to the window so it is accessible when we use the script tag
 	window.imperio = imperio;
 
@@ -284,7 +284,7 @@
 	 * Expose `debug()` as the module.
 	 */
 	
-	exports = module.exports = __webpack_require__(58);
+	exports = module.exports = __webpack_require__(59);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -455,12 +455,12 @@
 	 * Module dependencies.
 	 */
 	
-	var keys = __webpack_require__(65);
-	var hasBinary = __webpack_require__(66);
-	var sliceBuffer = __webpack_require__(28);
-	var base64encoder = __webpack_require__(56);
-	var after = __webpack_require__(27);
-	var utf8 = __webpack_require__(77);
+	var keys = __webpack_require__(67);
+	var hasBinary = __webpack_require__(72);
+	var sliceBuffer = __webpack_require__(69);
+	var base64encoder = __webpack_require__(70);
+	var after = __webpack_require__(68);
+	var utf8 = __webpack_require__(74);
 	
 	/**
 	 * Check if we are running an android browser. That requires us to use
@@ -517,7 +517,7 @@
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 	
-	var Blob = __webpack_require__(57);
+	var Blob = __webpack_require__(71);
 	
 	/**
 	 * Encodes a packet.
@@ -1053,6 +1053,231 @@
 /***/ function(module, exports) {
 
 	
+	module.exports = function(a, b){
+	  var fn = function(){};
+	  fn.prototype = b.prototype;
+	  a.prototype = new fn;
+	  a.prototype.constructor = a;
+	};
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = function (err) {
+	  return console.log(err.toString(), err);
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Module dependencies.
+	 */
+	
+	var parser = __webpack_require__(3);
+	var Emitter = __webpack_require__(8);
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = Transport;
+	
+	/**
+	 * Transport abstract constructor.
+	 *
+	 * @param {Object} options.
+	 * @api private
+	 */
+	
+	function Transport (opts) {
+	  this.path = opts.path;
+	  this.hostname = opts.hostname;
+	  this.port = opts.port;
+	  this.secure = opts.secure;
+	  this.query = opts.query;
+	  this.timestampParam = opts.timestampParam;
+	  this.timestampRequests = opts.timestampRequests;
+	  this.readyState = '';
+	  this.agent = opts.agent || false;
+	  this.socket = opts.socket;
+	  this.enablesXDR = opts.enablesXDR;
+	
+	  // SSL options for Node.js client
+	  this.pfx = opts.pfx;
+	  this.key = opts.key;
+	  this.passphrase = opts.passphrase;
+	  this.cert = opts.cert;
+	  this.ca = opts.ca;
+	  this.ciphers = opts.ciphers;
+	  this.rejectUnauthorized = opts.rejectUnauthorized;
+	
+	  // other options for Node.js client
+	  this.extraHeaders = opts.extraHeaders;
+	}
+	
+	/**
+	 * Mix in `Emitter`.
+	 */
+	
+	Emitter(Transport.prototype);
+	
+	/**
+	 * Emits an error.
+	 *
+	 * @param {String} str
+	 * @return {Transport} for chaining
+	 * @api public
+	 */
+	
+	Transport.prototype.onError = function (msg, desc) {
+	  var err = new Error(msg);
+	  err.type = 'TransportError';
+	  err.description = desc;
+	  this.emit('error', err);
+	  return this;
+	};
+	
+	/**
+	 * Opens the transport.
+	 *
+	 * @api public
+	 */
+	
+	Transport.prototype.open = function () {
+	  if ('closed' == this.readyState || '' == this.readyState) {
+	    this.readyState = 'opening';
+	    this.doOpen();
+	  }
+	
+	  return this;
+	};
+	
+	/**
+	 * Closes the transport.
+	 *
+	 * @api private
+	 */
+	
+	Transport.prototype.close = function () {
+	  if ('opening' == this.readyState || 'open' == this.readyState) {
+	    this.doClose();
+	    this.onClose();
+	  }
+	
+	  return this;
+	};
+	
+	/**
+	 * Sends multiple packets.
+	 *
+	 * @param {Array} packets
+	 * @api private
+	 */
+	
+	Transport.prototype.send = function(packets){
+	  if ('open' == this.readyState) {
+	    this.write(packets);
+	  } else {
+	    throw new Error('Transport not open');
+	  }
+	};
+	
+	/**
+	 * Called upon open
+	 *
+	 * @api private
+	 */
+	
+	Transport.prototype.onOpen = function () {
+	  this.readyState = 'open';
+	  this.writable = true;
+	  this.emit('open');
+	};
+	
+	/**
+	 * Called with data.
+	 *
+	 * @param {String} data
+	 * @api private
+	 */
+	
+	Transport.prototype.onData = function(data){
+	  var packet = parser.decodePacket(data, this.socket.binaryType);
+	  this.onPacket(packet);
+	};
+	
+	/**
+	 * Called with a decoded packet.
+	 */
+	
+	Transport.prototype.onPacket = function (packet) {
+	  this.emit('packet', packet);
+	};
+	
+	/**
+	 * Called upon close.
+	 *
+	 * @api private
+	 */
+	
+	Transport.prototype.onClose = function () {
+	  this.readyState = 'closed';
+	  this.emit('close');
+	};
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// browser shim for xmlhttprequest module
+	var hasCORS = __webpack_require__(75);
+	
+	module.exports = function(opts) {
+	  var xdomain = opts.xdomain;
+	
+	  // scheme must be same when usign XDomainRequest
+	  // http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
+	  var xscheme = opts.xscheme;
+	
+	  // XDomainRequest has a flow of not sending cookie, therefore it should be disabled as a default.
+	  // https://github.com/Automattic/engine.io-client/pull/217
+	  var enablesXDR = opts.enablesXDR;
+	
+	  // XMLHttpRequest can be disabled on IE
+	  try {
+	    if ('undefined' != typeof XMLHttpRequest && (!xdomain || hasCORS)) {
+	      return new XMLHttpRequest();
+	    }
+	  } catch (e) { }
+	
+	  // Use XDomainRequest for IE8 if enablesXDR is true
+	  // because loading bar keeps flashing when using jsonp-polling
+	  // https://github.com/yujiosaka/socke.io-ie8-loading-example
+	  try {
+	    if ('undefined' != typeof XDomainRequest && !xscheme && enablesXDR) {
+	      return new XDomainRequest();
+	    }
+	  } catch (e) { }
+	
+	  if (!xdomain) {
+	    try {
+	      return new ActiveXObject('Microsoft.XMLHTTP');
+	    } catch(e) { }
+	  }
+	}
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	
 	/**
 	 * Expose `Emitter`.
 	 */
@@ -1219,241 +1444,7 @@
 
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	
-	module.exports = function(a, b){
-	  var fn = function(){};
-	  fn.prototype = b.prototype;
-	  a.prototype = new fn;
-	  a.prototype.constructor = a;
-	};
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	module.exports = Array.isArray || function (arr) {
-	  return Object.prototype.toString.call(arr) == '[object Array]';
-	};
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = function (err) {
-	  return console.log(err.toString(), err);
-	};
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies.
-	 */
-	
-	var parser = __webpack_require__(3);
-	var Emitter = __webpack_require__(4);
-	
-	/**
-	 * Module exports.
-	 */
-	
-	module.exports = Transport;
-	
-	/**
-	 * Transport abstract constructor.
-	 *
-	 * @param {Object} options.
-	 * @api private
-	 */
-	
-	function Transport (opts) {
-	  this.path = opts.path;
-	  this.hostname = opts.hostname;
-	  this.port = opts.port;
-	  this.secure = opts.secure;
-	  this.query = opts.query;
-	  this.timestampParam = opts.timestampParam;
-	  this.timestampRequests = opts.timestampRequests;
-	  this.readyState = '';
-	  this.agent = opts.agent || false;
-	  this.socket = opts.socket;
-	  this.enablesXDR = opts.enablesXDR;
-	
-	  // SSL options for Node.js client
-	  this.pfx = opts.pfx;
-	  this.key = opts.key;
-	  this.passphrase = opts.passphrase;
-	  this.cert = opts.cert;
-	  this.ca = opts.ca;
-	  this.ciphers = opts.ciphers;
-	  this.rejectUnauthorized = opts.rejectUnauthorized;
-	
-	  // other options for Node.js client
-	  this.extraHeaders = opts.extraHeaders;
-	}
-	
-	/**
-	 * Mix in `Emitter`.
-	 */
-	
-	Emitter(Transport.prototype);
-	
-	/**
-	 * Emits an error.
-	 *
-	 * @param {String} str
-	 * @return {Transport} for chaining
-	 * @api public
-	 */
-	
-	Transport.prototype.onError = function (msg, desc) {
-	  var err = new Error(msg);
-	  err.type = 'TransportError';
-	  err.description = desc;
-	  this.emit('error', err);
-	  return this;
-	};
-	
-	/**
-	 * Opens the transport.
-	 *
-	 * @api public
-	 */
-	
-	Transport.prototype.open = function () {
-	  if ('closed' == this.readyState || '' == this.readyState) {
-	    this.readyState = 'opening';
-	    this.doOpen();
-	  }
-	
-	  return this;
-	};
-	
-	/**
-	 * Closes the transport.
-	 *
-	 * @api private
-	 */
-	
-	Transport.prototype.close = function () {
-	  if ('opening' == this.readyState || 'open' == this.readyState) {
-	    this.doClose();
-	    this.onClose();
-	  }
-	
-	  return this;
-	};
-	
-	/**
-	 * Sends multiple packets.
-	 *
-	 * @param {Array} packets
-	 * @api private
-	 */
-	
-	Transport.prototype.send = function(packets){
-	  if ('open' == this.readyState) {
-	    this.write(packets);
-	  } else {
-	    throw new Error('Transport not open');
-	  }
-	};
-	
-	/**
-	 * Called upon open
-	 *
-	 * @api private
-	 */
-	
-	Transport.prototype.onOpen = function () {
-	  this.readyState = 'open';
-	  this.writable = true;
-	  this.emit('open');
-	};
-	
-	/**
-	 * Called with data.
-	 *
-	 * @param {String} data
-	 * @api private
-	 */
-	
-	Transport.prototype.onData = function(data){
-	  var packet = parser.decodePacket(data, this.socket.binaryType);
-	  this.onPacket(packet);
-	};
-	
-	/**
-	 * Called with a decoded packet.
-	 */
-	
-	Transport.prototype.onPacket = function (packet) {
-	  this.emit('packet', packet);
-	};
-	
-	/**
-	 * Called upon close.
-	 *
-	 * @api private
-	 */
-	
-	Transport.prototype.onClose = function () {
-	  this.readyState = 'closed';
-	  this.emit('close');
-	};
-
-
-/***/ },
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// browser shim for xmlhttprequest module
-	var hasCORS = __webpack_require__(68);
-	
-	module.exports = function(opts) {
-	  var xdomain = opts.xdomain;
-	
-	  // scheme must be same when usign XDomainRequest
-	  // http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
-	  var xscheme = opts.xscheme;
-	
-	  // XDomainRequest has a flow of not sending cookie, therefore it should be disabled as a default.
-	  // https://github.com/Automattic/engine.io-client/pull/217
-	  var enablesXDR = opts.enablesXDR;
-	
-	  // XMLHttpRequest can be disabled on IE
-	  try {
-	    if ('undefined' != typeof XMLHttpRequest && (!xdomain || hasCORS)) {
-	      return new XMLHttpRequest();
-	    }
-	  } catch (e) { }
-	
-	  // Use XDomainRequest for IE8 if enablesXDR is true
-	  // because loading bar keeps flashing when using jsonp-polling
-	  // https://github.com/yujiosaka/socke.io-ie8-loading-example
-	  try {
-	    if ('undefined' != typeof XDomainRequest && !xscheme && enablesXDR) {
-	      return new XDomainRequest();
-	    }
-	  } catch (e) { }
-	
-	  if (!xdomain) {
-	    try {
-	      return new ActiveXObject('Microsoft.XMLHTTP');
-	    } catch(e) { }
-	  }
-	}
-
-
-/***/ },
-/* 10 */
 /***/ function(module, exports) {
 
 	/**
@@ -1496,7 +1487,7 @@
 
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -1505,10 +1496,10 @@
 	 */
 	
 	var debug = __webpack_require__(2)('socket.io-parser');
-	var json = __webpack_require__(75);
-	var isArray = __webpack_require__(6);
-	var Emitter = __webpack_require__(4);
-	var binary = __webpack_require__(74);
+	var json = __webpack_require__(81);
+	var isArray = __webpack_require__(25);
+	var Emitter = __webpack_require__(80);
+	var binary = __webpack_require__(79);
 	var isBuf = __webpack_require__(24);
 	
 	/**
@@ -1902,13 +1893,13 @@
 
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var sendMessage = __webpack_require__(13);
-	var logError = __webpack_require__(7);
+	var sendMessage = __webpack_require__(12);
+	var logError = __webpack_require__(5);
 	
 	var onLocalSessionCreated = function onLocalSessionCreated(desc) {
 	  imperio.peerConnection.setLocalDescription(desc, function () {
@@ -1919,7 +1910,7 @@
 	module.exports = onLocalSessionCreated;
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1932,7 +1923,7 @@
 	module.exports = sendMessage;
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1944,409 +1935,7 @@
 	module.exports = !!peerConnectionSupported && !!getUserMediaSupported;
 
 /***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-	/**
-	 * Slice reference.
-	 */
-	
-	var slice = [].slice;
-	
-	/**
-	 * Bind `obj` to `fn`.
-	 *
-	 * @param {Object} obj
-	 * @param {Function|String} fn or string
-	 * @return {Function}
-	 * @api public
-	 */
-	
-	module.exports = function(obj, fn){
-	  if ('string' == typeof fn) fn = obj[fn];
-	  if ('function' != typeof fn) throw new Error('bind() requires a function');
-	  var args = slice.call(arguments, 2);
-	  return function(){
-	    return fn.apply(obj, args.concat(slice.call(arguments)));
-	  }
-	};
-
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * Module dependencies
-	 */
-	
-	var XMLHttpRequest = __webpack_require__(9);
-	var XHR = __webpack_require__(63);
-	var JSONP = __webpack_require__(62);
-	var websocket = __webpack_require__(64);
-	
-	/**
-	 * Export transports.
-	 */
-	
-	exports.polling = polling;
-	exports.websocket = websocket;
-	
-	/**
-	 * Polling transport polymorphic constructor.
-	 * Decides on xhr vs jsonp based on feature detection.
-	 *
-	 * @api private
-	 */
-	
-	function polling(opts){
-	  var xhr;
-	  var xd = false;
-	  var xs = false;
-	  var jsonp = false !== opts.jsonp;
-	
-	  if (global.location) {
-	    var isSSL = 'https:' == location.protocol;
-	    var port = location.port;
-	
-	    // some user agents have empty `location.port`
-	    if (!port) {
-	      port = isSSL ? 443 : 80;
-	    }
-	
-	    xd = opts.hostname != location.hostname || port != opts.port;
-	    xs = opts.secure != isSSL;
-	  }
-	
-	  opts.xdomain = xd;
-	  opts.xscheme = xs;
-	  xhr = new XMLHttpRequest(opts);
-	
-	  if ('open' in xhr && !opts.forceJSONP) {
-	    return new XHR(opts);
-	  } else {
-	    if (!jsonp) throw new Error('JSONP disabled');
-	    return new JSONP(opts);
-	  }
-	}
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies.
-	 */
-	
-	var Transport = __webpack_require__(8);
-	var parseqs = __webpack_require__(10);
-	var parser = __webpack_require__(3);
-	var inherit = __webpack_require__(5);
-	var yeast = __webpack_require__(26);
-	var debug = __webpack_require__(2)('engine.io-client:polling');
-	
-	/**
-	 * Module exports.
-	 */
-	
-	module.exports = Polling;
-	
-	/**
-	 * Is XHR2 supported?
-	 */
-	
-	var hasXHR2 = (function() {
-	  var XMLHttpRequest = __webpack_require__(9);
-	  var xhr = new XMLHttpRequest({ xdomain: false });
-	  return null != xhr.responseType;
-	})();
-	
-	/**
-	 * Polling interface.
-	 *
-	 * @param {Object} opts
-	 * @api private
-	 */
-	
-	function Polling(opts){
-	  var forceBase64 = (opts && opts.forceBase64);
-	  if (!hasXHR2 || forceBase64) {
-	    this.supportsBinary = false;
-	  }
-	  Transport.call(this, opts);
-	}
-	
-	/**
-	 * Inherits from Transport.
-	 */
-	
-	inherit(Polling, Transport);
-	
-	/**
-	 * Transport name.
-	 */
-	
-	Polling.prototype.name = 'polling';
-	
-	/**
-	 * Opens the socket (triggers polling). We write a PING message to determine
-	 * when the transport is open.
-	 *
-	 * @api private
-	 */
-	
-	Polling.prototype.doOpen = function(){
-	  this.poll();
-	};
-	
-	/**
-	 * Pauses polling.
-	 *
-	 * @param {Function} callback upon buffers are flushed and transport is paused
-	 * @api private
-	 */
-	
-	Polling.prototype.pause = function(onPause){
-	  var pending = 0;
-	  var self = this;
-	
-	  this.readyState = 'pausing';
-	
-	  function pause(){
-	    debug('paused');
-	    self.readyState = 'paused';
-	    onPause();
-	  }
-	
-	  if (this.polling || !this.writable) {
-	    var total = 0;
-	
-	    if (this.polling) {
-	      debug('we are currently polling - waiting to pause');
-	      total++;
-	      this.once('pollComplete', function(){
-	        debug('pre-pause polling complete');
-	        --total || pause();
-	      });
-	    }
-	
-	    if (!this.writable) {
-	      debug('we are currently writing - waiting to pause');
-	      total++;
-	      this.once('drain', function(){
-	        debug('pre-pause writing complete');
-	        --total || pause();
-	      });
-	    }
-	  } else {
-	    pause();
-	  }
-	};
-	
-	/**
-	 * Starts polling cycle.
-	 *
-	 * @api public
-	 */
-	
-	Polling.prototype.poll = function(){
-	  debug('polling');
-	  this.polling = true;
-	  this.doPoll();
-	  this.emit('poll');
-	};
-	
-	/**
-	 * Overloads onData to detect payloads.
-	 *
-	 * @api private
-	 */
-	
-	Polling.prototype.onData = function(data){
-	  var self = this;
-	  debug('polling got data %s', data);
-	  var callback = function(packet, index, total) {
-	    // if its the first message we consider the transport open
-	    if ('opening' == self.readyState) {
-	      self.onOpen();
-	    }
-	
-	    // if its a close packet, we close the ongoing requests
-	    if ('close' == packet.type) {
-	      self.onClose();
-	      return false;
-	    }
-	
-	    // otherwise bypass onData and handle the message
-	    self.onPacket(packet);
-	  };
-	
-	  // decode payload
-	  parser.decodePayload(data, this.socket.binaryType, callback);
-	
-	  // if an event did not trigger closing
-	  if ('closed' != this.readyState) {
-	    // if we got data we're not polling
-	    this.polling = false;
-	    this.emit('pollComplete');
-	
-	    if ('open' == this.readyState) {
-	      this.poll();
-	    } else {
-	      debug('ignoring poll - transport state "%s"', this.readyState);
-	    }
-	  }
-	};
-	
-	/**
-	 * For polling, send a close packet.
-	 *
-	 * @api private
-	 */
-	
-	Polling.prototype.doClose = function(){
-	  var self = this;
-	
-	  function close(){
-	    debug('writing close packet');
-	    self.write([{ type: 'close' }]);
-	  }
-	
-	  if ('open' == this.readyState) {
-	    debug('transport open - closing');
-	    close();
-	  } else {
-	    // in case we're trying to close while
-	    // handshaking is in progress (GH-164)
-	    debug('transport not open - deferring close');
-	    this.once('open', close);
-	  }
-	};
-	
-	/**
-	 * Writes a packets payload.
-	 *
-	 * @param {Array} data packets
-	 * @param {Function} drain callback
-	 * @api private
-	 */
-	
-	Polling.prototype.write = function(packets){
-	  var self = this;
-	  this.writable = false;
-	  var callbackfn = function() {
-	    self.writable = true;
-	    self.emit('drain');
-	  };
-	
-	  var self = this;
-	  parser.encodePayload(packets, this.supportsBinary, function(data) {
-	    self.doWrite(data, callbackfn);
-	  });
-	};
-	
-	/**
-	 * Generates uri for connection.
-	 *
-	 * @api private
-	 */
-	
-	Polling.prototype.uri = function(){
-	  var query = this.query || {};
-	  var schema = this.secure ? 'https' : 'http';
-	  var port = '';
-	
-	  // cache busting is forced
-	  if (false !== this.timestampRequests) {
-	    query[this.timestampParam] = yeast();
-	  }
-	
-	  if (!this.supportsBinary && !query.sid) {
-	    query.b64 = 1;
-	  }
-	
-	  query = parseqs.encode(query);
-	
-	  // avoid port if default for schema
-	  if (this.port && (('https' == schema && this.port != 443) ||
-	     ('http' == schema && this.port != 80))) {
-	    port = ':' + this.port;
-	  }
-	
-	  // prepend ? to query
-	  if (query.length) {
-	    query = '?' + query;
-	  }
-	
-	  var ipv6 = this.hostname.indexOf(':') !== -1;
-	  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
-	};
-
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-	
-	var indexOf = [].indexOf;
-	
-	module.exports = function(arr, obj){
-	  if (indexOf) return arr.indexOf(obj);
-	  for (var i = 0; i < arr.length; ++i) {
-	    if (arr[i] === obj) return i;
-	  }
-	  return -1;
-	};
-
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
-
-	/**
-	 * Parses an URI
-	 *
-	 * @author Steven Levithan <stevenlevithan.com> (MIT license)
-	 * @api private
-	 */
-	
-	var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
-	
-	var parts = [
-	    'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
-	];
-	
-	module.exports = function parseuri(str) {
-	    var src = str,
-	        b = str.indexOf('['),
-	        e = str.indexOf(']');
-	
-	    if (b != -1 && e != -1) {
-	        str = str.substring(0, b) + str.substring(b, e).replace(/:/g, ';') + str.substring(e, str.length);
-	    }
-	
-	    var m = re.exec(str || ''),
-	        uri = {},
-	        i = 14;
-	
-	    while (i--) {
-	        uri[parts[i]] = m[i] || '';
-	    }
-	
-	    if (b != -1 && e != -1) {
-	        uri.source = src;
-	        uri.host = uri.host.substring(1, uri.host.length - 1).replace(/;/g, ':');
-	        uri.authority = uri.authority.replace('[', '').replace(']', '').replace(/;/g, ':');
-	        uri.ipv6uri = true;
-	    }
-	
-	    return uri;
-	};
-
-
-/***/ },
-/* 20 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -2354,15 +1943,15 @@
 	 * Module dependencies.
 	 */
 	
-	var eio = __webpack_require__(59);
-	var Socket = __webpack_require__(22);
-	var Emitter = __webpack_require__(23);
-	var parser = __webpack_require__(11);
-	var on = __webpack_require__(21);
-	var bind = __webpack_require__(15);
+	var eio = __webpack_require__(61);
+	var Socket = __webpack_require__(16);
+	var Emitter = __webpack_require__(18);
+	var parser = __webpack_require__(10);
+	var on = __webpack_require__(15);
+	var bind = __webpack_require__(17);
 	var debug = __webpack_require__(2)('socket.io-client:manager');
-	var indexOf = __webpack_require__(18);
-	var Backoff = __webpack_require__(55);
+	var indexOf = __webpack_require__(22);
+	var Backoff = __webpack_require__(58);
 	
 	/**
 	 * IE6+ hasOwnProperty
@@ -2909,7 +2498,7 @@
 
 
 /***/ },
-/* 21 */
+/* 15 */
 /***/ function(module, exports) {
 
 	
@@ -2939,7 +2528,7 @@
 
 
 /***/ },
-/* 22 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -2947,13 +2536,13 @@
 	 * Module dependencies.
 	 */
 	
-	var parser = __webpack_require__(11);
-	var Emitter = __webpack_require__(23);
-	var toArray = __webpack_require__(76);
-	var on = __webpack_require__(21);
-	var bind = __webpack_require__(15);
+	var parser = __webpack_require__(10);
+	var Emitter = __webpack_require__(18);
+	var toArray = __webpack_require__(82);
+	var on = __webpack_require__(15);
+	var bind = __webpack_require__(17);
 	var debug = __webpack_require__(2)('socket.io-client:socket');
-	var hasBin = __webpack_require__(67);
+	var hasBin = __webpack_require__(77);
 	
 	/**
 	 * Module exports.
@@ -3357,7 +2946,36 @@
 
 
 /***/ },
-/* 23 */
+/* 17 */
+/***/ function(module, exports) {
+
+	/**
+	 * Slice reference.
+	 */
+	
+	var slice = [].slice;
+	
+	/**
+	 * Bind `obj` to `fn`.
+	 *
+	 * @param {Object} obj
+	 * @param {Function|String} fn or string
+	 * @return {Function}
+	 * @api public
+	 */
+	
+	module.exports = function(obj, fn){
+	  if ('string' == typeof fn) fn = obj[fn];
+	  if ('function' != typeof fn) throw new Error('bind() requires a function');
+	  var args = slice.call(arguments, 2);
+	  return function(){
+	    return fn.apply(obj, args.concat(slice.call(arguments)));
+	  }
+	};
+
+
+/***/ },
+/* 18 */
 /***/ function(module, exports) {
 
 	
@@ -3524,43 +3142,320 @@
 
 
 /***/ },
-/* 24 */
-/***/ function(module, exports) {
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {
-	module.exports = isBuf;
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * Module dependencies
+	 */
+	
+	var XMLHttpRequest = __webpack_require__(7);
+	var XHR = __webpack_require__(65);
+	var JSONP = __webpack_require__(64);
+	var websocket = __webpack_require__(66);
 	
 	/**
-	 * Returns true if obj is a buffer or an arraybuffer.
+	 * Export transports.
+	 */
+	
+	exports.polling = polling;
+	exports.websocket = websocket;
+	
+	/**
+	 * Polling transport polymorphic constructor.
+	 * Decides on xhr vs jsonp based on feature detection.
 	 *
 	 * @api private
 	 */
 	
-	function isBuf(obj) {
-	  return (global.Buffer && global.Buffer.isBuffer(obj)) ||
-	         (global.ArrayBuffer && obj instanceof ArrayBuffer);
+	function polling(opts){
+	  var xhr;
+	  var xd = false;
+	  var xs = false;
+	  var jsonp = false !== opts.jsonp;
+	
+	  if (global.location) {
+	    var isSSL = 'https:' == location.protocol;
+	    var port = location.port;
+	
+	    // some user agents have empty `location.port`
+	    if (!port) {
+	      port = isSSL ? 443 : 80;
+	    }
+	
+	    xd = opts.hostname != location.hostname || port != opts.port;
+	    xs = opts.secure != isSSL;
+	  }
+	
+	  opts.xdomain = xd;
+	  opts.xscheme = xs;
+	  xhr = new XMLHttpRequest(opts);
+	
+	  if ('open' in xhr && !opts.forceJSONP) {
+	    return new XHR(opts);
+	  } else {
+	    if (!jsonp) throw new Error('JSONP disabled');
+	    return new JSONP(opts);
+	  }
 	}
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 25 */
-/***/ function(module, exports) {
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
+	/**
+	 * Module dependencies.
+	 */
+	
+	var Transport = __webpack_require__(6);
+	var parseqs = __webpack_require__(9);
+	var parser = __webpack_require__(3);
+	var inherit = __webpack_require__(4);
+	var yeast = __webpack_require__(21);
+	var debug = __webpack_require__(2)('engine.io-client:polling');
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = Polling;
+	
+	/**
+	 * Is XHR2 supported?
+	 */
+	
+	var hasXHR2 = (function() {
+	  var XMLHttpRequest = __webpack_require__(7);
+	  var xhr = new XMLHttpRequest({ xdomain: false });
+	  return null != xhr.responseType;
+	})();
+	
+	/**
+	 * Polling interface.
+	 *
+	 * @param {Object} opts
+	 * @api private
+	 */
+	
+	function Polling(opts){
+	  var forceBase64 = (opts && opts.forceBase64);
+	  if (!hasXHR2 || forceBase64) {
+	    this.supportsBinary = false;
+	  }
+	  Transport.call(this, opts);
 	}
+	
+	/**
+	 * Inherits from Transport.
+	 */
+	
+	inherit(Polling, Transport);
+	
+	/**
+	 * Transport name.
+	 */
+	
+	Polling.prototype.name = 'polling';
+	
+	/**
+	 * Opens the socket (triggers polling). We write a PING message to determine
+	 * when the transport is open.
+	 *
+	 * @api private
+	 */
+	
+	Polling.prototype.doOpen = function(){
+	  this.poll();
+	};
+	
+	/**
+	 * Pauses polling.
+	 *
+	 * @param {Function} callback upon buffers are flushed and transport is paused
+	 * @api private
+	 */
+	
+	Polling.prototype.pause = function(onPause){
+	  var pending = 0;
+	  var self = this;
+	
+	  this.readyState = 'pausing';
+	
+	  function pause(){
+	    debug('paused');
+	    self.readyState = 'paused';
+	    onPause();
+	  }
+	
+	  if (this.polling || !this.writable) {
+	    var total = 0;
+	
+	    if (this.polling) {
+	      debug('we are currently polling - waiting to pause');
+	      total++;
+	      this.once('pollComplete', function(){
+	        debug('pre-pause polling complete');
+	        --total || pause();
+	      });
+	    }
+	
+	    if (!this.writable) {
+	      debug('we are currently writing - waiting to pause');
+	      total++;
+	      this.once('drain', function(){
+	        debug('pre-pause writing complete');
+	        --total || pause();
+	      });
+	    }
+	  } else {
+	    pause();
+	  }
+	};
+	
+	/**
+	 * Starts polling cycle.
+	 *
+	 * @api public
+	 */
+	
+	Polling.prototype.poll = function(){
+	  debug('polling');
+	  this.polling = true;
+	  this.doPoll();
+	  this.emit('poll');
+	};
+	
+	/**
+	 * Overloads onData to detect payloads.
+	 *
+	 * @api private
+	 */
+	
+	Polling.prototype.onData = function(data){
+	  var self = this;
+	  debug('polling got data %s', data);
+	  var callback = function(packet, index, total) {
+	    // if its the first message we consider the transport open
+	    if ('opening' == self.readyState) {
+	      self.onOpen();
+	    }
+	
+	    // if its a close packet, we close the ongoing requests
+	    if ('close' == packet.type) {
+	      self.onClose();
+	      return false;
+	    }
+	
+	    // otherwise bypass onData and handle the message
+	    self.onPacket(packet);
+	  };
+	
+	  // decode payload
+	  parser.decodePayload(data, this.socket.binaryType, callback);
+	
+	  // if an event did not trigger closing
+	  if ('closed' != this.readyState) {
+	    // if we got data we're not polling
+	    this.polling = false;
+	    this.emit('pollComplete');
+	
+	    if ('open' == this.readyState) {
+	      this.poll();
+	    } else {
+	      debug('ignoring poll - transport state "%s"', this.readyState);
+	    }
+	  }
+	};
+	
+	/**
+	 * For polling, send a close packet.
+	 *
+	 * @api private
+	 */
+	
+	Polling.prototype.doClose = function(){
+	  var self = this;
+	
+	  function close(){
+	    debug('writing close packet');
+	    self.write([{ type: 'close' }]);
+	  }
+	
+	  if ('open' == this.readyState) {
+	    debug('transport open - closing');
+	    close();
+	  } else {
+	    // in case we're trying to close while
+	    // handshaking is in progress (GH-164)
+	    debug('transport not open - deferring close');
+	    this.once('open', close);
+	  }
+	};
+	
+	/**
+	 * Writes a packets payload.
+	 *
+	 * @param {Array} data packets
+	 * @param {Function} drain callback
+	 * @api private
+	 */
+	
+	Polling.prototype.write = function(packets){
+	  var self = this;
+	  this.writable = false;
+	  var callbackfn = function() {
+	    self.writable = true;
+	    self.emit('drain');
+	  };
+	
+	  var self = this;
+	  parser.encodePayload(packets, this.supportsBinary, function(data) {
+	    self.doWrite(data, callbackfn);
+	  });
+	};
+	
+	/**
+	 * Generates uri for connection.
+	 *
+	 * @api private
+	 */
+	
+	Polling.prototype.uri = function(){
+	  var query = this.query || {};
+	  var schema = this.secure ? 'https' : 'http';
+	  var port = '';
+	
+	  // cache busting is forced
+	  if (false !== this.timestampRequests) {
+	    query[this.timestampParam] = yeast();
+	  }
+	
+	  if (!this.supportsBinary && !query.sid) {
+	    query.b64 = 1;
+	  }
+	
+	  query = parseqs.encode(query);
+	
+	  // avoid port if default for schema
+	  if (this.port && (('https' == schema && this.port != 443) ||
+	     ('http' == schema && this.port != 80))) {
+	    port = ':' + this.port;
+	  }
+	
+	  // prepend ? to query
+	  if (query.length) {
+	    query = '?' + query;
+	  }
+	
+	  var ipv6 = this.hostname.indexOf(':') !== -1;
+	  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
+	};
 
 
 /***/ },
-/* 26 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3634,76 +3529,112 @@
 
 
 /***/ },
-/* 27 */
+/* 22 */
 /***/ function(module, exports) {
 
-	module.exports = after
 	
-	function after(count, callback, err_cb) {
-	    var bail = false
-	    err_cb = err_cb || noop
-	    proxy.count = count
+	var indexOf = [].indexOf;
 	
-	    return (count === 0) ? callback() : proxy
-	
-	    function proxy(err, result) {
-	        if (proxy.count <= 0) {
-	            throw new Error('after called too many times')
-	        }
-	        --proxy.count
-	
-	        // after first error, rest are passed to err_cb
-	        if (err) {
-	            bail = true
-	            callback(err)
-	            // future error callbacks will go to error handler
-	            callback = err_cb
-	        } else if (proxy.count === 0 && !bail) {
-	            callback(null, result)
-	        }
-	    }
-	}
-	
-	function noop() {}
-
+	module.exports = function(arr, obj){
+	  if (indexOf) return arr.indexOf(obj);
+	  for (var i = 0; i < arr.length; ++i) {
+	    if (arr[i] === obj) return i;
+	  }
+	  return -1;
+	};
 
 /***/ },
-/* 28 */
+/* 23 */
 /***/ function(module, exports) {
 
 	/**
-	 * An abstraction for slicing an arraybuffer even when
-	 * ArrayBuffer.prototype.slice is not supported
+	 * Parses an URI
 	 *
-	 * @api public
+	 * @author Steven Levithan <stevenlevithan.com> (MIT license)
+	 * @api private
 	 */
 	
-	module.exports = function(arraybuffer, start, end) {
-	  var bytes = arraybuffer.byteLength;
-	  start = start || 0;
-	  end = end || bytes;
+	var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
 	
-	  if (arraybuffer.slice) { return arraybuffer.slice(start, end); }
+	var parts = [
+	    'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
+	];
 	
-	  if (start < 0) { start += bytes; }
-	  if (end < 0) { end += bytes; }
-	  if (end > bytes) { end = bytes; }
+	module.exports = function parseuri(str) {
+	    var src = str,
+	        b = str.indexOf('['),
+	        e = str.indexOf(']');
 	
-	  if (start >= bytes || start >= end || bytes === 0) {
-	    return new ArrayBuffer(0);
-	  }
+	    if (b != -1 && e != -1) {
+	        str = str.substring(0, b) + str.substring(b, e).replace(/:/g, ';') + str.substring(e, str.length);
+	    }
 	
-	  var abv = new Uint8Array(arraybuffer);
-	  var result = new Uint8Array(end - start);
-	  for (var i = start, ii = 0; i < end; i++, ii++) {
-	    result[ii] = abv[i];
-	  }
-	  return result.buffer;
+	    var m = re.exec(str || ''),
+	        uri = {},
+	        i = 14;
+	
+	    while (i--) {
+	        uri[parts[i]] = m[i] || '';
+	    }
+	
+	    if (b != -1 && e != -1) {
+	        uri.source = src;
+	        uri.host = uri.host.substring(1, uri.host.length - 1).replace(/;/g, ':');
+	        uri.authority = uri.authority.replace('[', '').replace(']', '').replace(/;/g, ':');
+	        uri.ipv6uri = true;
+	    }
+	
+	    return uri;
 	};
 
 
 /***/ },
-/* 29 */
+/* 24 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {
+	module.exports = isBuf;
+	
+	/**
+	 * Returns true if obj is a buffer or an arraybuffer.
+	 *
+	 * @api private
+	 */
+	
+	function isBuf(obj) {
+	  return (global.Buffer && global.Buffer.isBuffer(obj)) ||
+	         (global.ArrayBuffer && obj instanceof ArrayBuffer);
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	module.exports = Array.isArray || function (arr) {
+	  return Object.prototype.toString.call(arr) == '[object Array]';
+	};
+
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
+
+
+/***/ },
+/* 27 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3764,7 +3695,26 @@
 	module.exports = mobileAccelShare;
 
 /***/ },
-/* 30 */
+/* 28 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var emitData = function emitData(callback, data) {
+	  if (imperio.connectionType === 'webRTC') {
+	    var webRTCData = {
+	      data: data,
+	      type: 'data'
+	    };
+	    imperio.dataChannel.send(webRTCData);
+	  } else imperio.socket.emit('data', imperio.room, data);
+	  if (callback) callback(data);
+	};
+	
+	module.exports = emitData;
+
+/***/ },
+/* 29 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3798,7 +3748,7 @@
 	module.exports = emitGeoLocation;
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3809,7 +3759,8 @@
 	// 1. A callback function that will be run every time the tap event is triggered, by default
 	// we will provide this function with the gyroscope data.
 	var mobileGyroShare = function mobileGyroShare(localCallback, modifyDataCallback) {
-	  window.ondeviceorientation = function (event) {
+	  // window.ondeviceorientation = function gyroShare(event) {
+	  function gyroShare(event) {
 	    var alpha = Math.round(event.alpha);
 	    var beta = Math.round(event.beta);
 	    var gamma = Math.round(event.gamma);
@@ -3827,13 +3778,21 @@
 	      imperio.dataChannel.send(JSON.stringify(webRTCData));
 	    } else imperio.socket.emit('gyroscope', imperio.room, gyroObject);
 	    if (localCallback) localCallback(gyroObject);
-	  };
+	  }
+	
+	  function removeGyroShare() {
+	    console.log('TOUCHED');
+	    window.removeEventListener('deviceorientation', gyroShare);
+	  }
+	
+	  window.addEventListener('deviceorientation', gyroShare);
+	  // window.document.body.addEventListener('touchend', removeGyroShare);
 	};
 	
 	module.exports = mobileGyroShare;
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3862,17 +3821,17 @@
 	module.exports = mobileRoomSetup;
 
 /***/ },
-/* 33 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var emitPan = __webpack_require__(34);
-	var emitPinch = __webpack_require__(35);
-	var emitPress = __webpack_require__(36);
-	var emitPressUp = __webpack_require__(37);
-	var emitRotate = __webpack_require__(38);
-	var emitSwipe = __webpack_require__(39);
+	var emitPan = __webpack_require__(33);
+	var emitPinch = __webpack_require__(34);
+	var emitPress = __webpack_require__(35);
+	var emitPressUp = __webpack_require__(36);
+	var emitRotate = __webpack_require__(37);
+	var emitSwipe = __webpack_require__(38);
 	
 	function curse(action, element, localCallback, modifyDataCallback) {
 	  if (action === 'pan') emitPan(element, localCallback, modifyDataCallback);
@@ -3886,7 +3845,7 @@
 	module.exports = curse;
 
 /***/ },
-/* 34 */
+/* 33 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3913,7 +3872,7 @@
 	module.exports = emitPan;
 
 /***/ },
-/* 35 */
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3941,7 +3900,7 @@
 	module.exports = emitPinch;
 
 /***/ },
-/* 36 */
+/* 35 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3965,7 +3924,7 @@
 	module.exports = emitPress;
 
 /***/ },
-/* 37 */
+/* 36 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3989,7 +3948,7 @@
 	module.exports = emitPressUp;
 
 /***/ },
-/* 38 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4017,7 +3976,7 @@
 	module.exports = emitRotate;
 
 /***/ },
-/* 39 */
+/* 38 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4039,6 +3998,28 @@
 	};
 	
 	module.exports = emitSwipe;
+
+/***/ },
+/* 39 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// Attach to a tappable element and it will emit the tap event.
+	// Accepts 1 argument:
+	// 1. A callback function that will be run every time the tap event is triggered.
+	var emitTap = function emitTap(callback, data) {
+	  if (imperio.connectionType === 'webRTC') {
+	    var webRTCData = {
+	      data: data,
+	      type: 'tap'
+	    };
+	    imperio.dataChannel.send(webRTCData);
+	  } else imperio.socket.emit('tap', imperio.room, data);
+	  if (callback) callback(data);
+	};
+	
+	module.exports = emitTap;
 
 /***/ },
 /* 40 */
@@ -4078,6 +4059,27 @@
 
 	'use strict';
 	
+	/**
+	 * Sets up a listener for a data event.
+	 * @param {Object} socket - The socket you would like to connect to
+	 * @param {function} callback - A callback function
+	 *        that will be run every time the tap event is triggered
+	 */
+	var dataListener = function dataListener(callback) {
+	  imperio.callbacks.data = callback;
+	  imperio.socket.on('data', function (data) {
+	    if (callback) callback(data);
+	  });
+	};
+	
+	module.exports = dataListener;
+
+/***/ },
+/* 43 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
 	// Sets up a listener for the location data and expects to receive an object
 	// with the location data in the form of {cords: {accuracy:21, altitude:null,
 	// altitudeAccuracy:null, heading:null, latitude:33.9794281, longitude:-118.42238250000001,
@@ -4094,7 +4096,7 @@
 	module.exports = geoLocationListener;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4113,7 +4115,7 @@
 	module.exports = gyroscopeListener;
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4132,6 +4134,7 @@
 	        id: imperio.socket.id,
 	        role: 'listener'
 	      };
+	      console.log('about to fire createRoom socket emit');
 	      imperio.socket.emit('createRoom', clientData);
 	    }
 	    if (callback) callback();
@@ -4141,7 +4144,7 @@
 	module.exports = listenerRoomSetup;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4160,7 +4163,7 @@
 	module.exports = nonceTimeoutUpdate;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4181,7 +4184,7 @@
 	module.exports = tapListener;
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -4234,12 +4237,12 @@
 	})("undefined" === typeof window ? undefined : window);
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _cookiesMin = __webpack_require__(47);
+	var _cookiesMin = __webpack_require__(48);
 	
 	var _cookiesMin2 = _interopRequireDefault(_cookiesMin);
 	
@@ -4255,7 +4258,7 @@
 	module.exports = getCookie;
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -4743,7 +4746,7 @@
 	//# sourceMappingURL=hammer.min.js.map
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4759,6 +4762,7 @@
 	    }).filter(function (socketID) {
 	      return socketID !== imperio.myID;
 	    });
+	    console.log('parsedRoomData: ', roomData);
 	    if (callback) callback(roomData);
 	  });
 	};
@@ -4766,15 +4770,15 @@
 	module.exports = roomUpdate;
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var sendMessage = __webpack_require__(13);
-	var logError = __webpack_require__(7);
-	var onDataChannelCreated = __webpack_require__(52);
-	var onLocalSessionCreated = __webpack_require__(12);
+	var sendMessage = __webpack_require__(12);
+	var logError = __webpack_require__(5);
+	var onDataChannelCreated = __webpack_require__(53);
+	var onLocalSessionCreated = __webpack_require__(11);
 	
 	// const createPeerConnection
 	module.exports = function (isInitiator, config) {
@@ -4812,7 +4816,7 @@
 	// module.export = createPeerConnection;
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4838,13 +4842,13 @@
 	module.exports = onDataChannelCreated;
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var logError = __webpack_require__(7);
-	var onLocalSessionCreated = __webpack_require__(12);
+	var logError = __webpack_require__(5);
+	var onLocalSessionCreated = __webpack_require__(11);
 	
 	var signalingMessageCallback = function signalingMessageCallback(message) {
 	  if (message.type === 'offer') {
@@ -4865,14 +4869,14 @@
 	module.exports = signalingMessageCallback;
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createPeerConnection = __webpack_require__(51);
-	var signalingMessageCallback = __webpack_require__(53);
-	var webRTCSupport = __webpack_require__(14);
+	var createPeerConnection = __webpack_require__(52);
+	var signalingMessageCallback = __webpack_require__(54);
+	var webRTCSupport = __webpack_require__(13);
 	
 	var webRTCConnect = function webRTCConnect() {
 	  if (webRTCSupport) {
@@ -4900,7 +4904,188 @@
 	module.exports = webRTCConnect;
 
 /***/ },
-/* 55 */
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Module dependencies.
+	 */
+	
+	var url = __webpack_require__(57);
+	var parser = __webpack_require__(10);
+	var Manager = __webpack_require__(14);
+	var debug = __webpack_require__(2)('socket.io-client');
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = exports = lookup;
+	
+	/**
+	 * Managers cache.
+	 */
+	
+	var cache = exports.managers = {};
+	
+	/**
+	 * Looks up an existing `Manager` for multiplexing.
+	 * If the user summons:
+	 *
+	 *   `io('http://localhost/a');`
+	 *   `io('http://localhost/b');`
+	 *
+	 * We reuse the existing instance based on same scheme/port/host,
+	 * and we initialize sockets for each namespace.
+	 *
+	 * @api public
+	 */
+	
+	function lookup(uri, opts) {
+	  if (typeof uri == 'object') {
+	    opts = uri;
+	    uri = undefined;
+	  }
+	
+	  opts = opts || {};
+	
+	  var parsed = url(uri);
+	  var source = parsed.source;
+	  var id = parsed.id;
+	  var path = parsed.path;
+	  var sameNamespace = cache[id] && path in cache[id].nsps;
+	  var newConnection = opts.forceNew || opts['force new connection'] ||
+	                      false === opts.multiplex || sameNamespace;
+	
+	  var io;
+	
+	  if (newConnection) {
+	    debug('ignoring socket cache for %s', source);
+	    io = Manager(source, opts);
+	  } else {
+	    if (!cache[id]) {
+	      debug('new io instance for %s', source);
+	      cache[id] = Manager(source, opts);
+	    }
+	    io = cache[id];
+	  }
+	
+	  return io.socket(parsed.path);
+	}
+	
+	/**
+	 * Protocol version.
+	 *
+	 * @api public
+	 */
+	
+	exports.protocol = parser.protocol;
+	
+	/**
+	 * `connect`.
+	 *
+	 * @param {String} uri
+	 * @api public
+	 */
+	
+	exports.connect = lookup;
+	
+	/**
+	 * Expose constructors for standalone build.
+	 *
+	 * @api public
+	 */
+	
+	exports.Manager = __webpack_require__(14);
+	exports.Socket = __webpack_require__(16);
+
+
+/***/ },
+/* 57 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {
+	/**
+	 * Module dependencies.
+	 */
+	
+	var parseuri = __webpack_require__(23);
+	var debug = __webpack_require__(2)('socket.io-client:url');
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = url;
+	
+	/**
+	 * URL parser.
+	 *
+	 * @param {String} url
+	 * @param {Object} An object meant to mimic window.location.
+	 *                 Defaults to window.location.
+	 * @api public
+	 */
+	
+	function url(uri, loc){
+	  var obj = uri;
+	
+	  // default to window.location
+	  var loc = loc || global.location;
+	  if (null == uri) uri = loc.protocol + '//' + loc.host;
+	
+	  // relative path support
+	  if ('string' == typeof uri) {
+	    if ('/' == uri.charAt(0)) {
+	      if ('/' == uri.charAt(1)) {
+	        uri = loc.protocol + uri;
+	      } else {
+	        uri = loc.host + uri;
+	      }
+	    }
+	
+	    if (!/^(https?|wss?):\/\//.test(uri)) {
+	      debug('protocol-less url %s', uri);
+	      if ('undefined' != typeof loc) {
+	        uri = loc.protocol + '//' + uri;
+	      } else {
+	        uri = 'https://' + uri;
+	      }
+	    }
+	
+	    // parse
+	    debug('parse %s', uri);
+	    obj = parseuri(uri);
+	  }
+	
+	  // make sure we treat `localhost:80` and `localhost` equally
+	  if (!obj.port) {
+	    if (/^(http|ws)$/.test(obj.protocol)) {
+	      obj.port = '80';
+	    }
+	    else if (/^(http|ws)s$/.test(obj.protocol)) {
+	      obj.port = '443';
+	    }
+	  }
+	
+	  obj.path = obj.path || '/';
+	
+	  var ipv6 = obj.host.indexOf(':') !== -1;
+	  var host = ipv6 ? '[' + obj.host + ']' : obj.host;
+	
+	  // define unique id
+	  obj.id = obj.protocol + '://' + host + ':' + obj.port;
+	  // define href
+	  obj.href = obj.protocol + '://' + host + (loc && loc.port == obj.port ? '' : (':' + obj.port));
+	
+	  return obj;
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 58 */
 /***/ function(module, exports) {
 
 	
@@ -4991,175 +5176,7 @@
 
 
 /***/ },
-/* 56 */
-/***/ function(module, exports) {
-
-	/*
-	 * base64-arraybuffer
-	 * https://github.com/niklasvh/base64-arraybuffer
-	 *
-	 * Copyright (c) 2012 Niklas von Hertzen
-	 * Licensed under the MIT license.
-	 */
-	(function(chars){
-	  "use strict";
-	
-	  exports.encode = function(arraybuffer) {
-	    var bytes = new Uint8Array(arraybuffer),
-	    i, len = bytes.length, base64 = "";
-	
-	    for (i = 0; i < len; i+=3) {
-	      base64 += chars[bytes[i] >> 2];
-	      base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
-	      base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
-	      base64 += chars[bytes[i + 2] & 63];
-	    }
-	
-	    if ((len % 3) === 2) {
-	      base64 = base64.substring(0, base64.length - 1) + "=";
-	    } else if (len % 3 === 1) {
-	      base64 = base64.substring(0, base64.length - 2) + "==";
-	    }
-	
-	    return base64;
-	  };
-	
-	  exports.decode =  function(base64) {
-	    var bufferLength = base64.length * 0.75,
-	    len = base64.length, i, p = 0,
-	    encoded1, encoded2, encoded3, encoded4;
-	
-	    if (base64[base64.length - 1] === "=") {
-	      bufferLength--;
-	      if (base64[base64.length - 2] === "=") {
-	        bufferLength--;
-	      }
-	    }
-	
-	    var arraybuffer = new ArrayBuffer(bufferLength),
-	    bytes = new Uint8Array(arraybuffer);
-	
-	    for (i = 0; i < len; i+=4) {
-	      encoded1 = chars.indexOf(base64[i]);
-	      encoded2 = chars.indexOf(base64[i+1]);
-	      encoded3 = chars.indexOf(base64[i+2]);
-	      encoded4 = chars.indexOf(base64[i+3]);
-	
-	      bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
-	      bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
-	      bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
-	    }
-	
-	    return arraybuffer;
-	  };
-	})("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
-
-
-/***/ },
-/* 57 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * Create a blob builder even when vendor prefixes exist
-	 */
-	
-	var BlobBuilder = global.BlobBuilder
-	  || global.WebKitBlobBuilder
-	  || global.MSBlobBuilder
-	  || global.MozBlobBuilder;
-	
-	/**
-	 * Check if Blob constructor is supported
-	 */
-	
-	var blobSupported = (function() {
-	  try {
-	    var a = new Blob(['hi']);
-	    return a.size === 2;
-	  } catch(e) {
-	    return false;
-	  }
-	})();
-	
-	/**
-	 * Check if Blob constructor supports ArrayBufferViews
-	 * Fails in Safari 6, so we need to map to ArrayBuffers there.
-	 */
-	
-	var blobSupportsArrayBufferView = blobSupported && (function() {
-	  try {
-	    var b = new Blob([new Uint8Array([1,2])]);
-	    return b.size === 2;
-	  } catch(e) {
-	    return false;
-	  }
-	})();
-	
-	/**
-	 * Check if BlobBuilder is supported
-	 */
-	
-	var blobBuilderSupported = BlobBuilder
-	  && BlobBuilder.prototype.append
-	  && BlobBuilder.prototype.getBlob;
-	
-	/**
-	 * Helper function that maps ArrayBufferViews to ArrayBuffers
-	 * Used by BlobBuilder constructor and old browsers that didn't
-	 * support it in the Blob constructor.
-	 */
-	
-	function mapArrayBufferViews(ary) {
-	  for (var i = 0; i < ary.length; i++) {
-	    var chunk = ary[i];
-	    if (chunk.buffer instanceof ArrayBuffer) {
-	      var buf = chunk.buffer;
-	
-	      // if this is a subarray, make a copy so we only
-	      // include the subarray region from the underlying buffer
-	      if (chunk.byteLength !== buf.byteLength) {
-	        var copy = new Uint8Array(chunk.byteLength);
-	        copy.set(new Uint8Array(buf, chunk.byteOffset, chunk.byteLength));
-	        buf = copy.buffer;
-	      }
-	
-	      ary[i] = buf;
-	    }
-	  }
-	}
-	
-	function BlobBuilderConstructor(ary, options) {
-	  options = options || {};
-	
-	  var bb = new BlobBuilder();
-	  mapArrayBufferViews(ary);
-	
-	  for (var i = 0; i < ary.length; i++) {
-	    bb.append(ary[i]);
-	  }
-	
-	  return (options.type) ? bb.getBlob(options.type) : bb.getBlob();
-	};
-	
-	function BlobConstructor(ary, options) {
-	  mapArrayBufferViews(ary);
-	  return new Blob(ary, options || {});
-	};
-	
-	module.exports = (function() {
-	  if (blobSupported) {
-	    return blobSupportsArrayBufferView ? global.Blob : BlobConstructor;
-	  } else if (blobBuilderSupported) {
-	    return BlobBuilderConstructor;
-	  } else {
-	    return undefined;
-	  }
-	})();
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5175,7 +5192,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(69);
+	exports.humanize = __webpack_require__(60);
 	
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -5362,19 +5379,150 @@
 
 
 /***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
+/* 60 */
+/***/ function(module, exports) {
 
+	/**
+	 * Helpers.
+	 */
 	
-	module.exports =  __webpack_require__(60);
+	var s = 1000;
+	var m = s * 60;
+	var h = m * 60;
+	var d = h * 24;
+	var y = d * 365.25;
+	
+	/**
+	 * Parse or format the given `val`.
+	 *
+	 * Options:
+	 *
+	 *  - `long` verbose formatting [false]
+	 *
+	 * @param {String|Number} val
+	 * @param {Object} options
+	 * @return {String|Number}
+	 * @api public
+	 */
+	
+	module.exports = function(val, options){
+	  options = options || {};
+	  if ('string' == typeof val) return parse(val);
+	  return options.long
+	    ? long(val)
+	    : short(val);
+	};
+	
+	/**
+	 * Parse the given `str` and return milliseconds.
+	 *
+	 * @param {String} str
+	 * @return {Number}
+	 * @api private
+	 */
+	
+	function parse(str) {
+	  str = '' + str;
+	  if (str.length > 10000) return;
+	  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
+	  if (!match) return;
+	  var n = parseFloat(match[1]);
+	  var type = (match[2] || 'ms').toLowerCase();
+	  switch (type) {
+	    case 'years':
+	    case 'year':
+	    case 'yrs':
+	    case 'yr':
+	    case 'y':
+	      return n * y;
+	    case 'days':
+	    case 'day':
+	    case 'd':
+	      return n * d;
+	    case 'hours':
+	    case 'hour':
+	    case 'hrs':
+	    case 'hr':
+	    case 'h':
+	      return n * h;
+	    case 'minutes':
+	    case 'minute':
+	    case 'mins':
+	    case 'min':
+	    case 'm':
+	      return n * m;
+	    case 'seconds':
+	    case 'second':
+	    case 'secs':
+	    case 'sec':
+	    case 's':
+	      return n * s;
+	    case 'milliseconds':
+	    case 'millisecond':
+	    case 'msecs':
+	    case 'msec':
+	    case 'ms':
+	      return n;
+	  }
+	}
+	
+	/**
+	 * Short format for `ms`.
+	 *
+	 * @param {Number} ms
+	 * @return {String}
+	 * @api private
+	 */
+	
+	function short(ms) {
+	  if (ms >= d) return Math.round(ms / d) + 'd';
+	  if (ms >= h) return Math.round(ms / h) + 'h';
+	  if (ms >= m) return Math.round(ms / m) + 'm';
+	  if (ms >= s) return Math.round(ms / s) + 's';
+	  return ms + 'ms';
+	}
+	
+	/**
+	 * Long format for `ms`.
+	 *
+	 * @param {Number} ms
+	 * @return {String}
+	 * @api private
+	 */
+	
+	function long(ms) {
+	  return plural(ms, d, 'day')
+	    || plural(ms, h, 'hour')
+	    || plural(ms, m, 'minute')
+	    || plural(ms, s, 'second')
+	    || ms + ' ms';
+	}
+	
+	/**
+	 * Pluralization helper.
+	 */
+	
+	function plural(ms, n, name) {
+	  if (ms < n) return;
+	  if (ms < n * 1.5) return Math.floor(ms / n) + ' ' + name;
+	  return Math.ceil(ms / n) + ' ' + name + 's';
+	}
 
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(61);
+	module.exports =  __webpack_require__(62);
+
+
+/***/ },
+/* 62 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	module.exports = __webpack_require__(63);
 	
 	/**
 	 * Exports parser
@@ -5386,21 +5534,21 @@
 
 
 /***/ },
-/* 61 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 	
-	var transports = __webpack_require__(16);
-	var Emitter = __webpack_require__(4);
+	var transports = __webpack_require__(19);
+	var Emitter = __webpack_require__(8);
 	var debug = __webpack_require__(2)('engine.io-client:socket');
-	var index = __webpack_require__(18);
+	var index = __webpack_require__(22);
 	var parser = __webpack_require__(3);
-	var parseuri = __webpack_require__(19);
-	var parsejson = __webpack_require__(70);
-	var parseqs = __webpack_require__(10);
+	var parseuri = __webpack_require__(23);
+	var parsejson = __webpack_require__(76);
+	var parseqs = __webpack_require__(9);
 	
 	/**
 	 * Module exports.
@@ -5524,8 +5672,8 @@
 	 */
 	
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(8);
-	Socket.transports = __webpack_require__(16);
+	Socket.Transport = __webpack_require__(6);
+	Socket.transports = __webpack_require__(19);
 	Socket.parser = __webpack_require__(3);
 	
 	/**
@@ -6121,7 +6269,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 62 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -6129,8 +6277,8 @@
 	 * Module requirements.
 	 */
 	
-	var Polling = __webpack_require__(17);
-	var inherit = __webpack_require__(5);
+	var Polling = __webpack_require__(20);
+	var inherit = __webpack_require__(4);
 	
 	/**
 	 * Module exports.
@@ -6366,17 +6514,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 63 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module requirements.
 	 */
 	
-	var XMLHttpRequest = __webpack_require__(9);
-	var Polling = __webpack_require__(17);
-	var Emitter = __webpack_require__(4);
-	var inherit = __webpack_require__(5);
+	var XMLHttpRequest = __webpack_require__(7);
+	var Polling = __webpack_require__(20);
+	var Emitter = __webpack_require__(8);
+	var inherit = __webpack_require__(4);
 	var debug = __webpack_require__(2)('engine.io-client:polling-xhr');
 	
 	/**
@@ -6785,18 +6933,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 64 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 	
-	var Transport = __webpack_require__(8);
+	var Transport = __webpack_require__(6);
 	var parser = __webpack_require__(3);
-	var parseqs = __webpack_require__(10);
-	var inherit = __webpack_require__(5);
-	var yeast = __webpack_require__(26);
+	var parseqs = __webpack_require__(9);
+	var inherit = __webpack_require__(4);
+	var yeast = __webpack_require__(21);
 	var debug = __webpack_require__(2)('engine.io-client:websocket');
 	var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
 	
@@ -6809,7 +6957,7 @@
 	var WebSocket = BrowserWebSocket;
 	if (!WebSocket && typeof window === 'undefined') {
 	  try {
-	    WebSocket = __webpack_require__(87);
+	    WebSocket = __webpack_require__(93);
 	  } catch (e) { }
 	}
 	
@@ -7080,7 +7228,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 65 */
+/* 67 */
 /***/ function(module, exports) {
 
 	
@@ -7105,7 +7253,244 @@
 
 
 /***/ },
-/* 66 */
+/* 68 */
+/***/ function(module, exports) {
+
+	module.exports = after
+	
+	function after(count, callback, err_cb) {
+	    var bail = false
+	    err_cb = err_cb || noop
+	    proxy.count = count
+	
+	    return (count === 0) ? callback() : proxy
+	
+	    function proxy(err, result) {
+	        if (proxy.count <= 0) {
+	            throw new Error('after called too many times')
+	        }
+	        --proxy.count
+	
+	        // after first error, rest are passed to err_cb
+	        if (err) {
+	            bail = true
+	            callback(err)
+	            // future error callbacks will go to error handler
+	            callback = err_cb
+	        } else if (proxy.count === 0 && !bail) {
+	            callback(null, result)
+	        }
+	    }
+	}
+	
+	function noop() {}
+
+
+/***/ },
+/* 69 */
+/***/ function(module, exports) {
+
+	/**
+	 * An abstraction for slicing an arraybuffer even when
+	 * ArrayBuffer.prototype.slice is not supported
+	 *
+	 * @api public
+	 */
+	
+	module.exports = function(arraybuffer, start, end) {
+	  var bytes = arraybuffer.byteLength;
+	  start = start || 0;
+	  end = end || bytes;
+	
+	  if (arraybuffer.slice) { return arraybuffer.slice(start, end); }
+	
+	  if (start < 0) { start += bytes; }
+	  if (end < 0) { end += bytes; }
+	  if (end > bytes) { end = bytes; }
+	
+	  if (start >= bytes || start >= end || bytes === 0) {
+	    return new ArrayBuffer(0);
+	  }
+	
+	  var abv = new Uint8Array(arraybuffer);
+	  var result = new Uint8Array(end - start);
+	  for (var i = start, ii = 0; i < end; i++, ii++) {
+	    result[ii] = abv[i];
+	  }
+	  return result.buffer;
+	};
+
+
+/***/ },
+/* 70 */
+/***/ function(module, exports) {
+
+	/*
+	 * base64-arraybuffer
+	 * https://github.com/niklasvh/base64-arraybuffer
+	 *
+	 * Copyright (c) 2012 Niklas von Hertzen
+	 * Licensed under the MIT license.
+	 */
+	(function(chars){
+	  "use strict";
+	
+	  exports.encode = function(arraybuffer) {
+	    var bytes = new Uint8Array(arraybuffer),
+	    i, len = bytes.length, base64 = "";
+	
+	    for (i = 0; i < len; i+=3) {
+	      base64 += chars[bytes[i] >> 2];
+	      base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
+	      base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
+	      base64 += chars[bytes[i + 2] & 63];
+	    }
+	
+	    if ((len % 3) === 2) {
+	      base64 = base64.substring(0, base64.length - 1) + "=";
+	    } else if (len % 3 === 1) {
+	      base64 = base64.substring(0, base64.length - 2) + "==";
+	    }
+	
+	    return base64;
+	  };
+	
+	  exports.decode =  function(base64) {
+	    var bufferLength = base64.length * 0.75,
+	    len = base64.length, i, p = 0,
+	    encoded1, encoded2, encoded3, encoded4;
+	
+	    if (base64[base64.length - 1] === "=") {
+	      bufferLength--;
+	      if (base64[base64.length - 2] === "=") {
+	        bufferLength--;
+	      }
+	    }
+	
+	    var arraybuffer = new ArrayBuffer(bufferLength),
+	    bytes = new Uint8Array(arraybuffer);
+	
+	    for (i = 0; i < len; i+=4) {
+	      encoded1 = chars.indexOf(base64[i]);
+	      encoded2 = chars.indexOf(base64[i+1]);
+	      encoded3 = chars.indexOf(base64[i+2]);
+	      encoded4 = chars.indexOf(base64[i+3]);
+	
+	      bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
+	      bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
+	      bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
+	    }
+	
+	    return arraybuffer;
+	  };
+	})("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+
+
+/***/ },
+/* 71 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * Create a blob builder even when vendor prefixes exist
+	 */
+	
+	var BlobBuilder = global.BlobBuilder
+	  || global.WebKitBlobBuilder
+	  || global.MSBlobBuilder
+	  || global.MozBlobBuilder;
+	
+	/**
+	 * Check if Blob constructor is supported
+	 */
+	
+	var blobSupported = (function() {
+	  try {
+	    var a = new Blob(['hi']);
+	    return a.size === 2;
+	  } catch(e) {
+	    return false;
+	  }
+	})();
+	
+	/**
+	 * Check if Blob constructor supports ArrayBufferViews
+	 * Fails in Safari 6, so we need to map to ArrayBuffers there.
+	 */
+	
+	var blobSupportsArrayBufferView = blobSupported && (function() {
+	  try {
+	    var b = new Blob([new Uint8Array([1,2])]);
+	    return b.size === 2;
+	  } catch(e) {
+	    return false;
+	  }
+	})();
+	
+	/**
+	 * Check if BlobBuilder is supported
+	 */
+	
+	var blobBuilderSupported = BlobBuilder
+	  && BlobBuilder.prototype.append
+	  && BlobBuilder.prototype.getBlob;
+	
+	/**
+	 * Helper function that maps ArrayBufferViews to ArrayBuffers
+	 * Used by BlobBuilder constructor and old browsers that didn't
+	 * support it in the Blob constructor.
+	 */
+	
+	function mapArrayBufferViews(ary) {
+	  for (var i = 0; i < ary.length; i++) {
+	    var chunk = ary[i];
+	    if (chunk.buffer instanceof ArrayBuffer) {
+	      var buf = chunk.buffer;
+	
+	      // if this is a subarray, make a copy so we only
+	      // include the subarray region from the underlying buffer
+	      if (chunk.byteLength !== buf.byteLength) {
+	        var copy = new Uint8Array(chunk.byteLength);
+	        copy.set(new Uint8Array(buf, chunk.byteOffset, chunk.byteLength));
+	        buf = copy.buffer;
+	      }
+	
+	      ary[i] = buf;
+	    }
+	  }
+	}
+	
+	function BlobBuilderConstructor(ary, options) {
+	  options = options || {};
+	
+	  var bb = new BlobBuilder();
+	  mapArrayBufferViews(ary);
+	
+	  for (var i = 0; i < ary.length; i++) {
+	    bb.append(ary[i]);
+	  }
+	
+	  return (options.type) ? bb.getBlob(options.type) : bb.getBlob();
+	};
+	
+	function BlobConstructor(ary, options) {
+	  mapArrayBufferViews(ary);
+	  return new Blob(ary, options || {});
+	};
+	
+	module.exports = (function() {
+	  if (blobSupported) {
+	    return blobSupportsArrayBufferView ? global.Blob : BlobConstructor;
+	  } else if (blobBuilderSupported) {
+	    return BlobBuilderConstructor;
+	  } else {
+	    return undefined;
+	  }
+	})();
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -7113,7 +7498,7 @@
 	 * Module requirements.
 	 */
 	
-	var isArray = __webpack_require__(6);
+	var isArray = __webpack_require__(73);
 	
 	/**
 	 * Module exports.
@@ -7170,7 +7555,326 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 67 */
+/* 73 */
+/***/ function(module, exports) {
+
+	module.exports = Array.isArray || function (arr) {
+	  return Object.prototype.toString.call(arr) == '[object Array]';
+	};
+
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/utf8js v2.0.0 by @mathias */
+	;(function(root) {
+	
+		// Detect free variables `exports`
+		var freeExports = typeof exports == 'object' && exports;
+	
+		// Detect free variable `module`
+		var freeModule = typeof module == 'object' && module &&
+			module.exports == freeExports && module;
+	
+		// Detect free variable `global`, from Node.js or Browserified code,
+		// and use it as `root`
+		var freeGlobal = typeof global == 'object' && global;
+		if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
+			root = freeGlobal;
+		}
+	
+		/*--------------------------------------------------------------------------*/
+	
+		var stringFromCharCode = String.fromCharCode;
+	
+		// Taken from https://mths.be/punycode
+		function ucs2decode(string) {
+			var output = [];
+			var counter = 0;
+			var length = string.length;
+			var value;
+			var extra;
+			while (counter < length) {
+				value = string.charCodeAt(counter++);
+				if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+					// high surrogate, and there is a next character
+					extra = string.charCodeAt(counter++);
+					if ((extra & 0xFC00) == 0xDC00) { // low surrogate
+						output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+					} else {
+						// unmatched surrogate; only append this code unit, in case the next
+						// code unit is the high surrogate of a surrogate pair
+						output.push(value);
+						counter--;
+					}
+				} else {
+					output.push(value);
+				}
+			}
+			return output;
+		}
+	
+		// Taken from https://mths.be/punycode
+		function ucs2encode(array) {
+			var length = array.length;
+			var index = -1;
+			var value;
+			var output = '';
+			while (++index < length) {
+				value = array[index];
+				if (value > 0xFFFF) {
+					value -= 0x10000;
+					output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
+					value = 0xDC00 | value & 0x3FF;
+				}
+				output += stringFromCharCode(value);
+			}
+			return output;
+		}
+	
+		function checkScalarValue(codePoint) {
+			if (codePoint >= 0xD800 && codePoint <= 0xDFFF) {
+				throw Error(
+					'Lone surrogate U+' + codePoint.toString(16).toUpperCase() +
+					' is not a scalar value'
+				);
+			}
+		}
+		/*--------------------------------------------------------------------------*/
+	
+		function createByte(codePoint, shift) {
+			return stringFromCharCode(((codePoint >> shift) & 0x3F) | 0x80);
+		}
+	
+		function encodeCodePoint(codePoint) {
+			if ((codePoint & 0xFFFFFF80) == 0) { // 1-byte sequence
+				return stringFromCharCode(codePoint);
+			}
+			var symbol = '';
+			if ((codePoint & 0xFFFFF800) == 0) { // 2-byte sequence
+				symbol = stringFromCharCode(((codePoint >> 6) & 0x1F) | 0xC0);
+			}
+			else if ((codePoint & 0xFFFF0000) == 0) { // 3-byte sequence
+				checkScalarValue(codePoint);
+				symbol = stringFromCharCode(((codePoint >> 12) & 0x0F) | 0xE0);
+				symbol += createByte(codePoint, 6);
+			}
+			else if ((codePoint & 0xFFE00000) == 0) { // 4-byte sequence
+				symbol = stringFromCharCode(((codePoint >> 18) & 0x07) | 0xF0);
+				symbol += createByte(codePoint, 12);
+				symbol += createByte(codePoint, 6);
+			}
+			symbol += stringFromCharCode((codePoint & 0x3F) | 0x80);
+			return symbol;
+		}
+	
+		function utf8encode(string) {
+			var codePoints = ucs2decode(string);
+			var length = codePoints.length;
+			var index = -1;
+			var codePoint;
+			var byteString = '';
+			while (++index < length) {
+				codePoint = codePoints[index];
+				byteString += encodeCodePoint(codePoint);
+			}
+			return byteString;
+		}
+	
+		/*--------------------------------------------------------------------------*/
+	
+		function readContinuationByte() {
+			if (byteIndex >= byteCount) {
+				throw Error('Invalid byte index');
+			}
+	
+			var continuationByte = byteArray[byteIndex] & 0xFF;
+			byteIndex++;
+	
+			if ((continuationByte & 0xC0) == 0x80) {
+				return continuationByte & 0x3F;
+			}
+	
+			// If we end up here, it’s not a continuation byte
+			throw Error('Invalid continuation byte');
+		}
+	
+		function decodeSymbol() {
+			var byte1;
+			var byte2;
+			var byte3;
+			var byte4;
+			var codePoint;
+	
+			if (byteIndex > byteCount) {
+				throw Error('Invalid byte index');
+			}
+	
+			if (byteIndex == byteCount) {
+				return false;
+			}
+	
+			// Read first byte
+			byte1 = byteArray[byteIndex] & 0xFF;
+			byteIndex++;
+	
+			// 1-byte sequence (no continuation bytes)
+			if ((byte1 & 0x80) == 0) {
+				return byte1;
+			}
+	
+			// 2-byte sequence
+			if ((byte1 & 0xE0) == 0xC0) {
+				var byte2 = readContinuationByte();
+				codePoint = ((byte1 & 0x1F) << 6) | byte2;
+				if (codePoint >= 0x80) {
+					return codePoint;
+				} else {
+					throw Error('Invalid continuation byte');
+				}
+			}
+	
+			// 3-byte sequence (may include unpaired surrogates)
+			if ((byte1 & 0xF0) == 0xE0) {
+				byte2 = readContinuationByte();
+				byte3 = readContinuationByte();
+				codePoint = ((byte1 & 0x0F) << 12) | (byte2 << 6) | byte3;
+				if (codePoint >= 0x0800) {
+					checkScalarValue(codePoint);
+					return codePoint;
+				} else {
+					throw Error('Invalid continuation byte');
+				}
+			}
+	
+			// 4-byte sequence
+			if ((byte1 & 0xF8) == 0xF0) {
+				byte2 = readContinuationByte();
+				byte3 = readContinuationByte();
+				byte4 = readContinuationByte();
+				codePoint = ((byte1 & 0x0F) << 0x12) | (byte2 << 0x0C) |
+					(byte3 << 0x06) | byte4;
+				if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
+					return codePoint;
+				}
+			}
+	
+			throw Error('Invalid UTF-8 detected');
+		}
+	
+		var byteArray;
+		var byteCount;
+		var byteIndex;
+		function utf8decode(byteString) {
+			byteArray = ucs2decode(byteString);
+			byteCount = byteArray.length;
+			byteIndex = 0;
+			var codePoints = [];
+			var tmp;
+			while ((tmp = decodeSymbol()) !== false) {
+				codePoints.push(tmp);
+			}
+			return ucs2encode(codePoints);
+		}
+	
+		/*--------------------------------------------------------------------------*/
+	
+		var utf8 = {
+			'version': '2.0.0',
+			'encode': utf8encode,
+			'decode': utf8decode
+		};
+	
+		// Some AMD build optimizers, like r.js, check for specific condition patterns
+		// like the following:
+		if (
+			true
+		) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+				return utf8;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		}	else if (freeExports && !freeExports.nodeType) {
+			if (freeModule) { // in Node.js or RingoJS v0.8.0+
+				freeModule.exports = utf8;
+			} else { // in Narwhal or RingoJS v0.7.0-
+				var object = {};
+				var hasOwnProperty = object.hasOwnProperty;
+				for (var key in utf8) {
+					hasOwnProperty.call(utf8, key) && (freeExports[key] = utf8[key]);
+				}
+			}
+		} else { // in Rhino or a web browser
+			root.utf8 = utf8;
+		}
+	
+	}(this));
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)(module), (function() { return this; }())))
+
+/***/ },
+/* 75 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Module exports.
+	 *
+	 * Logic borrowed from Modernizr:
+	 *
+	 *   - https://github.com/Modernizr/Modernizr/blob/master/feature-detects/cors.js
+	 */
+	
+	try {
+	  module.exports = typeof XMLHttpRequest !== 'undefined' &&
+	    'withCredentials' in new XMLHttpRequest();
+	} catch (err) {
+	  // if XMLHttp support is disabled in IE then it will throw
+	  // when trying to create
+	  module.exports = false;
+	}
+
+
+/***/ },
+/* 76 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * JSON parse.
+	 *
+	 * @see Based on jQuery#parseJSON (MIT) and JSON2
+	 * @api private
+	 */
+	
+	var rvalidchars = /^[\],:{}\s]*$/;
+	var rvalidescape = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
+	var rvalidtokens = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+	var rvalidbraces = /(?:^|:|,)(?:\s*\[)+/g;
+	var rtrimLeft = /^\s+/;
+	var rtrimRight = /\s+$/;
+	
+	module.exports = function parsejson(data) {
+	  if ('string' != typeof data || !data) {
+	    return null;
+	  }
+	
+	  data = data.replace(rtrimLeft, '').replace(rtrimRight, '');
+	
+	  // Attempt to parse using the native JSON parser first
+	  if (global.JSON && JSON.parse) {
+	    return JSON.parse(data);
+	  }
+	
+	  if (rvalidchars.test(data.replace(rvalidescape, '@')
+	      .replace(rvalidtokens, ']')
+	      .replace(rvalidbraces, ''))) {
+	    return (new Function('return ' + data))();
+	  }
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -7178,7 +7882,7 @@
 	 * Module requirements.
 	 */
 	
-	var isArray = __webpack_require__(6);
+	var isArray = __webpack_require__(78);
 	
 	/**
 	 * Module exports.
@@ -7236,877 +7940,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 68 */
+/* 78 */
 /***/ function(module, exports) {
 
-	
-	/**
-	 * Module exports.
-	 *
-	 * Logic borrowed from Modernizr:
-	 *
-	 *   - https://github.com/Modernizr/Modernizr/blob/master/feature-detects/cors.js
-	 */
-	
-	try {
-	  module.exports = typeof XMLHttpRequest !== 'undefined' &&
-	    'withCredentials' in new XMLHttpRequest();
-	} catch (err) {
-	  // if XMLHttp support is disabled in IE then it will throw
-	  // when trying to create
-	  module.exports = false;
-	}
+	module.exports = Array.isArray || function (arr) {
+	  return Object.prototype.toString.call(arr) == '[object Array]';
+	};
 
 
 /***/ },
-/* 69 */
-/***/ function(module, exports) {
-
-	/**
-	 * Helpers.
-	 */
-	
-	var s = 1000;
-	var m = s * 60;
-	var h = m * 60;
-	var d = h * 24;
-	var y = d * 365.25;
-	
-	/**
-	 * Parse or format the given `val`.
-	 *
-	 * Options:
-	 *
-	 *  - `long` verbose formatting [false]
-	 *
-	 * @param {String|Number} val
-	 * @param {Object} options
-	 * @return {String|Number}
-	 * @api public
-	 */
-	
-	module.exports = function(val, options){
-	  options = options || {};
-	  if ('string' == typeof val) return parse(val);
-	  return options.long
-	    ? long(val)
-	    : short(val);
-	};
-	
-	/**
-	 * Parse the given `str` and return milliseconds.
-	 *
-	 * @param {String} str
-	 * @return {Number}
-	 * @api private
-	 */
-	
-	function parse(str) {
-	  str = '' + str;
-	  if (str.length > 10000) return;
-	  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
-	  if (!match) return;
-	  var n = parseFloat(match[1]);
-	  var type = (match[2] || 'ms').toLowerCase();
-	  switch (type) {
-	    case 'years':
-	    case 'year':
-	    case 'yrs':
-	    case 'yr':
-	    case 'y':
-	      return n * y;
-	    case 'days':
-	    case 'day':
-	    case 'd':
-	      return n * d;
-	    case 'hours':
-	    case 'hour':
-	    case 'hrs':
-	    case 'hr':
-	    case 'h':
-	      return n * h;
-	    case 'minutes':
-	    case 'minute':
-	    case 'mins':
-	    case 'min':
-	    case 'm':
-	      return n * m;
-	    case 'seconds':
-	    case 'second':
-	    case 'secs':
-	    case 'sec':
-	    case 's':
-	      return n * s;
-	    case 'milliseconds':
-	    case 'millisecond':
-	    case 'msecs':
-	    case 'msec':
-	    case 'ms':
-	      return n;
-	  }
-	}
-	
-	/**
-	 * Short format for `ms`.
-	 *
-	 * @param {Number} ms
-	 * @return {String}
-	 * @api private
-	 */
-	
-	function short(ms) {
-	  if (ms >= d) return Math.round(ms / d) + 'd';
-	  if (ms >= h) return Math.round(ms / h) + 'h';
-	  if (ms >= m) return Math.round(ms / m) + 'm';
-	  if (ms >= s) return Math.round(ms / s) + 's';
-	  return ms + 'ms';
-	}
-	
-	/**
-	 * Long format for `ms`.
-	 *
-	 * @param {Number} ms
-	 * @return {String}
-	 * @api private
-	 */
-	
-	function long(ms) {
-	  return plural(ms, d, 'day')
-	    || plural(ms, h, 'hour')
-	    || plural(ms, m, 'minute')
-	    || plural(ms, s, 'second')
-	    || ms + ' ms';
-	}
-	
-	/**
-	 * Pluralization helper.
-	 */
-	
-	function plural(ms, n, name) {
-	  if (ms < n) return;
-	  if (ms < n * 1.5) return Math.floor(ms / n) + ' ' + name;
-	  return Math.ceil(ms / n) + ' ' + name + 's';
-	}
-
-
-/***/ },
-/* 70 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * JSON parse.
-	 *
-	 * @see Based on jQuery#parseJSON (MIT) and JSON2
-	 * @api private
-	 */
-	
-	var rvalidchars = /^[\],:{}\s]*$/;
-	var rvalidescape = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
-	var rvalidtokens = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
-	var rvalidbraces = /(?:^|:|,)(?:\s*\[)+/g;
-	var rtrimLeft = /^\s+/;
-	var rtrimRight = /\s+$/;
-	
-	module.exports = function parsejson(data) {
-	  if ('string' != typeof data || !data) {
-	    return null;
-	  }
-	
-	  data = data.replace(rtrimLeft, '').replace(rtrimRight, '');
-	
-	  // Attempt to parse using the native JSON parser first
-	  if (global.JSON && JSON.parse) {
-	    return JSON.parse(data);
-	  }
-	
-	  if (rvalidchars.test(data.replace(rvalidescape, '@')
-	      .replace(rvalidtokens, ']')
-	      .replace(rvalidbraces, ''))) {
-	    return (new Function('return ' + data))();
-	  }
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 71 */
-/***/ function(module, exports) {
-
-	 /* eslint-env node */
-	'use strict';
-	
-	// SDP helpers.
-	var SDPUtils = {};
-	
-	// Generate an alphanumeric identifier for cname or mids.
-	// TODO: use UUIDs instead? https://gist.github.com/jed/982883
-	SDPUtils.generateIdentifier = function() {
-	  return Math.random().toString(36).substr(2, 10);
-	};
-	
-	// The RTCP CNAME used by all peerconnections from the same JS.
-	SDPUtils.localCName = SDPUtils.generateIdentifier();
-	
-	// Splits SDP into lines, dealing with both CRLF and LF.
-	SDPUtils.splitLines = function(blob) {
-	  return blob.trim().split('\n').map(function(line) {
-	    return line.trim();
-	  });
-	};
-	// Splits SDP into sessionpart and mediasections. Ensures CRLF.
-	SDPUtils.splitSections = function(blob) {
-	  var parts = blob.split('\nm=');
-	  return parts.map(function(part, index) {
-	    return (index > 0 ? 'm=' + part : part).trim() + '\r\n';
-	  });
-	};
-	
-	// Returns lines that start with a certain prefix.
-	SDPUtils.matchPrefix = function(blob, prefix) {
-	  return SDPUtils.splitLines(blob).filter(function(line) {
-	    return line.indexOf(prefix) === 0;
-	  });
-	};
-	
-	// Parses an ICE candidate line. Sample input:
-	// candidate:702786350 2 udp 41819902 8.8.8.8 60769 typ relay raddr 8.8.8.8
-	// rport 55996"
-	SDPUtils.parseCandidate = function(line) {
-	  var parts;
-	  // Parse both variants.
-	  if (line.indexOf('a=candidate:') === 0) {
-	    parts = line.substring(12).split(' ');
-	  } else {
-	    parts = line.substring(10).split(' ');
-	  }
-	
-	  var candidate = {
-	    foundation: parts[0],
-	    component: parts[1],
-	    protocol: parts[2].toLowerCase(),
-	    priority: parseInt(parts[3], 10),
-	    ip: parts[4],
-	    port: parseInt(parts[5], 10),
-	    // skip parts[6] == 'typ'
-	    type: parts[7]
-	  };
-	
-	  for (var i = 8; i < parts.length; i += 2) {
-	    switch (parts[i]) {
-	      case 'raddr':
-	        candidate.relatedAddress = parts[i + 1];
-	        break;
-	      case 'rport':
-	        candidate.relatedPort = parseInt(parts[i + 1], 10);
-	        break;
-	      case 'tcptype':
-	        candidate.tcpType = parts[i + 1];
-	        break;
-	      default: // Unknown extensions are silently ignored.
-	        break;
-	    }
-	  }
-	  return candidate;
-	};
-	
-	// Translates a candidate object into SDP candidate attribute.
-	SDPUtils.writeCandidate = function(candidate) {
-	  var sdp = [];
-	  sdp.push(candidate.foundation);
-	  sdp.push(candidate.component);
-	  sdp.push(candidate.protocol.toUpperCase());
-	  sdp.push(candidate.priority);
-	  sdp.push(candidate.ip);
-	  sdp.push(candidate.port);
-	
-	  var type = candidate.type;
-	  sdp.push('typ');
-	  sdp.push(type);
-	  if (type !== 'host' && candidate.relatedAddress &&
-	      candidate.relatedPort) {
-	    sdp.push('raddr');
-	    sdp.push(candidate.relatedAddress); // was: relAddr
-	    sdp.push('rport');
-	    sdp.push(candidate.relatedPort); // was: relPort
-	  }
-	  if (candidate.tcpType && candidate.protocol.toLowerCase() === 'tcp') {
-	    sdp.push('tcptype');
-	    sdp.push(candidate.tcpType);
-	  }
-	  return 'candidate:' + sdp.join(' ');
-	};
-	
-	// Parses an rtpmap line, returns RTCRtpCoddecParameters. Sample input:
-	// a=rtpmap:111 opus/48000/2
-	SDPUtils.parseRtpMap = function(line) {
-	  var parts = line.substr(9).split(' ');
-	  var parsed = {
-	    payloadType: parseInt(parts.shift(), 10) // was: id
-	  };
-	
-	  parts = parts[0].split('/');
-	
-	  parsed.name = parts[0];
-	  parsed.clockRate = parseInt(parts[1], 10); // was: clockrate
-	  // was: channels
-	  parsed.numChannels = parts.length === 3 ? parseInt(parts[2], 10) : 1;
-	  return parsed;
-	};
-	
-	// Generate an a=rtpmap line from RTCRtpCodecCapability or
-	// RTCRtpCodecParameters.
-	SDPUtils.writeRtpMap = function(codec) {
-	  var pt = codec.payloadType;
-	  if (codec.preferredPayloadType !== undefined) {
-	    pt = codec.preferredPayloadType;
-	  }
-	  return 'a=rtpmap:' + pt + ' ' + codec.name + '/' + codec.clockRate +
-	      (codec.numChannels !== 1 ? '/' + codec.numChannels : '') + '\r\n';
-	};
-	
-	// Parses an a=extmap line (headerextension from RFC 5285). Sample input:
-	// a=extmap:2 urn:ietf:params:rtp-hdrext:toffset
-	SDPUtils.parseExtmap = function(line) {
-	  var parts = line.substr(9).split(' ');
-	  return {
-	    id: parseInt(parts[0], 10),
-	    uri: parts[1]
-	  };
-	};
-	
-	// Generates a=extmap line from RTCRtpHeaderExtensionParameters or
-	// RTCRtpHeaderExtension.
-	SDPUtils.writeExtmap = function(headerExtension) {
-	  return 'a=extmap:' + (headerExtension.id || headerExtension.preferredId) +
-	       ' ' + headerExtension.uri + '\r\n';
-	};
-	
-	// Parses an ftmp line, returns dictionary. Sample input:
-	// a=fmtp:96 vbr=on;cng=on
-	// Also deals with vbr=on; cng=on
-	SDPUtils.parseFmtp = function(line) {
-	  var parsed = {};
-	  var kv;
-	  var parts = line.substr(line.indexOf(' ') + 1).split(';');
-	  for (var j = 0; j < parts.length; j++) {
-	    kv = parts[j].trim().split('=');
-	    parsed[kv[0].trim()] = kv[1];
-	  }
-	  return parsed;
-	};
-	
-	// Generates an a=ftmp line from RTCRtpCodecCapability or RTCRtpCodecParameters.
-	SDPUtils.writeFmtp = function(codec) {
-	  var line = '';
-	  var pt = codec.payloadType;
-	  if (codec.preferredPayloadType !== undefined) {
-	    pt = codec.preferredPayloadType;
-	  }
-	  if (codec.parameters && Object.keys(codec.parameters).length) {
-	    var params = [];
-	    Object.keys(codec.parameters).forEach(function(param) {
-	      params.push(param + '=' + codec.parameters[param]);
-	    });
-	    line += 'a=fmtp:' + pt + ' ' + params.join(';') + '\r\n';
-	  }
-	  return line;
-	};
-	
-	// Parses an rtcp-fb line, returns RTCPRtcpFeedback object. Sample input:
-	// a=rtcp-fb:98 nack rpsi
-	SDPUtils.parseRtcpFb = function(line) {
-	  var parts = line.substr(line.indexOf(' ') + 1).split(' ');
-	  return {
-	    type: parts.shift(),
-	    parameter: parts.join(' ')
-	  };
-	};
-	// Generate a=rtcp-fb lines from RTCRtpCodecCapability or RTCRtpCodecParameters.
-	SDPUtils.writeRtcpFb = function(codec) {
-	  var lines = '';
-	  var pt = codec.payloadType;
-	  if (codec.preferredPayloadType !== undefined) {
-	    pt = codec.preferredPayloadType;
-	  }
-	  if (codec.rtcpFeedback && codec.rtcpFeedback.length) {
-	    // FIXME: special handling for trr-int?
-	    codec.rtcpFeedback.forEach(function(fb) {
-	      lines += 'a=rtcp-fb:' + pt + ' ' + fb.type +
-	      (fb.parameter && fb.parameter.length ? ' ' + fb.parameter : '') +
-	          '\r\n';
-	    });
-	  }
-	  return lines;
-	};
-	
-	// Parses an RFC 5576 ssrc media attribute. Sample input:
-	// a=ssrc:3735928559 cname:something
-	SDPUtils.parseSsrcMedia = function(line) {
-	  var sp = line.indexOf(' ');
-	  var parts = {
-	    ssrc: parseInt(line.substr(7, sp - 7), 10)
-	  };
-	  var colon = line.indexOf(':', sp);
-	  if (colon > -1) {
-	    parts.attribute = line.substr(sp + 1, colon - sp - 1);
-	    parts.value = line.substr(colon + 1);
-	  } else {
-	    parts.attribute = line.substr(sp + 1);
-	  }
-	  return parts;
-	};
-	
-	// Extracts DTLS parameters from SDP media section or sessionpart.
-	// FIXME: for consistency with other functions this should only
-	//   get the fingerprint line as input. See also getIceParameters.
-	SDPUtils.getDtlsParameters = function(mediaSection, sessionpart) {
-	  var lines = SDPUtils.splitLines(mediaSection);
-	  // Search in session part, too.
-	  lines = lines.concat(SDPUtils.splitLines(sessionpart));
-	  var fpLine = lines.filter(function(line) {
-	    return line.indexOf('a=fingerprint:') === 0;
-	  })[0].substr(14);
-	  // Note: a=setup line is ignored since we use the 'auto' role.
-	  var dtlsParameters = {
-	    role: 'auto',
-	    fingerprints: [{
-	      algorithm: fpLine.split(' ')[0],
-	      value: fpLine.split(' ')[1]
-	    }]
-	  };
-	  return dtlsParameters;
-	};
-	
-	// Serializes DTLS parameters to SDP.
-	SDPUtils.writeDtlsParameters = function(params, setupType) {
-	  var sdp = 'a=setup:' + setupType + '\r\n';
-	  params.fingerprints.forEach(function(fp) {
-	    sdp += 'a=fingerprint:' + fp.algorithm + ' ' + fp.value + '\r\n';
-	  });
-	  return sdp;
-	};
-	// Parses ICE information from SDP media section or sessionpart.
-	// FIXME: for consistency with other functions this should only
-	//   get the ice-ufrag and ice-pwd lines as input.
-	SDPUtils.getIceParameters = function(mediaSection, sessionpart) {
-	  var lines = SDPUtils.splitLines(mediaSection);
-	  // Search in session part, too.
-	  lines = lines.concat(SDPUtils.splitLines(sessionpart));
-	  var iceParameters = {
-	    usernameFragment: lines.filter(function(line) {
-	      return line.indexOf('a=ice-ufrag:') === 0;
-	    })[0].substr(12),
-	    password: lines.filter(function(line) {
-	      return line.indexOf('a=ice-pwd:') === 0;
-	    })[0].substr(10)
-	  };
-	  return iceParameters;
-	};
-	
-	// Serializes ICE parameters to SDP.
-	SDPUtils.writeIceParameters = function(params) {
-	  return 'a=ice-ufrag:' + params.usernameFragment + '\r\n' +
-	      'a=ice-pwd:' + params.password + '\r\n';
-	};
-	
-	// Parses the SDP media section and returns RTCRtpParameters.
-	SDPUtils.parseRtpParameters = function(mediaSection) {
-	  var description = {
-	    codecs: [],
-	    headerExtensions: [],
-	    fecMechanisms: [],
-	    rtcp: []
-	  };
-	  var lines = SDPUtils.splitLines(mediaSection);
-	  var mline = lines[0].split(' ');
-	  for (var i = 3; i < mline.length; i++) { // find all codecs from mline[3..]
-	    var pt = mline[i];
-	    var rtpmapline = SDPUtils.matchPrefix(
-	        mediaSection, 'a=rtpmap:' + pt + ' ')[0];
-	    if (rtpmapline) {
-	      var codec = SDPUtils.parseRtpMap(rtpmapline);
-	      var fmtps = SDPUtils.matchPrefix(
-	          mediaSection, 'a=fmtp:' + pt + ' ');
-	      // Only the first a=fmtp:<pt> is considered.
-	      codec.parameters = fmtps.length ? SDPUtils.parseFmtp(fmtps[0]) : {};
-	      codec.rtcpFeedback = SDPUtils.matchPrefix(
-	          mediaSection, 'a=rtcp-fb:' + pt + ' ')
-	        .map(SDPUtils.parseRtcpFb);
-	      description.codecs.push(codec);
-	      // parse FEC mechanisms from rtpmap lines.
-	      switch (codec.name.toUpperCase()) {
-	        case 'RED':
-	        case 'ULPFEC':
-	          description.fecMechanisms.push(codec.name.toUpperCase());
-	          break;
-	        default: // only RED and ULPFEC are recognized as FEC mechanisms.
-	          break;
-	      }
-	    }
-	  }
-	  SDPUtils.matchPrefix(mediaSection, 'a=extmap:').forEach(function(line) {
-	    description.headerExtensions.push(SDPUtils.parseExtmap(line));
-	  });
-	  // FIXME: parse rtcp.
-	  return description;
-	};
-	
-	// Generates parts of the SDP media section describing the capabilities /
-	// parameters.
-	SDPUtils.writeRtpDescription = function(kind, caps) {
-	  var sdp = '';
-	
-	  // Build the mline.
-	  sdp += 'm=' + kind + ' ';
-	  sdp += caps.codecs.length > 0 ? '9' : '0'; // reject if no codecs.
-	  sdp += ' UDP/TLS/RTP/SAVPF ';
-	  sdp += caps.codecs.map(function(codec) {
-	    if (codec.preferredPayloadType !== undefined) {
-	      return codec.preferredPayloadType;
-	    }
-	    return codec.payloadType;
-	  }).join(' ') + '\r\n';
-	
-	  sdp += 'c=IN IP4 0.0.0.0\r\n';
-	  sdp += 'a=rtcp:9 IN IP4 0.0.0.0\r\n';
-	
-	  // Add a=rtpmap lines for each codec. Also fmtp and rtcp-fb.
-	  caps.codecs.forEach(function(codec) {
-	    sdp += SDPUtils.writeRtpMap(codec);
-	    sdp += SDPUtils.writeFmtp(codec);
-	    sdp += SDPUtils.writeRtcpFb(codec);
-	  });
-	  // FIXME: add headerExtensions, fecMechanismş and rtcp.
-	  sdp += 'a=rtcp-mux\r\n';
-	  return sdp;
-	};
-	
-	// Parses the SDP media section and returns an array of
-	// RTCRtpEncodingParameters.
-	SDPUtils.parseRtpEncodingParameters = function(mediaSection) {
-	  var encodingParameters = [];
-	  var description = SDPUtils.parseRtpParameters(mediaSection);
-	  var hasRed = description.fecMechanisms.indexOf('RED') !== -1;
-	  var hasUlpfec = description.fecMechanisms.indexOf('ULPFEC') !== -1;
-	
-	  // filter a=ssrc:... cname:, ignore PlanB-msid
-	  var ssrcs = SDPUtils.matchPrefix(mediaSection, 'a=ssrc:')
-	  .map(function(line) {
-	    return SDPUtils.parseSsrcMedia(line);
-	  })
-	  .filter(function(parts) {
-	    return parts.attribute === 'cname';
-	  });
-	  var primarySsrc = ssrcs.length > 0 && ssrcs[0].ssrc;
-	  var secondarySsrc;
-	
-	  var flows = SDPUtils.matchPrefix(mediaSection, 'a=ssrc-group:FID')
-	  .map(function(line) {
-	    var parts = line.split(' ');
-	    parts.shift();
-	    return parts.map(function(part) {
-	      return parseInt(part, 10);
-	    });
-	  });
-	  if (flows.length > 0 && flows[0].length > 1 && flows[0][0] === primarySsrc) {
-	    secondarySsrc = flows[0][1];
-	  }
-	
-	  description.codecs.forEach(function(codec) {
-	    if (codec.name.toUpperCase() === 'RTX' && codec.parameters.apt) {
-	      var encParam = {
-	        ssrc: primarySsrc,
-	        codecPayloadType: parseInt(codec.parameters.apt, 10),
-	        rtx: {
-	          payloadType: codec.payloadType,
-	          ssrc: secondarySsrc
-	        }
-	      };
-	      encodingParameters.push(encParam);
-	      if (hasRed) {
-	        encParam = JSON.parse(JSON.stringify(encParam));
-	        encParam.fec = {
-	          ssrc: secondarySsrc,
-	          mechanism: hasUlpfec ? 'red+ulpfec' : 'red'
-	        };
-	        encodingParameters.push(encParam);
-	      }
-	    }
-	  });
-	  if (encodingParameters.length === 0 && primarySsrc) {
-	    encodingParameters.push({
-	      ssrc: primarySsrc
-	    });
-	  }
-	
-	  // we support both b=AS and b=TIAS but interpret AS as TIAS.
-	  var bandwidth = SDPUtils.matchPrefix(mediaSection, 'b=');
-	  if (bandwidth.length) {
-	    if (bandwidth[0].indexOf('b=TIAS:') === 0) {
-	      bandwidth = parseInt(bandwidth[0].substr(7), 10);
-	    } else if (bandwidth[0].indexOf('b=AS:') === 0) {
-	      bandwidth = parseInt(bandwidth[0].substr(5), 10);
-	    }
-	    encodingParameters.forEach(function(params) {
-	      params.maxBitrate = bandwidth;
-	    });
-	  }
-	  return encodingParameters;
-	};
-	
-	SDPUtils.writeSessionBoilerplate = function() {
-	  // FIXME: sess-id should be an NTP timestamp.
-	  return 'v=0\r\n' +
-	      'o=thisisadapterortc 8169639915646943137 2 IN IP4 127.0.0.1\r\n' +
-	      's=-\r\n' +
-	      't=0 0\r\n';
-	};
-	
-	SDPUtils.writeMediaSection = function(transceiver, caps, type, stream) {
-	  var sdp = SDPUtils.writeRtpDescription(transceiver.kind, caps);
-	
-	  // Map ICE parameters (ufrag, pwd) to SDP.
-	  sdp += SDPUtils.writeIceParameters(
-	      transceiver.iceGatherer.getLocalParameters());
-	
-	  // Map DTLS parameters to SDP.
-	  sdp += SDPUtils.writeDtlsParameters(
-	      transceiver.dtlsTransport.getLocalParameters(),
-	      type === 'offer' ? 'actpass' : 'active');
-	
-	  sdp += 'a=mid:' + transceiver.mid + '\r\n';
-	
-	  if (transceiver.rtpSender && transceiver.rtpReceiver) {
-	    sdp += 'a=sendrecv\r\n';
-	  } else if (transceiver.rtpSender) {
-	    sdp += 'a=sendonly\r\n';
-	  } else if (transceiver.rtpReceiver) {
-	    sdp += 'a=recvonly\r\n';
-	  } else {
-	    sdp += 'a=inactive\r\n';
-	  }
-	
-	  // FIXME: for RTX there might be multiple SSRCs. Not implemented in Edge yet.
-	  if (transceiver.rtpSender) {
-	    var msid = 'msid:' + stream.id + ' ' +
-	        transceiver.rtpSender.track.id + '\r\n';
-	    sdp += 'a=' + msid;
-	    sdp += 'a=ssrc:' + transceiver.sendEncodingParameters[0].ssrc +
-	        ' ' + msid;
-	  }
-	  // FIXME: this should be written by writeRtpDescription.
-	  sdp += 'a=ssrc:' + transceiver.sendEncodingParameters[0].ssrc +
-	      ' cname:' + SDPUtils.localCName + '\r\n';
-	  return sdp;
-	};
-	
-	// Gets the direction from the mediaSection or the sessionpart.
-	SDPUtils.getDirection = function(mediaSection, sessionpart) {
-	  // Look for sendrecv, sendonly, recvonly, inactive, default to sendrecv.
-	  var lines = SDPUtils.splitLines(mediaSection);
-	  for (var i = 0; i < lines.length; i++) {
-	    switch (lines[i]) {
-	      case 'a=sendrecv':
-	      case 'a=sendonly':
-	      case 'a=recvonly':
-	      case 'a=inactive':
-	        return lines[i].substr(2);
-	      default:
-	        // FIXME: What should happen here?
-	    }
-	  }
-	  if (sessionpart) {
-	    return SDPUtils.getDirection(sessionpart);
-	  }
-	  return 'sendrecv';
-	};
-	
-	// Expose public methods.
-	module.exports = SDPUtils;
-
-
-/***/ },
-/* 72 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * Module dependencies.
-	 */
-	
-	var url = __webpack_require__(73);
-	var parser = __webpack_require__(11);
-	var Manager = __webpack_require__(20);
-	var debug = __webpack_require__(2)('socket.io-client');
-	
-	/**
-	 * Module exports.
-	 */
-	
-	module.exports = exports = lookup;
-	
-	/**
-	 * Managers cache.
-	 */
-	
-	var cache = exports.managers = {};
-	
-	/**
-	 * Looks up an existing `Manager` for multiplexing.
-	 * If the user summons:
-	 *
-	 *   `io('http://localhost/a');`
-	 *   `io('http://localhost/b');`
-	 *
-	 * We reuse the existing instance based on same scheme/port/host,
-	 * and we initialize sockets for each namespace.
-	 *
-	 * @api public
-	 */
-	
-	function lookup(uri, opts) {
-	  if (typeof uri == 'object') {
-	    opts = uri;
-	    uri = undefined;
-	  }
-	
-	  opts = opts || {};
-	
-	  var parsed = url(uri);
-	  var source = parsed.source;
-	  var id = parsed.id;
-	  var path = parsed.path;
-	  var sameNamespace = cache[id] && path in cache[id].nsps;
-	  var newConnection = opts.forceNew || opts['force new connection'] ||
-	                      false === opts.multiplex || sameNamespace;
-	
-	  var io;
-	
-	  if (newConnection) {
-	    debug('ignoring socket cache for %s', source);
-	    io = Manager(source, opts);
-	  } else {
-	    if (!cache[id]) {
-	      debug('new io instance for %s', source);
-	      cache[id] = Manager(source, opts);
-	    }
-	    io = cache[id];
-	  }
-	
-	  return io.socket(parsed.path);
-	}
-	
-	/**
-	 * Protocol version.
-	 *
-	 * @api public
-	 */
-	
-	exports.protocol = parser.protocol;
-	
-	/**
-	 * `connect`.
-	 *
-	 * @param {String} uri
-	 * @api public
-	 */
-	
-	exports.connect = lookup;
-	
-	/**
-	 * Expose constructors for standalone build.
-	 *
-	 * @api public
-	 */
-	
-	exports.Manager = __webpack_require__(20);
-	exports.Socket = __webpack_require__(22);
-
-
-/***/ },
-/* 73 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {
-	/**
-	 * Module dependencies.
-	 */
-	
-	var parseuri = __webpack_require__(19);
-	var debug = __webpack_require__(2)('socket.io-client:url');
-	
-	/**
-	 * Module exports.
-	 */
-	
-	module.exports = url;
-	
-	/**
-	 * URL parser.
-	 *
-	 * @param {String} url
-	 * @param {Object} An object meant to mimic window.location.
-	 *                 Defaults to window.location.
-	 * @api public
-	 */
-	
-	function url(uri, loc){
-	  var obj = uri;
-	
-	  // default to window.location
-	  var loc = loc || global.location;
-	  if (null == uri) uri = loc.protocol + '//' + loc.host;
-	
-	  // relative path support
-	  if ('string' == typeof uri) {
-	    if ('/' == uri.charAt(0)) {
-	      if ('/' == uri.charAt(1)) {
-	        uri = loc.protocol + uri;
-	      } else {
-	        uri = loc.host + uri;
-	      }
-	    }
-	
-	    if (!/^(https?|wss?):\/\//.test(uri)) {
-	      debug('protocol-less url %s', uri);
-	      if ('undefined' != typeof loc) {
-	        uri = loc.protocol + '//' + uri;
-	      } else {
-	        uri = 'https://' + uri;
-	      }
-	    }
-	
-	    // parse
-	    debug('parse %s', uri);
-	    obj = parseuri(uri);
-	  }
-	
-	  // make sure we treat `localhost:80` and `localhost` equally
-	  if (!obj.port) {
-	    if (/^(http|ws)$/.test(obj.protocol)) {
-	      obj.port = '80';
-	    }
-	    else if (/^(http|ws)s$/.test(obj.protocol)) {
-	      obj.port = '443';
-	    }
-	  }
-	
-	  obj.path = obj.path || '/';
-	
-	  var ipv6 = obj.host.indexOf(':') !== -1;
-	  var host = ipv6 ? '[' + obj.host + ']' : obj.host;
-	
-	  // define unique id
-	  obj.id = obj.protocol + '://' + host + ':' + obj.port;
-	  // define href
-	  obj.href = obj.protocol + '://' + host + (loc && loc.port == obj.port ? '' : (':' + obj.port));
-	
-	  return obj;
-	}
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 74 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -8115,7 +7958,7 @@
 	 * Module requirements
 	 */
 	
-	var isArray = __webpack_require__(6);
+	var isArray = __webpack_require__(25);
 	var isBuf = __webpack_require__(24);
 	
 	/**
@@ -8254,14 +8097,184 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 75 */
+/* 80 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Expose `Emitter`.
+	 */
+	
+	module.exports = Emitter;
+	
+	/**
+	 * Initialize a new `Emitter`.
+	 *
+	 * @api public
+	 */
+	
+	function Emitter(obj) {
+	  if (obj) return mixin(obj);
+	};
+	
+	/**
+	 * Mixin the emitter properties.
+	 *
+	 * @param {Object} obj
+	 * @return {Object}
+	 * @api private
+	 */
+	
+	function mixin(obj) {
+	  for (var key in Emitter.prototype) {
+	    obj[key] = Emitter.prototype[key];
+	  }
+	  return obj;
+	}
+	
+	/**
+	 * Listen on the given `event` with `fn`.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+	
+	Emitter.prototype.on =
+	Emitter.prototype.addEventListener = function(event, fn){
+	  this._callbacks = this._callbacks || {};
+	  (this._callbacks[event] = this._callbacks[event] || [])
+	    .push(fn);
+	  return this;
+	};
+	
+	/**
+	 * Adds an `event` listener that will be invoked a single
+	 * time then automatically removed.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+	
+	Emitter.prototype.once = function(event, fn){
+	  var self = this;
+	  this._callbacks = this._callbacks || {};
+	
+	  function on() {
+	    self.off(event, on);
+	    fn.apply(this, arguments);
+	  }
+	
+	  on.fn = fn;
+	  this.on(event, on);
+	  return this;
+	};
+	
+	/**
+	 * Remove the given callback for `event` or all
+	 * registered callbacks.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+	
+	Emitter.prototype.off =
+	Emitter.prototype.removeListener =
+	Emitter.prototype.removeAllListeners =
+	Emitter.prototype.removeEventListener = function(event, fn){
+	  this._callbacks = this._callbacks || {};
+	
+	  // all
+	  if (0 == arguments.length) {
+	    this._callbacks = {};
+	    return this;
+	  }
+	
+	  // specific event
+	  var callbacks = this._callbacks[event];
+	  if (!callbacks) return this;
+	
+	  // remove all handlers
+	  if (1 == arguments.length) {
+	    delete this._callbacks[event];
+	    return this;
+	  }
+	
+	  // remove specific handler
+	  var cb;
+	  for (var i = 0; i < callbacks.length; i++) {
+	    cb = callbacks[i];
+	    if (cb === fn || cb.fn === fn) {
+	      callbacks.splice(i, 1);
+	      break;
+	    }
+	  }
+	  return this;
+	};
+	
+	/**
+	 * Emit `event` with the given args.
+	 *
+	 * @param {String} event
+	 * @param {Mixed} ...
+	 * @return {Emitter}
+	 */
+	
+	Emitter.prototype.emit = function(event){
+	  this._callbacks = this._callbacks || {};
+	  var args = [].slice.call(arguments, 1)
+	    , callbacks = this._callbacks[event];
+	
+	  if (callbacks) {
+	    callbacks = callbacks.slice(0);
+	    for (var i = 0, len = callbacks.length; i < len; ++i) {
+	      callbacks[i].apply(this, args);
+	    }
+	  }
+	
+	  return this;
+	};
+	
+	/**
+	 * Return array of callbacks for `event`.
+	 *
+	 * @param {String} event
+	 * @return {Array}
+	 * @api public
+	 */
+	
+	Emitter.prototype.listeners = function(event){
+	  this._callbacks = this._callbacks || {};
+	  return this._callbacks[event] || [];
+	};
+	
+	/**
+	 * Check if this emitter has `event` handlers.
+	 *
+	 * @param {String} event
+	 * @return {Boolean}
+	 * @api public
+	 */
+	
+	Emitter.prototype.hasListeners = function(event){
+	  return !! this.listeners(event).length;
+	};
+
+
+/***/ },
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! JSON v3.3.2 | http://bestiejs.github.io/json3 | Copyright 2012-2014, Kit Cambridge | http://kit.mit-license.org */
 	;(function () {
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(78);
+	  var isLoader = "function" === "function" && __webpack_require__(83);
 	
 	  // A set of types used to distinguish objects from primitives.
 	  var objectTypes = {
@@ -9160,10 +9173,10 @@
 	  }
 	}).call(this);
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)(module), (function() { return this; }())))
 
 /***/ },
-/* 76 */
+/* 82 */
 /***/ function(module, exports) {
 
 	module.exports = toArray
@@ -9182,256 +9195,7 @@
 
 
 /***/ },
-/* 77 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/utf8js v2.0.0 by @mathias */
-	;(function(root) {
-	
-		// Detect free variables `exports`
-		var freeExports = typeof exports == 'object' && exports;
-	
-		// Detect free variable `module`
-		var freeModule = typeof module == 'object' && module &&
-			module.exports == freeExports && module;
-	
-		// Detect free variable `global`, from Node.js or Browserified code,
-		// and use it as `root`
-		var freeGlobal = typeof global == 'object' && global;
-		if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
-			root = freeGlobal;
-		}
-	
-		/*--------------------------------------------------------------------------*/
-	
-		var stringFromCharCode = String.fromCharCode;
-	
-		// Taken from https://mths.be/punycode
-		function ucs2decode(string) {
-			var output = [];
-			var counter = 0;
-			var length = string.length;
-			var value;
-			var extra;
-			while (counter < length) {
-				value = string.charCodeAt(counter++);
-				if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
-					// high surrogate, and there is a next character
-					extra = string.charCodeAt(counter++);
-					if ((extra & 0xFC00) == 0xDC00) { // low surrogate
-						output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
-					} else {
-						// unmatched surrogate; only append this code unit, in case the next
-						// code unit is the high surrogate of a surrogate pair
-						output.push(value);
-						counter--;
-					}
-				} else {
-					output.push(value);
-				}
-			}
-			return output;
-		}
-	
-		// Taken from https://mths.be/punycode
-		function ucs2encode(array) {
-			var length = array.length;
-			var index = -1;
-			var value;
-			var output = '';
-			while (++index < length) {
-				value = array[index];
-				if (value > 0xFFFF) {
-					value -= 0x10000;
-					output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
-					value = 0xDC00 | value & 0x3FF;
-				}
-				output += stringFromCharCode(value);
-			}
-			return output;
-		}
-	
-		function checkScalarValue(codePoint) {
-			if (codePoint >= 0xD800 && codePoint <= 0xDFFF) {
-				throw Error(
-					'Lone surrogate U+' + codePoint.toString(16).toUpperCase() +
-					' is not a scalar value'
-				);
-			}
-		}
-		/*--------------------------------------------------------------------------*/
-	
-		function createByte(codePoint, shift) {
-			return stringFromCharCode(((codePoint >> shift) & 0x3F) | 0x80);
-		}
-	
-		function encodeCodePoint(codePoint) {
-			if ((codePoint & 0xFFFFFF80) == 0) { // 1-byte sequence
-				return stringFromCharCode(codePoint);
-			}
-			var symbol = '';
-			if ((codePoint & 0xFFFFF800) == 0) { // 2-byte sequence
-				symbol = stringFromCharCode(((codePoint >> 6) & 0x1F) | 0xC0);
-			}
-			else if ((codePoint & 0xFFFF0000) == 0) { // 3-byte sequence
-				checkScalarValue(codePoint);
-				symbol = stringFromCharCode(((codePoint >> 12) & 0x0F) | 0xE0);
-				symbol += createByte(codePoint, 6);
-			}
-			else if ((codePoint & 0xFFE00000) == 0) { // 4-byte sequence
-				symbol = stringFromCharCode(((codePoint >> 18) & 0x07) | 0xF0);
-				symbol += createByte(codePoint, 12);
-				symbol += createByte(codePoint, 6);
-			}
-			symbol += stringFromCharCode((codePoint & 0x3F) | 0x80);
-			return symbol;
-		}
-	
-		function utf8encode(string) {
-			var codePoints = ucs2decode(string);
-			var length = codePoints.length;
-			var index = -1;
-			var codePoint;
-			var byteString = '';
-			while (++index < length) {
-				codePoint = codePoints[index];
-				byteString += encodeCodePoint(codePoint);
-			}
-			return byteString;
-		}
-	
-		/*--------------------------------------------------------------------------*/
-	
-		function readContinuationByte() {
-			if (byteIndex >= byteCount) {
-				throw Error('Invalid byte index');
-			}
-	
-			var continuationByte = byteArray[byteIndex] & 0xFF;
-			byteIndex++;
-	
-			if ((continuationByte & 0xC0) == 0x80) {
-				return continuationByte & 0x3F;
-			}
-	
-			// If we end up here, it’s not a continuation byte
-			throw Error('Invalid continuation byte');
-		}
-	
-		function decodeSymbol() {
-			var byte1;
-			var byte2;
-			var byte3;
-			var byte4;
-			var codePoint;
-	
-			if (byteIndex > byteCount) {
-				throw Error('Invalid byte index');
-			}
-	
-			if (byteIndex == byteCount) {
-				return false;
-			}
-	
-			// Read first byte
-			byte1 = byteArray[byteIndex] & 0xFF;
-			byteIndex++;
-	
-			// 1-byte sequence (no continuation bytes)
-			if ((byte1 & 0x80) == 0) {
-				return byte1;
-			}
-	
-			// 2-byte sequence
-			if ((byte1 & 0xE0) == 0xC0) {
-				var byte2 = readContinuationByte();
-				codePoint = ((byte1 & 0x1F) << 6) | byte2;
-				if (codePoint >= 0x80) {
-					return codePoint;
-				} else {
-					throw Error('Invalid continuation byte');
-				}
-			}
-	
-			// 3-byte sequence (may include unpaired surrogates)
-			if ((byte1 & 0xF0) == 0xE0) {
-				byte2 = readContinuationByte();
-				byte3 = readContinuationByte();
-				codePoint = ((byte1 & 0x0F) << 12) | (byte2 << 6) | byte3;
-				if (codePoint >= 0x0800) {
-					checkScalarValue(codePoint);
-					return codePoint;
-				} else {
-					throw Error('Invalid continuation byte');
-				}
-			}
-	
-			// 4-byte sequence
-			if ((byte1 & 0xF8) == 0xF0) {
-				byte2 = readContinuationByte();
-				byte3 = readContinuationByte();
-				byte4 = readContinuationByte();
-				codePoint = ((byte1 & 0x0F) << 0x12) | (byte2 << 0x0C) |
-					(byte3 << 0x06) | byte4;
-				if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
-					return codePoint;
-				}
-			}
-	
-			throw Error('Invalid UTF-8 detected');
-		}
-	
-		var byteArray;
-		var byteCount;
-		var byteIndex;
-		function utf8decode(byteString) {
-			byteArray = ucs2decode(byteString);
-			byteCount = byteArray.length;
-			byteIndex = 0;
-			var codePoints = [];
-			var tmp;
-			while ((tmp = decodeSymbol()) !== false) {
-				codePoints.push(tmp);
-			}
-			return ucs2encode(codePoints);
-		}
-	
-		/*--------------------------------------------------------------------------*/
-	
-		var utf8 = {
-			'version': '2.0.0',
-			'encode': utf8encode,
-			'decode': utf8decode
-		};
-	
-		// Some AMD build optimizers, like r.js, check for specific condition patterns
-		// like the following:
-		if (
-			true
-		) {
-			!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
-				return utf8;
-			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		}	else if (freeExports && !freeExports.nodeType) {
-			if (freeModule) { // in Node.js or RingoJS v0.8.0+
-				freeModule.exports = utf8;
-			} else { // in Narwhal or RingoJS v0.7.0-
-				var object = {};
-				var hasOwnProperty = object.hasOwnProperty;
-				for (var key in utf8) {
-					hasOwnProperty.call(utf8, key) && (freeExports[key] = utf8[key]);
-				}
-			}
-		} else { // in Rhino or a web browser
-			root.utf8 = utf8;
-		}
-	
-	}(this));
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)(module), (function() { return this; }())))
-
-/***/ },
-/* 78 */
+/* 83 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -9439,7 +9203,504 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 79 */
+/* 84 */
+/***/ function(module, exports) {
+
+	 /* eslint-env node */
+	'use strict';
+	
+	// SDP helpers.
+	var SDPUtils = {};
+	
+	// Generate an alphanumeric identifier for cname or mids.
+	// TODO: use UUIDs instead? https://gist.github.com/jed/982883
+	SDPUtils.generateIdentifier = function() {
+	  return Math.random().toString(36).substr(2, 10);
+	};
+	
+	// The RTCP CNAME used by all peerconnections from the same JS.
+	SDPUtils.localCName = SDPUtils.generateIdentifier();
+	
+	// Splits SDP into lines, dealing with both CRLF and LF.
+	SDPUtils.splitLines = function(blob) {
+	  return blob.trim().split('\n').map(function(line) {
+	    return line.trim();
+	  });
+	};
+	// Splits SDP into sessionpart and mediasections. Ensures CRLF.
+	SDPUtils.splitSections = function(blob) {
+	  var parts = blob.split('\nm=');
+	  return parts.map(function(part, index) {
+	    return (index > 0 ? 'm=' + part : part).trim() + '\r\n';
+	  });
+	};
+	
+	// Returns lines that start with a certain prefix.
+	SDPUtils.matchPrefix = function(blob, prefix) {
+	  return SDPUtils.splitLines(blob).filter(function(line) {
+	    return line.indexOf(prefix) === 0;
+	  });
+	};
+	
+	// Parses an ICE candidate line. Sample input:
+	// candidate:702786350 2 udp 41819902 8.8.8.8 60769 typ relay raddr 8.8.8.8
+	// rport 55996"
+	SDPUtils.parseCandidate = function(line) {
+	  var parts;
+	  // Parse both variants.
+	  if (line.indexOf('a=candidate:') === 0) {
+	    parts = line.substring(12).split(' ');
+	  } else {
+	    parts = line.substring(10).split(' ');
+	  }
+	
+	  var candidate = {
+	    foundation: parts[0],
+	    component: parts[1],
+	    protocol: parts[2].toLowerCase(),
+	    priority: parseInt(parts[3], 10),
+	    ip: parts[4],
+	    port: parseInt(parts[5], 10),
+	    // skip parts[6] == 'typ'
+	    type: parts[7]
+	  };
+	
+	  for (var i = 8; i < parts.length; i += 2) {
+	    switch (parts[i]) {
+	      case 'raddr':
+	        candidate.relatedAddress = parts[i + 1];
+	        break;
+	      case 'rport':
+	        candidate.relatedPort = parseInt(parts[i + 1], 10);
+	        break;
+	      case 'tcptype':
+	        candidate.tcpType = parts[i + 1];
+	        break;
+	      default: // Unknown extensions are silently ignored.
+	        break;
+	    }
+	  }
+	  return candidate;
+	};
+	
+	// Translates a candidate object into SDP candidate attribute.
+	SDPUtils.writeCandidate = function(candidate) {
+	  var sdp = [];
+	  sdp.push(candidate.foundation);
+	  sdp.push(candidate.component);
+	  sdp.push(candidate.protocol.toUpperCase());
+	  sdp.push(candidate.priority);
+	  sdp.push(candidate.ip);
+	  sdp.push(candidate.port);
+	
+	  var type = candidate.type;
+	  sdp.push('typ');
+	  sdp.push(type);
+	  if (type !== 'host' && candidate.relatedAddress &&
+	      candidate.relatedPort) {
+	    sdp.push('raddr');
+	    sdp.push(candidate.relatedAddress); // was: relAddr
+	    sdp.push('rport');
+	    sdp.push(candidate.relatedPort); // was: relPort
+	  }
+	  if (candidate.tcpType && candidate.protocol.toLowerCase() === 'tcp') {
+	    sdp.push('tcptype');
+	    sdp.push(candidate.tcpType);
+	  }
+	  return 'candidate:' + sdp.join(' ');
+	};
+	
+	// Parses an rtpmap line, returns RTCRtpCoddecParameters. Sample input:
+	// a=rtpmap:111 opus/48000/2
+	SDPUtils.parseRtpMap = function(line) {
+	  var parts = line.substr(9).split(' ');
+	  var parsed = {
+	    payloadType: parseInt(parts.shift(), 10) // was: id
+	  };
+	
+	  parts = parts[0].split('/');
+	
+	  parsed.name = parts[0];
+	  parsed.clockRate = parseInt(parts[1], 10); // was: clockrate
+	  // was: channels
+	  parsed.numChannels = parts.length === 3 ? parseInt(parts[2], 10) : 1;
+	  return parsed;
+	};
+	
+	// Generate an a=rtpmap line from RTCRtpCodecCapability or
+	// RTCRtpCodecParameters.
+	SDPUtils.writeRtpMap = function(codec) {
+	  var pt = codec.payloadType;
+	  if (codec.preferredPayloadType !== undefined) {
+	    pt = codec.preferredPayloadType;
+	  }
+	  return 'a=rtpmap:' + pt + ' ' + codec.name + '/' + codec.clockRate +
+	      (codec.numChannels !== 1 ? '/' + codec.numChannels : '') + '\r\n';
+	};
+	
+	// Parses an a=extmap line (headerextension from RFC 5285). Sample input:
+	// a=extmap:2 urn:ietf:params:rtp-hdrext:toffset
+	SDPUtils.parseExtmap = function(line) {
+	  var parts = line.substr(9).split(' ');
+	  return {
+	    id: parseInt(parts[0], 10),
+	    uri: parts[1]
+	  };
+	};
+	
+	// Generates a=extmap line from RTCRtpHeaderExtensionParameters or
+	// RTCRtpHeaderExtension.
+	SDPUtils.writeExtmap = function(headerExtension) {
+	  return 'a=extmap:' + (headerExtension.id || headerExtension.preferredId) +
+	       ' ' + headerExtension.uri + '\r\n';
+	};
+	
+	// Parses an ftmp line, returns dictionary. Sample input:
+	// a=fmtp:96 vbr=on;cng=on
+	// Also deals with vbr=on; cng=on
+	SDPUtils.parseFmtp = function(line) {
+	  var parsed = {};
+	  var kv;
+	  var parts = line.substr(line.indexOf(' ') + 1).split(';');
+	  for (var j = 0; j < parts.length; j++) {
+	    kv = parts[j].trim().split('=');
+	    parsed[kv[0].trim()] = kv[1];
+	  }
+	  return parsed;
+	};
+	
+	// Generates an a=ftmp line from RTCRtpCodecCapability or RTCRtpCodecParameters.
+	SDPUtils.writeFmtp = function(codec) {
+	  var line = '';
+	  var pt = codec.payloadType;
+	  if (codec.preferredPayloadType !== undefined) {
+	    pt = codec.preferredPayloadType;
+	  }
+	  if (codec.parameters && Object.keys(codec.parameters).length) {
+	    var params = [];
+	    Object.keys(codec.parameters).forEach(function(param) {
+	      params.push(param + '=' + codec.parameters[param]);
+	    });
+	    line += 'a=fmtp:' + pt + ' ' + params.join(';') + '\r\n';
+	  }
+	  return line;
+	};
+	
+	// Parses an rtcp-fb line, returns RTCPRtcpFeedback object. Sample input:
+	// a=rtcp-fb:98 nack rpsi
+	SDPUtils.parseRtcpFb = function(line) {
+	  var parts = line.substr(line.indexOf(' ') + 1).split(' ');
+	  return {
+	    type: parts.shift(),
+	    parameter: parts.join(' ')
+	  };
+	};
+	// Generate a=rtcp-fb lines from RTCRtpCodecCapability or RTCRtpCodecParameters.
+	SDPUtils.writeRtcpFb = function(codec) {
+	  var lines = '';
+	  var pt = codec.payloadType;
+	  if (codec.preferredPayloadType !== undefined) {
+	    pt = codec.preferredPayloadType;
+	  }
+	  if (codec.rtcpFeedback && codec.rtcpFeedback.length) {
+	    // FIXME: special handling for trr-int?
+	    codec.rtcpFeedback.forEach(function(fb) {
+	      lines += 'a=rtcp-fb:' + pt + ' ' + fb.type +
+	      (fb.parameter && fb.parameter.length ? ' ' + fb.parameter : '') +
+	          '\r\n';
+	    });
+	  }
+	  return lines;
+	};
+	
+	// Parses an RFC 5576 ssrc media attribute. Sample input:
+	// a=ssrc:3735928559 cname:something
+	SDPUtils.parseSsrcMedia = function(line) {
+	  var sp = line.indexOf(' ');
+	  var parts = {
+	    ssrc: parseInt(line.substr(7, sp - 7), 10)
+	  };
+	  var colon = line.indexOf(':', sp);
+	  if (colon > -1) {
+	    parts.attribute = line.substr(sp + 1, colon - sp - 1);
+	    parts.value = line.substr(colon + 1);
+	  } else {
+	    parts.attribute = line.substr(sp + 1);
+	  }
+	  return parts;
+	};
+	
+	// Extracts DTLS parameters from SDP media section or sessionpart.
+	// FIXME: for consistency with other functions this should only
+	//   get the fingerprint line as input. See also getIceParameters.
+	SDPUtils.getDtlsParameters = function(mediaSection, sessionpart) {
+	  var lines = SDPUtils.splitLines(mediaSection);
+	  // Search in session part, too.
+	  lines = lines.concat(SDPUtils.splitLines(sessionpart));
+	  var fpLine = lines.filter(function(line) {
+	    return line.indexOf('a=fingerprint:') === 0;
+	  })[0].substr(14);
+	  // Note: a=setup line is ignored since we use the 'auto' role.
+	  var dtlsParameters = {
+	    role: 'auto',
+	    fingerprints: [{
+	      algorithm: fpLine.split(' ')[0],
+	      value: fpLine.split(' ')[1]
+	    }]
+	  };
+	  return dtlsParameters;
+	};
+	
+	// Serializes DTLS parameters to SDP.
+	SDPUtils.writeDtlsParameters = function(params, setupType) {
+	  var sdp = 'a=setup:' + setupType + '\r\n';
+	  params.fingerprints.forEach(function(fp) {
+	    sdp += 'a=fingerprint:' + fp.algorithm + ' ' + fp.value + '\r\n';
+	  });
+	  return sdp;
+	};
+	// Parses ICE information from SDP media section or sessionpart.
+	// FIXME: for consistency with other functions this should only
+	//   get the ice-ufrag and ice-pwd lines as input.
+	SDPUtils.getIceParameters = function(mediaSection, sessionpart) {
+	  var lines = SDPUtils.splitLines(mediaSection);
+	  // Search in session part, too.
+	  lines = lines.concat(SDPUtils.splitLines(sessionpart));
+	  var iceParameters = {
+	    usernameFragment: lines.filter(function(line) {
+	      return line.indexOf('a=ice-ufrag:') === 0;
+	    })[0].substr(12),
+	    password: lines.filter(function(line) {
+	      return line.indexOf('a=ice-pwd:') === 0;
+	    })[0].substr(10)
+	  };
+	  return iceParameters;
+	};
+	
+	// Serializes ICE parameters to SDP.
+	SDPUtils.writeIceParameters = function(params) {
+	  return 'a=ice-ufrag:' + params.usernameFragment + '\r\n' +
+	      'a=ice-pwd:' + params.password + '\r\n';
+	};
+	
+	// Parses the SDP media section and returns RTCRtpParameters.
+	SDPUtils.parseRtpParameters = function(mediaSection) {
+	  var description = {
+	    codecs: [],
+	    headerExtensions: [],
+	    fecMechanisms: [],
+	    rtcp: []
+	  };
+	  var lines = SDPUtils.splitLines(mediaSection);
+	  var mline = lines[0].split(' ');
+	  for (var i = 3; i < mline.length; i++) { // find all codecs from mline[3..]
+	    var pt = mline[i];
+	    var rtpmapline = SDPUtils.matchPrefix(
+	        mediaSection, 'a=rtpmap:' + pt + ' ')[0];
+	    if (rtpmapline) {
+	      var codec = SDPUtils.parseRtpMap(rtpmapline);
+	      var fmtps = SDPUtils.matchPrefix(
+	          mediaSection, 'a=fmtp:' + pt + ' ');
+	      // Only the first a=fmtp:<pt> is considered.
+	      codec.parameters = fmtps.length ? SDPUtils.parseFmtp(fmtps[0]) : {};
+	      codec.rtcpFeedback = SDPUtils.matchPrefix(
+	          mediaSection, 'a=rtcp-fb:' + pt + ' ')
+	        .map(SDPUtils.parseRtcpFb);
+	      description.codecs.push(codec);
+	      // parse FEC mechanisms from rtpmap lines.
+	      switch (codec.name.toUpperCase()) {
+	        case 'RED':
+	        case 'ULPFEC':
+	          description.fecMechanisms.push(codec.name.toUpperCase());
+	          break;
+	        default: // only RED and ULPFEC are recognized as FEC mechanisms.
+	          break;
+	      }
+	    }
+	  }
+	  SDPUtils.matchPrefix(mediaSection, 'a=extmap:').forEach(function(line) {
+	    description.headerExtensions.push(SDPUtils.parseExtmap(line));
+	  });
+	  // FIXME: parse rtcp.
+	  return description;
+	};
+	
+	// Generates parts of the SDP media section describing the capabilities /
+	// parameters.
+	SDPUtils.writeRtpDescription = function(kind, caps) {
+	  var sdp = '';
+	
+	  // Build the mline.
+	  sdp += 'm=' + kind + ' ';
+	  sdp += caps.codecs.length > 0 ? '9' : '0'; // reject if no codecs.
+	  sdp += ' UDP/TLS/RTP/SAVPF ';
+	  sdp += caps.codecs.map(function(codec) {
+	    if (codec.preferredPayloadType !== undefined) {
+	      return codec.preferredPayloadType;
+	    }
+	    return codec.payloadType;
+	  }).join(' ') + '\r\n';
+	
+	  sdp += 'c=IN IP4 0.0.0.0\r\n';
+	  sdp += 'a=rtcp:9 IN IP4 0.0.0.0\r\n';
+	
+	  // Add a=rtpmap lines for each codec. Also fmtp and rtcp-fb.
+	  caps.codecs.forEach(function(codec) {
+	    sdp += SDPUtils.writeRtpMap(codec);
+	    sdp += SDPUtils.writeFmtp(codec);
+	    sdp += SDPUtils.writeRtcpFb(codec);
+	  });
+	  // FIXME: add headerExtensions, fecMechanismş and rtcp.
+	  sdp += 'a=rtcp-mux\r\n';
+	  return sdp;
+	};
+	
+	// Parses the SDP media section and returns an array of
+	// RTCRtpEncodingParameters.
+	SDPUtils.parseRtpEncodingParameters = function(mediaSection) {
+	  var encodingParameters = [];
+	  var description = SDPUtils.parseRtpParameters(mediaSection);
+	  var hasRed = description.fecMechanisms.indexOf('RED') !== -1;
+	  var hasUlpfec = description.fecMechanisms.indexOf('ULPFEC') !== -1;
+	
+	  // filter a=ssrc:... cname:, ignore PlanB-msid
+	  var ssrcs = SDPUtils.matchPrefix(mediaSection, 'a=ssrc:')
+	  .map(function(line) {
+	    return SDPUtils.parseSsrcMedia(line);
+	  })
+	  .filter(function(parts) {
+	    return parts.attribute === 'cname';
+	  });
+	  var primarySsrc = ssrcs.length > 0 && ssrcs[0].ssrc;
+	  var secondarySsrc;
+	
+	  var flows = SDPUtils.matchPrefix(mediaSection, 'a=ssrc-group:FID')
+	  .map(function(line) {
+	    var parts = line.split(' ');
+	    parts.shift();
+	    return parts.map(function(part) {
+	      return parseInt(part, 10);
+	    });
+	  });
+	  if (flows.length > 0 && flows[0].length > 1 && flows[0][0] === primarySsrc) {
+	    secondarySsrc = flows[0][1];
+	  }
+	
+	  description.codecs.forEach(function(codec) {
+	    if (codec.name.toUpperCase() === 'RTX' && codec.parameters.apt) {
+	      var encParam = {
+	        ssrc: primarySsrc,
+	        codecPayloadType: parseInt(codec.parameters.apt, 10),
+	        rtx: {
+	          payloadType: codec.payloadType,
+	          ssrc: secondarySsrc
+	        }
+	      };
+	      encodingParameters.push(encParam);
+	      if (hasRed) {
+	        encParam = JSON.parse(JSON.stringify(encParam));
+	        encParam.fec = {
+	          ssrc: secondarySsrc,
+	          mechanism: hasUlpfec ? 'red+ulpfec' : 'red'
+	        };
+	        encodingParameters.push(encParam);
+	      }
+	    }
+	  });
+	  if (encodingParameters.length === 0 && primarySsrc) {
+	    encodingParameters.push({
+	      ssrc: primarySsrc
+	    });
+	  }
+	
+	  // we support both b=AS and b=TIAS but interpret AS as TIAS.
+	  var bandwidth = SDPUtils.matchPrefix(mediaSection, 'b=');
+	  if (bandwidth.length) {
+	    if (bandwidth[0].indexOf('b=TIAS:') === 0) {
+	      bandwidth = parseInt(bandwidth[0].substr(7), 10);
+	    } else if (bandwidth[0].indexOf('b=AS:') === 0) {
+	      bandwidth = parseInt(bandwidth[0].substr(5), 10);
+	    }
+	    encodingParameters.forEach(function(params) {
+	      params.maxBitrate = bandwidth;
+	    });
+	  }
+	  return encodingParameters;
+	};
+	
+	SDPUtils.writeSessionBoilerplate = function() {
+	  // FIXME: sess-id should be an NTP timestamp.
+	  return 'v=0\r\n' +
+	      'o=thisisadapterortc 8169639915646943137 2 IN IP4 127.0.0.1\r\n' +
+	      's=-\r\n' +
+	      't=0 0\r\n';
+	};
+	
+	SDPUtils.writeMediaSection = function(transceiver, caps, type, stream) {
+	  var sdp = SDPUtils.writeRtpDescription(transceiver.kind, caps);
+	
+	  // Map ICE parameters (ufrag, pwd) to SDP.
+	  sdp += SDPUtils.writeIceParameters(
+	      transceiver.iceGatherer.getLocalParameters());
+	
+	  // Map DTLS parameters to SDP.
+	  sdp += SDPUtils.writeDtlsParameters(
+	      transceiver.dtlsTransport.getLocalParameters(),
+	      type === 'offer' ? 'actpass' : 'active');
+	
+	  sdp += 'a=mid:' + transceiver.mid + '\r\n';
+	
+	  if (transceiver.rtpSender && transceiver.rtpReceiver) {
+	    sdp += 'a=sendrecv\r\n';
+	  } else if (transceiver.rtpSender) {
+	    sdp += 'a=sendonly\r\n';
+	  } else if (transceiver.rtpReceiver) {
+	    sdp += 'a=recvonly\r\n';
+	  } else {
+	    sdp += 'a=inactive\r\n';
+	  }
+	
+	  // FIXME: for RTX there might be multiple SSRCs. Not implemented in Edge yet.
+	  if (transceiver.rtpSender) {
+	    var msid = 'msid:' + stream.id + ' ' +
+	        transceiver.rtpSender.track.id + '\r\n';
+	    sdp += 'a=' + msid;
+	    sdp += 'a=ssrc:' + transceiver.sendEncodingParameters[0].ssrc +
+	        ' ' + msid;
+	  }
+	  // FIXME: this should be written by writeRtpDescription.
+	  sdp += 'a=ssrc:' + transceiver.sendEncodingParameters[0].ssrc +
+	      ' cname:' + SDPUtils.localCName + '\r\n';
+	  return sdp;
+	};
+	
+	// Gets the direction from the mediaSection or the sessionpart.
+	SDPUtils.getDirection = function(mediaSection, sessionpart) {
+	  // Look for sendrecv, sendonly, recvonly, inactive, default to sendrecv.
+	  var lines = SDPUtils.splitLines(mediaSection);
+	  for (var i = 0; i < lines.length; i++) {
+	    switch (lines[i]) {
+	      case 'a=sendrecv':
+	      case 'a=sendonly':
+	      case 'a=recvonly':
+	      case 'a=inactive':
+	        return lines[i].substr(2);
+	      default:
+	        // FIXME: What should happen here?
+	    }
+	  }
+	  if (sessionpart) {
+	    return SDPUtils.getDirection(sessionpart);
+	  }
+	  return 'sendrecv';
+	};
+	
+	// Expose public methods.
+	module.exports = SDPUtils;
+
+
+/***/ },
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -9470,10 +9731,10 @@
 	  // require('./utils').disableLog(false);
 	
 	  // Browser shims.
-	  var chromeShim = __webpack_require__(80) || null;
-	  var edgeShim = __webpack_require__(82) || null;
-	  var firefoxShim = __webpack_require__(84) || null;
-	  var safariShim = __webpack_require__(86) || null;
+	  var chromeShim = __webpack_require__(86) || null;
+	  var edgeShim = __webpack_require__(88) || null;
+	  var firefoxShim = __webpack_require__(90) || null;
+	  var safariShim = __webpack_require__(92) || null;
 	
 	  // Shim browser if found.
 	  switch (browserDetails.browser) {
@@ -9537,7 +9798,7 @@
 
 
 /***/ },
-/* 80 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -9819,14 +10080,14 @@
 	  shimOnTrack: chromeShim.shimOnTrack,
 	  shimSourceObject: chromeShim.shimSourceObject,
 	  shimPeerConnection: chromeShim.shimPeerConnection,
-	  shimGetUserMedia: __webpack_require__(81),
+	  shimGetUserMedia: __webpack_require__(87),
 	  attachMediaStream: chromeShim.attachMediaStream,
 	  reattachMediaStream: chromeShim.reattachMediaStream
 	};
 
 
 /***/ },
-/* 81 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -10021,7 +10282,7 @@
 
 
 /***/ },
-/* 82 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -10034,7 +10295,7 @@
 	 /* eslint-env node */
 	'use strict';
 	
-	var SDPUtils = __webpack_require__(71);
+	var SDPUtils = __webpack_require__(84);
 	var logging = __webpack_require__(1).log;
 	
 	var edgeShim = {
@@ -11069,14 +11330,14 @@
 	// Expose public methods.
 	module.exports = {
 	  shimPeerConnection: edgeShim.shimPeerConnection,
-	  shimGetUserMedia: __webpack_require__(83),
+	  shimGetUserMedia: __webpack_require__(89),
 	  attachMediaStream: edgeShim.attachMediaStream,
 	  reattachMediaStream: edgeShim.reattachMediaStream
 	};
 
 
 /***/ },
-/* 83 */
+/* 89 */
 /***/ function(module, exports) {
 
 	/*
@@ -11114,7 +11375,7 @@
 
 
 /***/ },
-/* 84 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -11282,14 +11543,14 @@
 	  shimOnTrack: firefoxShim.shimOnTrack,
 	  shimSourceObject: firefoxShim.shimSourceObject,
 	  shimPeerConnection: firefoxShim.shimPeerConnection,
-	  shimGetUserMedia: __webpack_require__(85),
+	  shimGetUserMedia: __webpack_require__(91),
 	  attachMediaStream: firefoxShim.attachMediaStream,
 	  reattachMediaStream: firefoxShim.reattachMediaStream
 	};
 
 
 /***/ },
-/* 85 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -11445,7 +11706,7 @@
 
 
 /***/ },
-/* 86 */
+/* 92 */
 /***/ function(module, exports) {
 
 	/*
@@ -11485,72 +11746,10 @@
 
 
 /***/ },
-/* 87 */
+/* 93 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
-
-/***/ },
-/* 88 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	// Attach to a tappable element and it will emit the tap event.
-	// Accepts 1 argument:
-	// 1. A callback function that will be run every time the tap event is triggered.
-	var emitTap = function emitTap(callback, data) {
-	  if (imperio.connectionType === 'webRTC') {
-	    var webRTCData = {
-	      data: data,
-	      type: 'tap'
-	    };
-	    imperio.dataChannel.send(webRTCData);
-	  } else imperio.socket.emit('tap', imperio.room, data);
-	  if (callback) callback(data);
-	};
-	
-	module.exports = emitTap;
-
-/***/ },
-/* 89 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var emitData = function emitData(callback, data) {
-	  if (imperio.connectionType === 'webRTC') {
-	    var webRTCData = {
-	      data: data,
-	      type: 'data'
-	    };
-	    imperio.dataChannel.send(webRTCData);
-	  } else imperio.socket.emit('data', imperio.room, data);
-	  if (callback) callback(data);
-	};
-	
-	module.exports = emitData;
-
-/***/ },
-/* 90 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * Sets up a listener for a data event.
-	 * @param {Object} socket - The socket you would like to connect to
-	 * @param {function} callback - A callback function
-	 *        that will be run every time the tap event is triggered
-	 */
-	var dataListener = function dataListener(callback) {
-	  imperio.callbacks.data = callback;
-	  imperio.socket.on('data', function (data) {
-	    if (callback) callback(data);
-	  });
-	};
-	
-	module.exports = dataListener;
 
 /***/ }
 /******/ ]);
