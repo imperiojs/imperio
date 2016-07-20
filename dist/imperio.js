@@ -79,8 +79,6 @@
 	imperio.peerConnection = null;
 	// storage place for pointers to callback functions passed into handler functions
 	imperio.callbacks = {};
-	// take a tap event and emit the tap event
-	imperio.emitTap = __webpack_require__(41);
 	// sets up listener for motion data and emits object containing x,y,z coords
 	imperio.emitAcceleration = __webpack_require__(29);
 	// sets up a listener for location data and emits object containing coordinates and time
@@ -3892,15 +3890,17 @@
 	var emitPressUp = __webpack_require__(38);
 	var emitRotate = __webpack_require__(39);
 	var emitSwipe = __webpack_require__(40);
+	var emitTap = __webpack_require__(41);
 	
-	function curse(action, element, localCallback, modifyDataCallback) {
+	var curse = function curse(action, element, localCallback, modifyDataCallback) {
 	  if (action === 'pan') emitPan(element, localCallback, modifyDataCallback);
 	  if (action === 'pinch') emitPinch(element, localCallback, modifyDataCallback);
 	  if (action === 'press') emitPress(element, localCallback, modifyDataCallback);
 	  if (action === 'pressUp') emitPressUp(element, localCallback, modifyDataCallback);
 	  if (action === 'rotate') emitRotate(element, localCallback, modifyDataCallback);
 	  if (action === 'swipe') emitSwipe(element, localCallback, modifyDataCallback);
-	}
+	  if (action === 'tap') emitTap(element, localCallback, modifyDataCallback);
+	};
 	
 	module.exports = curse;
 
@@ -4068,15 +4068,18 @@
 	// Attach to a tappable element and it will emit the tap event.
 	// Accepts 1 argument:
 	// 1. A callback function that will be run every time the tap event is triggered.
-	var emitTap = function emitTap(callback, data) {
-	  if (imperio.connectionType === 'webRTC') {
-	    var webRTCData = {
-	      data: data,
-	      type: 'tap'
-	    };
-	    imperio.dataChannel.send(webRTCData);
-	  } else imperio.socket.emit('tap', imperio.room, data);
-	  if (callback) callback(data);
+	var emitTap = function emitTap(element, localCallback, modifyDataCallback) {
+	  element.addEventListener('click', function (event) {
+	    if (modifyDataCallback) event = modifyDataCallback(event);
+	    if (imperio.connectionType === 'webRTC') {
+	      var webRTCData = {
+	        data: event,
+	        type: 'tap'
+	      };
+	      imperio.dataChannel.send(webRTCData);
+	    } else imperio.socket.emit('tap', imperio.room, event);
+	    if (localCallback) localCallback(event);
+	  });
 	};
 	
 	module.exports = emitTap;
@@ -4802,7 +4805,6 @@
 	    return ha;
 	  }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : "undefined" != typeof module && module.exports ? module.exports = ha : a[c] = ha;
 	}(window, document, "Hammer");
-	//# sourceMappingURL=hammer.min.js.map
 
 /***/ },
 /* 53 */
