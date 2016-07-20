@@ -1,6 +1,6 @@
 {
   "name": "imperio",
-  "version": "0.0.3",
+  "version": "0.2.3",
   "description": "Control your desktop experience from a mobile device.",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,8 @@
     "express-useragent": "0.2.4",
     "jsonwebtoken": "7.0.1",
     "node-uuid": "1.4.7",
-    "socket.io": "1.4.6"
+    "socket.io": "1.4.6",
+    "webrtc-adapter": "1.4.0"
   },
   "devDependencies": {
     "chai": "3.5.0",
@@ -45,6 +46,10 @@
     "eslint-plugin-import": "1.9.2",
     "eslint-plugin-jsx-a11y": "1.5.3",
     "eslint-plugin-react": "5.2.2",
-    "socket.io-client": "1.4.6"
+    "expect": "1.20.2",
+    "mocha": "2.5.3",
+    "socket.io-client": "1.4.6",
+    "supertest": "1.2.0",
+    "twilio": "2.9.1"
   }
 }
