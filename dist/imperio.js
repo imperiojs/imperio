@@ -4743,7 +4743,6 @@
 	    return ha;
 	  }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : "undefined" != typeof module && module.exports ? module.exports = ha : a[c] = ha;
 	}(window, document, "Hammer");
-	//# sourceMappingURL=hammer.min.js.map
 
 /***/ },
 /* 51 */
