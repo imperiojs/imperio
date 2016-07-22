@@ -26,8 +26,10 @@ Install via npm:
 npm install --save imperio
 ```
 
-## [Getting Started](https://github.com/imperiojs/imperio/wiki/Getting-Started)
-Getting started with imperio is simple, just add a few methods to your client and server code.
+## Get Started
+Getting started with imperio is simple, just add a few methods to your client and server code.  Below you will find some code to get a basic and quick example running.  For a full list of methods check out our full [API ](https://github.com/imperiojs/imperio/wiki/API) docs.
+
+You can check out the full code for this sample implementation [here](https://github.com/imperiojs/getting-started).
 
 #### Client Side Implementation
 Use imperio in your client-side code to share and receive a range of events and data.
@@ -37,17 +39,21 @@ imperio is attached to the window object and is accessible at namespace `imperio
 ```javascript
 <script src='./dist/imperio.min.js'></script>
 ```
-One client sets up the socket connection, generally the desktop browser, and listens for an emit from other clients. However, any client can setup and listen for a socket emit as long as the line above is in their js file.
+The listener sets up the socket room connection, generally the desktop browser, and listens for incoming data from connected clients.
 ```javascript
 imperio.listenerRoomSetup();
 ```
 
-The other client(s), generally the mobile, need the above code in their js in order to emit a method from the imperio library. The `imperio.gesture()` method is one example method from our library. Check out the [API wiki page](https://github.com/imperiojs/imperio/wiki/API) to see the full suite of features available for development.
+The emitter(s), generally a mobile device, will connect to the room established above.
+```javascript
+imperio.emitRoomSetup();
+```
+
+The `imperio.gesture()` method is one example method from our library. Check out the [API wiki page](https://github.com/imperiojs/imperio/wiki/API) to see the full suite of features available for development.
 
 ```javascript
-const myElement = document.getElementById('swipeBox');
-imperio.emitRoomSetup();
-imperio.gesture('swipe', myElement);
+var swipeBox = document.getElementById('swipe-box');
+imperio.gesture('swipe', swipeBox);
 ```
 
 #### Server Side Implementation
@@ -66,49 +72,28 @@ To correctly route the front-end request for the imperio bundle, include the fol
 app.use(express.static(path.join(`${__dirname}/../node_modules/imperio`)));
 ```
 
-Then have your app use the returned object as middleware
-```javascript
-app.use(imperio.init());
-```
-imperio will handle the mobile-to-desktop connections for you!
-
-### Server Side Implementation
-imperio server side functions are currently Express middleware. Implementing Imperio will require Express to be installed and required. We use several Express middleware (body-parser, cookie-parser, useragent) which are invoked before imperio middleware is invoked. These middleware handle the creation of connection sessions and authenticates connections to these sessions.
-
-Require the module and pass it the server object of your app
-```javascript
-const imperio = require('imperio')(server);
-```
-
-Add a static route so your client will get the correct files from our node module
-
-```javascript
-app.use(express.static(path.join(`{path/from/server/to/node_modules}/node_modules/imperio`)));
-```
-
-The above is the example of how a developer would implement a server GET route.  Include <code>imperio.init()</code> as middleware in your GET route. Check out the cookies on your desktop browser to find your nonce. Your `route/nonce` on both client urls finalizes the connection between imperio and clients.
+ Include <code>imperio.init()</code> as middleware in your desired express route.
 
 ```javascript
 app.get('/:nonce', imperio.init(),
-   (req, res) => {
-     if (req.imperio.isDesktop) {
-       res.sendFile(path.join(__dirname, "route/from/server/to/desktop/html/file"));
-     } else if (req.imperio.isMobile) {
-       res.render(path.join(__dirname, "route/from/server/to/mobile/html/file"));
-     }
-   }
- );
+  (req, res) => {
+    if (req.imperio.isDesktop) {
+      res.sendFile(path.join(`${__dirname}/../client/desktop.html`));
+    } else {
+      if (req.imperio.connected) {
+        res.sendFile(path.join(`${__dirname}/../client/mobile.html`));
+      } else {
+        res.sendFile(path.join(`${__dirname}/../client/mobileLogin.html`));
+      }
+    }
+  }
+);
 ```
 
 And that's it! Now go forth and build awesome things.
 
-
-
-
 ### Examples
-Checkout our wiki and other repos in this organization for some examples of imperio in use.
-
-### Available Functions
+Other examples using our library can be found at other repos on our organization and on our [example](https://github.com/imperiojs/imperio/wiki/example) page.
 
 ### License
 MIT
