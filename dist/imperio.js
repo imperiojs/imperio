@@ -3713,53 +3713,75 @@
 	// 2. A room name that will inform the server which room to emit the acceleration event and data to.
 	// 4. A callback function that will be run every time the tap event is triggered, by default
 	// we will provide this function with the accelerometer data.
-	var mobileAccelShare = {};
+	var emitAcceleration = {};
 	
-	mobileAccelShare.gravity = function (localCallback, modifyDataCallback) {
-	  window.ondevicemotion = function (event) {
-	    var x = Math.round(event.accelerationIncludingGravity.x);
-	    var y = Math.round(event.accelerationIncludingGravity.y);
-	    var z = Math.round(event.accelerationIncludingGravity.z);
-	    var accObject = {
-	      x: x,
-	      y: y,
-	      z: z
-	    };
-	    if (modifyDataCallback) accObject = modifyDataCallback(accObject);
-	    var webRTCData = {
-	      data: accObject,
-	      type: 'acceleration'
-	    };
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(webRTCData));
-	    } else imperio.socket.emit('acceleration', imperio.room, accObject);
-	    if (localCallback) localCallback(accObject);
+	var handleDeviceMotionGravity = function handleDeviceMotionGravity(event) {
+	  var localCallback = imperio.callbacks.gravityLocal;
+	  var modifyDataCallback = imperio.callbacks.gravityModify;
+	  var x = Math.round(event.accelerationIncludingGravity.x);
+	  var y = Math.round(event.accelerationIncludingGravity.y);
+	  var z = Math.round(event.accelerationIncludingGravity.z);
+	  var accObject = {
+	    x: x,
+	    y: y,
+	    z: z
 	  };
+	  if (modifyDataCallback) accObject = modifyDataCallback(accObject);
+	  var webRTCData = {
+	    data: accObject,
+	    type: 'acceleration'
+	  };
+	  if (imperio.connectionType === 'webRTC') {
+	    imperio.dataChannel.send(JSON.stringify(webRTCData));
+	  } else imperio.socket.emit('acceleration', imperio.room, accObject);
+	  if (localCallback) localCallback(accObject);
 	};
 	
-	mobileAccelShare.noGravity = function (localCallback, modifyDataCallback) {
-	  window.ondevicemotion = function (event) {
-	    var x = Math.round(event.acceleration.x);
-	    var y = Math.round(event.acceleration.y);
-	    var z = Math.round(event.acceleration.z);
-	    var accObject = {
-	      x: x,
-	      y: y,
-	      z: z
-	    };
-	    if (modifyDataCallback) accObject = modifyDataCallback(accObject);
-	    var webRTCData = {
-	      data: accObject,
-	      type: 'acceleration'
-	    };
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(webRTCData));
-	    } else imperio.socket.emit('acceleration', imperio.room, accObject);
-	    if (localCallback) localCallback(accObject);
-	  };
+	emitAcceleration.gravity = function (localCallback, modifyDataCallback) {
+	  imperio.callbacks.gravityLocal = localCallback;
+	  imperio.callbacks.gravityModify = modifyDataCallback;
+	  window.addEventListener('devicemotion', handleDeviceMotionGravity);
+	};
+	emitAcceleration.removeGravity = function () {
+	  delete imperio.callbacks.gravityLocal;
+	  delete imperio.callbacks.gravityModify;
+	  window.removeEventListener('devicemotion', handleDeviceMotionGravity);
 	};
 	
-	module.exports = mobileAccelShare;
+	var handleDeviceMotionNoGravity = function handleDeviceMotionNoGravity(event) {
+	  var localCallback = imperio.callbacks.noGravityLocal;
+	  var modifyDataCallback = imperio.callbacks.noGravityModify;
+	  var x = Math.round(event.acceleration.x);
+	  var y = Math.round(event.acceleration.y);
+	  var z = Math.round(event.acceleration.z);
+	  var accObject = {
+	    x: x,
+	    y: y,
+	    z: z
+	  };
+	  if (modifyDataCallback) accObject = modifyDataCallback(accObject);
+	  var webRTCData = {
+	    data: accObject,
+	    type: 'acceleration'
+	  };
+	  if (imperio.connectionType === 'webRTC') {
+	    imperio.dataChannel.send(JSON.stringify(webRTCData));
+	  } else imperio.socket.emit('acceleration', imperio.room, accObject);
+	  if (localCallback) localCallback(accObject);
+	};
+	
+	emitAcceleration.noGravity = function (localCallback, modifyDataCallback) {
+	  imperio.callbacks.noGravityLocal = localCallback;
+	  imperio.callbacks.noGravityModify = modifyDataCallback;
+	  window.addEventListener('devicemotion', handleDeviceMotionNoGravity);
+	};
+	emitAcceleration.removeNoGravity = function () {
+	  delete imperio.callbacks.noGravityLocal;
+	  delete imperio.callbacks.noGravityModify;
+	  window.removeEventListener('devicemotion', handleDeviceMotionNoGravity);
+	};
+	
+	module.exports = emitAcceleration;
 
 /***/ },
 /* 30 */
@@ -3773,7 +3795,7 @@
 	      data: data,
 	      type: 'data'
 	    };
-	    imperio.dataChannel.send(webRTCData);
+	    imperio.dataChannel.send(JSON.stringify(webRTCData));
 	  } else imperio.socket.emit('data', imperio.room, data);
 	  if (callback) callback(data);
 	};
@@ -3825,7 +3847,7 @@
 	// Accepts 1 argument:
 	// 1. A callback function that will be run every time the tap event is triggered, by default
 	// we will provide this function with the gyroscope data.
-	var mobileGyroShare = function mobileGyroShare(localCallback, modifyDataCallback) {
+	var emitGyroscope = function emitGyroscope(localCallback, modifyDataCallback) {
 	  window.ondeviceorientation = function (event) {
 	    var alpha = Math.round(event.alpha);
 	    var beta = Math.round(event.beta);
@@ -3847,7 +3869,7 @@
 	  };
 	};
 	
-	module.exports = mobileGyroShare;
+	module.exports = emitGyroscope;
 
 /***/ },
 /* 33 */

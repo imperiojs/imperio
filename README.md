@@ -6,7 +6,7 @@ imperio is an open source javascript library that gives developers an easy way t
 
 ## Features
 #### Capturing Mobile inputs
-* Touch Gestures - Tap, Press, Pan, Pinch, Swipe, Rotate
+* Touch Gestures - Tap, Press, PresUp, Pan, Pinch, Swipe, Rotate
 * Accelerometer
 * Gyroscope
 * Geolocation
