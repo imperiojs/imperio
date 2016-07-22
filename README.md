@@ -1,24 +1,33 @@
 # imperio
-imperio is an open source javascript library that gives developers an easy way to interact mobile webAPI bridge between native mobile inputs and sensor data with desktop interaction, requiring minimal code and knowledge of the underlying technologies.
+imperio is an open source JavaScript library that enables developers to build web applications that harness the power of mobile devices communicating sensor and gesture data to other devices in real-time. imperio provides developers an easy-to-use API, configurable middlware to easily set up device communication rules, and automatically initiates optimal datastreams based on browser compatibility with minimal code to get started. 
 
 ## Version
 [![npm version](https://badge.fury.io/js/imperio.svg)](https://www.npmjs.com/package/imperio)
 
 ## Features
-#### Control
-* Gestures - Tap, Press, PresUp, Pan, Pinch, Swipe, Rotate
-* Accelerometer
-* Gyroscope
-* Geolocation
+#### Front-end API
+* Sensor event data:
+  * Accelerometer
+  * Gyroscope
+  * Geolocation
+* Gesture event data:
+  * Pan
+  * Pinch
+  * Press
+  * Rotate
+  * Swipe
+  * Tap
+* Peer client ID information
+* Room information
 
-#### Connect
-* WebRTC
-* WebSockets
+#### Real-time Communication
+* Initiate streaming communication using WebSockets
+* Automatically switch to WebRTC DataChannels as appropriate with one line of code
 
 #### Authenticate
-* URL + shortcode
-* Alphanumeric Client Password
-* Cookie Sessions
+* Configurable middleware automatically creates and manages data streaming rooms for clients
+* Clients connect with short, randomly generated passwords provided to room initiator
+* Peristent client room connections
 
 ## Installation
 Install via npm:
@@ -27,29 +36,29 @@ npm install --save imperio
 ```
 
 ## Get Started
-Getting started with imperio is simple, just add a few methods to your client and server code.  Below you will find some code to get a basic and quick example running.  For a full list of methods check out our full [API ](https://github.com/imperiojs/imperio/wiki/API) docs.
+Getting started with imperio is simple: add a few lines in your frontend and server code.  Below is some code to get a basic example running.  For all available functionality, check out our [API ](https://github.com/imperiojs/imperio/wiki/API) docs.
 
-You can check out the full code for this sample implementation [here](https://github.com/imperiojs/getting-started).
+Check out the full code for the sample implementation [here](https://github.com/imperiojs/getting-started).
 
 #### Client Side Implementation
-Use imperio in your client-side code to share and receive a range of events and data.
+Use imperio in your client-side code to emit and receive a wide range of sensor and gesture events and data.
 
-imperio is attached to the window object and is accessible at namespace `imperio` once you add the script tag to your html files.
+imperio is attached to the window object and is accessible by `imperio` once you add the script tag to your html files.
 
 ```javascript
 <script src='./dist/imperio.min.js'></script>
 ```
-The listener sets up the socket room connection, generally the desktop browser, and listens for incoming data from connected clients.
+ListenerRoomSetup starts the socket room connection and listens for incoming data from other connected clients. This is generally, but not necessarily, on a desktop/main browser.
 ```javascript
 imperio.listenerRoomSetup();
 ```
 
-The emitter(s), generally a mobile device, will connect to the room established above.
+The emitter(s), generally mobile devices, will connect to the room established above.
 ```javascript
 imperio.emitRoomSetup();
 ```
 
-The `imperio.gesture()` method is one example method from our library. Check out the [API wiki page](https://github.com/imperiojs/imperio/wiki/API) to see the full suite of features available for development.
+The `imperio.gesture()` method gives developers access to all gesture events on a touch screen enabled device. Check out the [API wiki page](https://github.com/imperiojs/imperio/wiki/API) to see the full suite of features available.
 
 ```javascript
 var swipeBox = document.getElementById('swipe-box');
@@ -90,10 +99,10 @@ app.get('/:nonce', imperio.init(),
 );
 ```
 
-And that's it! Now go forth and build awesome things.
+And that's it! This application will now stream swipe data from client to client, with a just a few lines of front end code and one line of middleware. Now go forth and build awesome things.
 
 ### Examples
-Other examples using our library can be found at other repos on our organization and on our [example](https://github.com/imperiojs/imperio/wiki/example) page.
+Other examples using imperio can be found in the other repos under the imperio organization and on our [example](https://github.com/imperiojs/imperio/wiki/example) page.
 
 ### License
 MIT
