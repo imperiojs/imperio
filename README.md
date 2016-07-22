@@ -1,24 +1,24 @@
 # imperio
 imperio is an open source javascript library that gives developers an easy way to interact mobile webAPI bridge between native mobile inputs and sensor data with desktop interaction, requiring minimal code and knowledge of the underlying technologies.
 
-### Version
+## Version
 [![npm version](https://badge.fury.io/js/imperio.svg)](https://www.npmjs.com/package/imperio)
 
 ## Features
-#### Capturing Mobile inputs
-* Touch Gestures - Tap, Press, PresUp, Pan, Pinch, Swipe, Rotate
+#### Control
+* Gestures - Tap, Press, PresUp, Pan, Pinch, Swipe, Rotate
 * Accelerometer
 * Gyroscope
 * Geolocation
 
-#### Phone to Desktop Connections
+#### Connect
 * WebRTC
 * WebSockets
 
-#### Authenticating Mobile to Desktop Sessions
+#### Authenticate
 * URL + shortcode
 * Alphanumeric Client Password
-* Cookie/Token Sessions
+* Cookie Sessions
 
 ## Installation
 Install via npm:
@@ -26,46 +26,74 @@ Install via npm:
 npm install --save imperio
 ```
 
-## Getting Started
+## Get Started
+Getting started with imperio is simple, just add a few methods to your client and server code.  Below you will find some code to get a basic and quick example running.  For a full list of methods check out our full [API ](https://github.com/imperiojs/imperio/wiki/API) docs.
+
+You can check out the full code for this sample implementation [here](https://github.com/imperiojs/getting-started).
 
 #### Client Side Implementation
-The client side implementation of imperio represents the use of the mobile functionality to influence browser interaction.
-Client-side functionality can be accessed by:
+Use imperio in your client-side code to share and receive a range of events and data.
+
+imperio is attached to the window object and is accessible at namespace `imperio` once you add the script tag to your html files.
 
 ```javascript
 <script src='./dist/imperio.min.js'></script>
 ```
-Then you can simply access the imperio object attached to the window.
+The listener sets up the socket room connection, generally the desktop browser, and listens for incoming data from connected clients.
+```javascript
+imperio.listenerRoomSetup();
+```
 
+The emitter(s), generally a mobile device, will connect to the room established above.
+```javascript
+imperio.emitRoomSetup();
+```
+
+The `imperio.gesture()` method is one example method from our library. Check out the [API wiki page](https://github.com/imperiojs/imperio/wiki/API) to see the full suite of features available for development.
+
+```javascript
+var swipeBox = document.getElementById('swipe-box');
+imperio.gesture('swipe', swipeBox);
+```
 
 #### Server Side Implementation
 
-imperio's server functions function as Express middleware. Implementing imperio will require Express to be installed and required.
+imperio provides connection and authentication functionality on the server via an Express middleware.
 ```bash
 npm install --save express
 ```
-
-imperio's server-side functionality can be enable with just a couple lines of javascript:
 Just require the module and pass it the server object of your app
 ```javascript
 const imperio = require('imperio')(server);
 ```
 
-Add a static route so your client will get the correct files from our node module
+To correctly route the front-end request for the imperio bundle, include the following static route.
 ```javascript
 app.use(express.static(path.join(`${__dirname}/../node_modules/imperio`)));
 ```
 
-Then have your app use the returned object as middleware
+ Include <code>imperio.init()</code> as middleware in your desired express route.
+
 ```javascript
-app.use(imperio.init());
+app.get('/:nonce', imperio.init(),
+  (req, res) => {
+    if (req.imperio.isDesktop) {
+      res.sendFile(path.join(`${__dirname}/../client/desktop.html`));
+    } else {
+      if (req.imperio.connected) {
+        res.sendFile(path.join(`${__dirname}/../client/mobile.html`));
+      } else {
+        res.sendFile(path.join(`${__dirname}/../client/mobileLogin.html`));
+      }
+    }
+  }
+);
 ```
-imperio will handle the mobile-to-desktop connections for you!
+
+And that's it! Now go forth and build awesome things.
 
 ### Examples
-Checkout our wiki and other repos in this organization for some examples of imperio in use.
-
-### Available Functions
+Other examples using our library can be found at other repos on our organization and on our [example](https://github.com/imperiojs/imperio/wiki/example) page.
 
 ### License
 MIT
