@@ -3847,26 +3847,39 @@
 	// Accepts 1 argument:
 	// 1. A callback function that will be run every time the tap event is triggered, by default
 	// we will provide this function with the gyroscope data.
-	var emitGyroscope = function emitGyroscope(localCallback, modifyDataCallback) {
-	  window.ondeviceorientation = function (event) {
-	    var alpha = Math.round(event.alpha);
-	    var beta = Math.round(event.beta);
-	    var gamma = Math.round(event.gamma);
-	    var gyroObject = {
-	      alpha: alpha,
-	      beta: beta,
-	      gamma: gamma
-	    };
-	    if (modifyDataCallback) gyroObject = modifyDataCallback(gyroObject);
-	    var webRTCData = {
-	      data: gyroObject,
-	      type: 'gyroscope'
-	    };
-	    if (imperio.connectionType === 'webRTC') {
-	      imperio.dataChannel.send(JSON.stringify(webRTCData));
-	    } else imperio.socket.emit('gyroscope', imperio.room, gyroObject);
-	    if (localCallback) localCallback(gyroObject);
+	
+	var emitGyroscope = {};
+	var handleDeviceOrientation = function handleDeviceOrientation(event) {
+	  var localCallback = imperio.callbacks.gyroLocal;
+	  var modifyDataCallback = imperio.callbacks.gyroModify;
+	  var alpha = Math.round(event.alpha);
+	  var beta = Math.round(event.beta);
+	  var gamma = Math.round(event.gamma);
+	  var gyroObject = {
+	    alpha: alpha,
+	    beta: beta,
+	    gamma: gamma
 	  };
+	  if (modifyDataCallback) gyroObject = modifyDataCallback(gyroObject);
+	  var webRTCData = {
+	    data: gyroObject,
+	    type: 'gyroscope'
+	  };
+	  if (imperio.connectionType === 'webRTC') {
+	    imperio.dataChannel.send(JSON.stringify(webRTCData));
+	  } else imperio.socket.emit('gyroscope', imperio.room, gyroObject);
+	  if (localCallback) localCallback(gyroObject);
+	};
+	
+	emitGyroscope.start = function (localCallback, modifyDataCallback) {
+	  imperio.callbacks.gyroLocal = localCallback;
+	  imperio.callbacks.gyroModify = modifyDataCallback;
+	  window.addEventListener('deviceorientaiton', handleDeviceOrientation);
+	};
+	emitGyroscope.remove = function (localCallback, modifyDataCallback) {
+	  imperio.callbacks.gyroLocal = localCallback;
+	  imperio.callbacks.gyroModify = modifyDataCallback;
+	  window.removeEventListener('deviceorientaiton', handleDeviceOrientation);
 	};
 	
 	module.exports = emitGyroscope;
