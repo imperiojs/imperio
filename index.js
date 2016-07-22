@@ -1,6 +1,7 @@
 "use strict"; // eslint-disable-line
 /* eslint-disable no-console, global-require, no-param-reassign */
 function initializeImperio(server, options) {
+  console.log('imperio initialized');
   const imperio = {};
   imperio.connectionController = require('./lib/server/connectionController.js');
   imperio.nonceController = require('./lib/server/nonceController.js');
@@ -35,6 +36,7 @@ function initializeImperio(server, options) {
    * @return {function} express middleware
    */
   imperio.init = function imperioInit() {
+    console.log('imperio init called!');
     const that = this;
     // Include our dependency middleware
     const bodyParser = require('body-parser');
@@ -108,7 +110,7 @@ function initializeImperio(server, options) {
    * ------------------------ */
   io.on('connection', socket => {
     // keep track of sockets connected
-    // console.log(`socket connected with id: ${socket.id}`);
+    console.log(`socket connected with id: ${socket.id}`);
     // imperio.openSockets[socket.id] = null;
     function log() {
       const array = ['Message from server:'];
@@ -150,6 +152,7 @@ function initializeImperio(server, options) {
   });
 
   function handleCreateRoom(socket, clientData) {
+    console.log('handleCreateRoom invoked');
     const room = clientData.room;
     const clientRole = clientData.role;
     let roomData = io.sockets.adapter.rooms[room];
@@ -171,6 +174,7 @@ function initializeImperio(server, options) {
       roomData = io.sockets.adapter.rooms[room];
       roomData.sockets[socket.id] = clientRole;
       imperio.clientRooms[socket.id] = room;
+      console.log(`about to emit updateRoomData to ${room} from ${clientRole}`);
       io.sockets.in(room).emit('updateRoomData', roomData);
     } else {
       roomData.limit = imperio.globalRoomLimit;

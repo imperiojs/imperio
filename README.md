@@ -1,207 +1,99 @@
 # imperio
-imperio provides developers with an SDK that creates a bridge between native mobile inputs and sensor data with desktop interaction, requiring minimal code and knowledge of the underlying technologies.
+imperio is an open source javascript library that gives developers an easy way to interact mobile webAPI bridge between native mobile inputs and sensor data with desktop interaction, requiring minimal code and knowledge of the underlying technologies.
+
+## Version
+[![npm version](https://badge.fury.io/js/imperio.svg)](https://www.npmjs.com/package/imperio)
 
 ## Features
-#### Capturing Mobile inputs
-* Touch Gestures
+#### Control
+* Gestures - Tap, Press, PresUp, Pan, Pinch, Swipe, Rotate
 * Accelerometer
 * Gyroscope
+* Geolocation
 
-#### Phone to Desktop Connections
-* Sockets
+#### Connect
+* WebRTC
+* WebSockets
 
-#### Various Forms of Authenticating Mobile to Desktop Sessions
+#### Authenticate
 * URL + shortcode
 * Alphanumeric Client Password
-* Cookie/Token Sessions
+* Cookie Sessions
 
 ## Installation
+Install via npm:
 ```bash
-npm install imperio
+npm install --save imperio
 ```
 
-## Getting Started
+## Get Started
+Getting started with imperio is simple, just add a few methods to your client and server code.  Below you will find some code to get a basic and quick example running.  For a full list of methods check out our full [API ](https://github.com/imperiojs/imperio/wiki/API) docs.
+
+You can check out the full code for this sample implementation [here](https://github.com/imperiojs/getting-started).
 
 #### Client Side Implementation
-The client side implementation of imperio represents the use of the mobile functionality to influence browser interaction.
-Client-side functionality can be accessed by:
+Use imperio in your client-side code to share and receive a range of events and data.
+
+imperio is attached to the window object and is accessible at namespace `imperio` once you add the script tag to your html files.
 
 ```javascript
-<script src = 'https://cdn.socket.io/socket-io-1.4.5.js'></script>
 <script src='./dist/imperio.min.js'></script>
 ```
-This above code needs to be included on the mobile browser and desktop browser.
+The listener sets up the socket room connection, generally the desktop browser, and listens for incoming data from connected clients.
+```javascript
+imperio.listenerRoomSetup();
+```
 
+The emitter(s), generally a mobile device, will connect to the room established above.
+```javascript
+imperio.emitRoomSetup();
+```
+
+The `imperio.gesture()` method is one example method from our library. Check out the [API wiki page](https://github.com/imperiojs/imperio/wiki/API) to see the full suite of features available for development.
+
+```javascript
+var swipeBox = document.getElementById('swipe-box');
+imperio.gesture('swipe', swipeBox);
+```
 
 #### Server Side Implementation
 
-imperio's server functions are currently Express middleware. Implementing imperio will require Express to be installed and required.
-
-imperio's server-side functionality can be enable with just a couple lines of javascript:
+imperio provides connection and authentication functionality on the server via an Express middleware.
+```bash
+npm install --save express
+```
 Just require the module and pass it the server object of your app
 ```javascript
 const imperio = require('imperio')(server);
 ```
 
-Add a static route so your client will get the correct files from our node module
+To correctly route the front-end request for the imperio bundle, include the following static route.
 ```javascript
 app.use(express.static(path.join(`${__dirname}/../node_modules/imperio`)));
 ```
 
-Then have your app use the returned object as middleware
+ Include <code>imperio.init()</code> as middleware in your desired express route.
+
 ```javascript
-app.use(imperio.init());
-```
-imperio will handle the mobile-to-desktop connections for you!
-
-### A Simple Example
-In this example, we'll include a button in the mobile browser, which on "tap", will alter the Dom of the desktop browser.
-
-mobile.html :
-```javascript
-<body>
-  <button type="button" name="button" class="tap" onclick="imperio.mobileTapShare()">Tap Here</button>
-  <h2>Hello World</h2
-</body>
-<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-<script src='./dist/imperio.min.js'></script>
-```
-
-mobile.js:
-```javascript
-imperio.mobileRoomSetup(imperio.socket, imperio.room);
-```
-
-
-desktopBrowser.html:
-```javascript
-<body class='class1'>
-  <h1> Welcome, imperio User!</h1>
-  <div id= "nonceContainer"></div>
-</body>
-```
-
-desktopBrowser.js
-```javascript
-
-function changeBodyClass() {
-  if (bodyElement.classList.contains('class1')) {
-    bodyElement.classList.remove('class1');
-    bodyElement.classList.add('class2');
-  } else {
-    bodyElement.classList.remove('class2');
-    bodyElement.classList.add('class1');
+app.get('/:nonce', imperio.init(),
+  (req, res) => {
+    if (req.imperio.isDesktop) {
+      res.sendFile(path.join(`${__dirname}/../client/desktop.html`));
+    } else {
+      if (req.imperio.connected) {
+        res.sendFile(path.join(`${__dirname}/../client/mobile.html`));
+      } else {
+        res.sendFile(path.join(`${__dirname}/../client/mobileLogin.html`));
+      }
+    }
   }
-}
-
+);
 ```
 
+And that's it! Now go forth and build awesome things.
 
-In server.js:
-```javascript
-const express = require('express');
-const app = express();
-const server = require('http').Server(app); // get the server object from the app instance
-const path = require('path');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const useragent = require('express-useragent');
-// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-const imperio = require('imperio')(server);
-// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-
-app.use(express.static(path.join(`${__dirname}/../client`)));
-app.use(express.static(path.join(`${__dirname}/../node_modules/imperio`)));
-app.set('view engine', 'ejs');
-// *-*-*-*-*-*-*-*-*-
-app.use(imperio.init());
-// *-*-*-*-*-*-*-*-*-
-
-// Handle Routes
-app.get('/', (req, res) => {
-  if (req.useragent && req.useragent.isDesktop) {
-    res.sendFile(path.join(`${__dirname}/path/to/desktopBrowser.html`));
-  } else if (req.useragent && req.useragent.isMobile) {
-    res.sendFile(path.join(`${__dirname}/path/to/mobile.html`));
-  }
-});
-
-server.listen(3000, () => {
-  console.log('Listening on port 3000');
-});
-```
-
-### Available Functions
-#### Client Side Methods
-
-
-* instantiate our shared socket
-``` javascript
-imperio.socket = io();
-```
-
-* store roomID to pass to server for room creation and correctly routing the emissions
-``` javascript
-imperio.room = getCookie('roomId');
-```
-
-* store nonce to use to display and show mobile user how to connect
-``` javascript
-imperio.nonce = getCookie('nonce');
-```
-
-* take a tap event from mobile browser and emit the tap event
-``` javascript
-imperio.mobileTapShare = require('./Mobile/mobileTapShare.js');
-```
-* sets up listener for motion data from mobile browser and emits object containing x,y,z coords
-``` javascript
-imperio.mobileAccelShare = require('./Mobile/mobileAccelShare.js');
-```
-
-* sets up a listener for orientation data from mobile browser and emits object containing alpha, beta, and gamma data
-``` javascript
-imperio.mobileGyroShare = require('./Mobile/mobileGyroShare.js');
-```
-
-* establishes connection to socket and shares room it should connnect to
-``` javascript
-imperio.mobileRoomSetup = require('./Mobile/mobileRoomSetup.js');
-```
-
-* sets up listener for tap event on desktop browser
-``` javascript
-imperio.desktopTapHandler = require('./Desktop/desktopTapHandler.js');
-```
-
-* sets up listener for accel event/data on desktop browser
-``` javascript
-imperio.desktopAccelHandler = require('./Desktop/desktopAccelHandler.js');
-```
-
-* sets up listener for gyro event/data on desktop browser
-``` javascript
-imperio.desktopGyroHandler = require('./Desktop/desktopGyroHandler.js');
-```
-
-* establishes connection to socket and shares room it should connnect to
-``` javascript
-imperio.desktopRoomSetup = require('./Desktop/desktopRoomSetup.js');
-```
-
-#### Server Side Methods
-
-
-
-### TODO
-
-- [ ] Tell Austin about adding parameter for non-Nonce implementation of SDK
-- [ ] Add different url form of authentication
-- [ ] Look at testing suite for Sockets and Implement some socket testing
-
+### Examples
+Other examples using our library can be found at other repos on our organization and on our [example](https://github.com/imperiojs/imperio/wiki/example) page.
 
 ### License
 MIT
-
-### On That Note....
-Go forth and build awesome things!
