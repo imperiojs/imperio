@@ -3802,14 +3802,19 @@
 	};
 	
 	emitGyroscope.start = function (localCallback, modifyDataCallback) {
+	  console.log('gyro start invoked!');
 	  imperio.callbacks.gyroLocal = localCallback;
 	  imperio.callbacks.gyroModify = modifyDataCallback;
-	  window.addEventListener('deviceorientaiton', handleDeviceOrientation);
+	  console.log('localCallback: ', imperio.callbacks.gyroLocal);
+	  console.log('modifyDataCallback: ', imperio.callbacks.gyroModify);
+	  console.log('handleDeviceOrientation should be in scope: ', handleDeviceOrientation);
+	  window.addEventListener('deviceorientation', handleDeviceOrientation);
 	};
 	emitGyroscope.remove = function (localCallback, modifyDataCallback) {
+	  console.log('gyro remove invoked!');
 	  imperio.callbacks.gyroLocal = localCallback;
 	  imperio.callbacks.gyroModify = modifyDataCallback;
-	  window.removeEventListener('deviceorientaiton', handleDeviceOrientation);
+	  window.removeEventListener('deviceorientation', handleDeviceOrientation);
 	};
 	
 	module.exports = emitGyroscope;
