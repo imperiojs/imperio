@@ -3718,9 +3718,9 @@
 	var handleDeviceMotionGravity = function handleDeviceMotionGravity(event) {
 	  var localCallback = imperio.callbacks.gravityLocal;
 	  var modifyDataCallback = imperio.callbacks.gravityModify;
-	  var x = Math.round(event.accelerationIncludingGravity.x);
-	  var y = Math.round(event.accelerationIncludingGravity.y);
-	  var z = Math.round(event.accelerationIncludingGravity.z);
+	  var x = event.accelerationIncludingGravity.x;
+	  var y = event.accelerationIncludingGravity.y;
+	  var z = event.accelerationIncludingGravity.z;
 	  var accObject = {
 	    x: x,
 	    y: y,
@@ -3751,9 +3751,9 @@
 	var handleDeviceMotionNoGravity = function handleDeviceMotionNoGravity(event) {
 	  var localCallback = imperio.callbacks.noGravityLocal;
 	  var modifyDataCallback = imperio.callbacks.noGravityModify;
-	  var x = Math.round(event.acceleration.x);
-	  var y = Math.round(event.acceleration.y);
-	  var z = Math.round(event.acceleration.z);
+	  var x = event.acceleration.x;
+	  var y = event.acceleration.y;
+	  var z = event.acceleration.z;
 	  var accObject = {
 	    x: x,
 	    y: y,
@@ -3851,9 +3851,9 @@
 	var handleDeviceOrientation = function handleDeviceOrientation(event) {
 	  var localCallback = imperio.callbacks.gyroLocal;
 	  var modifyDataCallback = imperio.callbacks.gyroModify;
-	  var alpha = Math.round(event.alpha);
-	  var beta = Math.round(event.beta);
-	  var gamma = Math.round(event.gamma);
+	  var alpha = event.alpha;
+	  var beta = event.beta;
+	  var gamma = event.gamma;
 	  var gyroObject = {
 	    alpha: alpha,
 	    beta: beta,
@@ -4110,7 +4110,7 @@
 	        data: event,
 	        type: 'tap'
 	      };
-	      imperio.dataChannel.send(webRTCData);
+	      imperio.dataChannel.send(JSON.stringify(webRTCData));
 	    } else imperio.socket.emit('tap', imperio.room, event);
 	    if (localCallback) localCallback(event);
 	  });
