@@ -1,5 +1,5 @@
 # [imperio](imperiojs.com)
-imperio is an open source JavaScript library that enables developers to build web applications that harness the power of mobile devices communicating sensor and gesture data to other devices in real-time. imperio provides developers an easy-to-use API, configurable middlware to easily set up device communication rules, and automatically initiates optimal datastreams based on browser compatibility with minimal code to get started.
+imperio is an open source JavaScript library that enables developers to build web applications that harness the power of mobile devices communicating sensor and gesture data to other devices in real-time. imperio provides developers an easy-to-use API, configurable middleware to easily set up device communication rules, and automatically initiates optimal data-streams based on browser compatibility with minimal code to get started.
 
 Check out our website for a glimpse at what is possible with [imperio](imperiojs.com).
 
