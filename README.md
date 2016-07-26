@@ -106,5 +106,14 @@ And that's it! This application will now stream swipe data from client to client
 ### Examples
 Other examples using imperio can be found in the other repos under the imperio organization and on our [example](https://github.com/imperiojs/imperio/wiki/example) page.
 
+### Contributors
+[Michael Blanchard](https://github.com/miblanchard)
+
+[Austin Lyon](https://github.com/austinlyon)
+
+[Matt McLaughlin](https://github.com/mclaugmg)
+
+[Austin Nwaukoni](https://github.com/anwaukoni) 
+
 ### License
 MIT
